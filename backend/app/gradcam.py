@@ -1,6 +1,7 @@
 import os
-import uuid
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
+import uuid
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -168,14 +169,26 @@ class GradCAM:
             f"{uuid.uuid4().hex}.png"
         )
 
+        os.makedirs("heatmaps", exist_ok=True)
+
         output_path = os.path.join(
             "heatmaps",
             filename,
         )
 
+        raw_output_path = os.path.join(
+            "heatmaps",
+            f"raw_{filename}",
+        )
+
         cv2.imwrite(
             output_path,
             overlay,
+        )
+
+        cv2.imwrite(
+            raw_output_path,
+            original,
         )
 
         return filename

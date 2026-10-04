@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#07090e] text-slate-100 selection:bg-blue-600 selection:text-white">
+    <main className="relative min-h-screen bg-[#070A11] text-slate-100 selection:bg-cyan-600 selection:text-white">
       {/* Ambient background micro-grid */}
       <div
         className="pointer-events-none fixed inset-0 bg-grid-pattern opacity-60 z-0"
@@ -17,12 +17,12 @@ export default function Home() {
 
       {/* Atmospheric radial gradient spotlight */}
       <div
-        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] bg-radial-glow z-0"
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1680px] h-[650px] bg-radial-glow z-0"
         aria-hidden="true"
       />
 
-      {/* Content wrapper */}
-      <div className="relative z-10 flex flex-col">
+      {/* Widescreen Content wrapper */}
+      <div className="relative z-10 flex flex-col max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Navbar />
         <Hero />
         <UploadCard />

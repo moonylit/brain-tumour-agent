@@ -1,9 +1,10 @@
+import os
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
 import time
 
 import numpy as np
 import tensorflow as tf
-
-from tensorflow.keras.models import load_model
 
 from app.config import (
     MODEL_PATH,
@@ -18,7 +19,7 @@ class Predictor:
 
     def __init__(self):
 
-        self.model = load_model(
+        self.model = tf.keras.models.load_model(
             MODEL_PATH,
         )
 

@@ -166,5 +166,165 @@
         "confidence": 0.9917919635772705,
         "processing_time_ms": 591.19,
         "heatmap_filename": "9438bcea1c584c66b5e5b7efc51b894c.png"
+    },
+    {
+        "timestamp": "2026-10-04T22:10:35.188640",
+        "filename": "Te-gl_41.jpg",
+        "prediction": "glioma",
+        "confidence": 0.9998980760574341,
+        "processing_time_ms": 4058.98,
+        "heatmap_filename": "2d81b8a09d6d41049f358c352938ba8e.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Glioma",
+            "confidence": 0.9999,
+            "patient_city": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Glioma detected with 100.0% confidence. High priority neuro-oncology escalation indicated. Immediate multidisciplinary evaluation is recommended to assess for maximal safe surgical resection, molecular neuropathology (IDH1/2 mutation & 1p/19q co-deletion profiling), and adjuvant chemoradiotherapy planning.",
+            "articles": [
+                {
+                    "title": "NCCN Clinical Practice Guidelines in Oncology: Central Nervous System Cancers (Glioma)",
+                    "snippet": "First-line standard of care involves maximal safe surgical resection followed by concurrent temozolomide (TMZ) chemoradiotherapy (Stupp protocol) and tumor-treating fields (TTFields).",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/33227768/",
+                    "source": "National Comprehensive Cancer Network (NCCN) / PubMed"
+                },
+                {
+                    "title": "Targeted Molecular Therapies & IDH Inhibitors in Residual Gliomas",
+                    "snippet": "Pathological assessment of IDH1/2 mutation status and 1p/19q co-deletion is critical. Vorasidenib significantly delays disease progression in residual IDH-mutant lower-grade and diffuse gliomas.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/37272516/",
+                    "source": "New England Journal of Medicine (NEJM)"
+                },
+                {
+                    "title": "Clinical Trial NCT04145115: Immunotherapeutic Dendritic Cell Vaccines in Newly Diagnosed Malignant Glioma",
+                    "snippet": "Phase II randomized investigation evaluating autologous tumor lysate-loaded dendritic cell immunotherapy combined with adjuvant temozolomide in patients with resected malignant supratentorial glioma.",
+                    "url": "https://clinicaltrials.gov/study/NCT04145115",
+                    "source": "ClinicalTrials.gov"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
+                    "rating": 4.7,
+                    "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
+                    "phone": "+91 141 270 0107",
+                    "link": "https://www.bmchrc.org"
+                },
+                {
+                    "name": "SMS Medical College & Hospital - Institute of Neurosciences & Oncology",
+                    "rating": 4.5,
+                    "address": "JLN Marg, Gangawal Park, Adarsh Nagar, Jaipur, Rajasthan 302004",
+                    "phone": "+91 141 251 8222",
+                    "link": "https://medicaleducation.rajasthan.gov.in/smsjaipur"
+                },
+                {
+                    "name": "Narayana Multispeciality Hospital Jaipur - Comprehensive Cancer Care",
+                    "rating": 4.6,
+                    "address": "Sector 28, Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, Rajasthan 302033",
+                    "phone": "+91 141 712 2222",
+                    "link": "https://www.narayanahealth.org/hospitals/jaipur/narayana-multispeciality-hospital-jaipur"
+                },
+                {
+                    "name": "Fortis Escorts Hospital Jaipur - Neuro-Oncology & Advanced Neurosurgery",
+                    "rating": 4.4,
+                    "address": "Jawaharlal Nehru Marg, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 254 7000",
+                    "link": "https://www.fortishealthcare.com/india/fortis-escorts-hospital-in-jaipur-rajasthan"
+                },
+                {
+                    "name": "Apex Hospitals Jaipur - Institute of Neurosciences & Radiotherapy",
+                    "rating": 4.6,
+                    "address": "SP-4, Malviya Industrial Area, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 410 1111",
+                    "link": "https://apexhospitals.com"
+                }
+            ],
+            "queries_executed": [
+                "Glioma standard of care NCCN guidelines PubMed",
+                "Glioma novel therapeutics clinical trials",
+                "tertiary neuro oncology cancer hospital surgical center Jaipur"
+            ],
+            "source_mode": "curated_clinical_benchmark",
+            "timestamp": "2026-10-04T16:40:35.185529+00:00"
+        }
+    },
+    {
+        "timestamp": "2026-10-04T22:25:35.797517",
+        "filename": "Te-gl_5.jpg",
+        "prediction": "glioma",
+        "confidence": 1.0,
+        "processing_time_ms": 9371.41,
+        "heatmap_filename": "6b67a3a0b4df4fdf8515bb0bd0d37792.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Glioma",
+            "confidence": 1.0,
+            "patient_city": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Glioma detected with 100.0% confidence. High priority neuro-oncology escalation indicated. Immediate multidisciplinary evaluation is recommended to assess for maximal safe surgical resection, molecular neuropathology (IDH1/2 mutation & 1p/19q co-deletion profiling), and adjuvant chemoradiotherapy planning.",
+            "articles": [
+                {
+                    "title": "NCCN Clinical Practice Guidelines in Oncology: Central Nervous System Cancers (Glioma)",
+                    "snippet": "First-line standard of care involves maximal safe surgical resection followed by concurrent temozolomide (TMZ) chemoradiotherapy (Stupp protocol) and tumor-treating fields (TTFields).",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/33227768/",
+                    "source": "National Comprehensive Cancer Network (NCCN) / PubMed"
+                },
+                {
+                    "title": "Targeted Molecular Therapies & IDH Inhibitors in Residual Gliomas",
+                    "snippet": "Pathological assessment of IDH1/2 mutation status and 1p/19q co-deletion is critical. Vorasidenib significantly delays disease progression in residual IDH-mutant lower-grade and diffuse gliomas.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/37272516/",
+                    "source": "New England Journal of Medicine (NEJM)"
+                },
+                {
+                    "title": "Clinical Trial NCT04145115: Immunotherapeutic Dendritic Cell Vaccines in Newly Diagnosed Malignant Glioma",
+                    "snippet": "Phase II randomized investigation evaluating autologous tumor lysate-loaded dendritic cell immunotherapy combined with adjuvant temozolomide in patients with resected malignant supratentorial glioma.",
+                    "url": "https://clinicaltrials.gov/study/NCT04145115",
+                    "source": "ClinicalTrials.gov"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
+                    "rating": 4.7,
+                    "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
+                    "phone": "+91 141 270 0107",
+                    "link": "https://www.bmchrc.org"
+                },
+                {
+                    "name": "SMS Medical College & Hospital - Institute of Neurosciences & Oncology",
+                    "rating": 4.5,
+                    "address": "JLN Marg, Gangawal Park, Adarsh Nagar, Jaipur, Rajasthan 302004",
+                    "phone": "+91 141 251 8222",
+                    "link": "https://medicaleducation.rajasthan.gov.in/smsjaipur"
+                },
+                {
+                    "name": "Narayana Multispeciality Hospital Jaipur - Comprehensive Cancer Care",
+                    "rating": 4.6,
+                    "address": "Sector 28, Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, Rajasthan 302033",
+                    "phone": "+91 141 712 2222",
+                    "link": "https://www.narayanahealth.org/hospitals/jaipur/narayana-multispeciality-hospital-jaipur"
+                },
+                {
+                    "name": "Fortis Escorts Hospital Jaipur - Neuro-Oncology & Advanced Neurosurgery",
+                    "rating": 4.4,
+                    "address": "Jawaharlal Nehru Marg, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 254 7000",
+                    "link": "https://www.fortishealthcare.com/india/fortis-escorts-hospital-in-jaipur-rajasthan"
+                },
+                {
+                    "name": "Apex Hospitals Jaipur - Institute of Neurosciences & Radiotherapy",
+                    "rating": 4.6,
+                    "address": "SP-4, Malviya Industrial Area, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 410 1111",
+                    "link": "https://apexhospitals.com"
+                }
+            ],
+            "queries_executed": [
+                "Glioma standard of care NCCN guidelines PubMed",
+                "Glioma novel therapeutics clinical trials",
+                "tertiary neuro oncology cancer hospital surgical center Jaipur"
+            ],
+            "source_mode": "curated_clinical_benchmark",
+            "timestamp": "2026-10-04T16:55:35.796364+00:00"
+        }
     }
 ]

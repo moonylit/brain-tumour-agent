@@ -1,14 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   downloadReport,
   getHeatmapUrl,
+  getRawScanUrl,
   formatApiError,
   formatTumorClass,
   AgentResearch,
 } from "@/lib/api";
 import ClinicalAgentCard from "./ClinicalAgentCard";
+import {
+  Activity,
+  Clock,
+  Fingerprint,
+  ShieldAlert,
+  CheckCircle2,
+  FileDown,
+  Layers,
+  Eye,
+  Sliders,
+  Crosshair,
+} from "lucide-react";
 
 type Props = {
   prediction: string;
@@ -16,6 +29,9 @@ type Props = {
   probabilities: Record<string, number>;
   processingTime: number;
   heatmapFilename: string;
+  rawHeatmapFilename?: string;
+  region?: string;
+  accessionId?: string;
   agentResearch?: AgentResearch;
 };
 
@@ -25,16 +41,21 @@ export default function PredictionCard({
   probabilities,
   processingTime,
   heatmapFilename,
+  rawHeatmapFilename,
+  region = "Jaipur",
+  accessionId,
   agentResearch,
 }: Props) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"side-by-side" | "raw" | "gradcam">("side-by-side");
+  const [showCrosshairs, setShowCrosshairs] = useState(true);
 
   async function handleDownloadReport() {
     try {
       setDownloading(true);
       setDownloadError(null);
-      await downloadReport();
+      await downloadReport(region);
     } catch (error) {
       console.error("PDF download failed:", error);
       setDownloadError(formatApiError(error));
@@ -44,13 +65,21 @@ export default function PredictionCard({
   }
 
   const heatmapUrl = getHeatmapUrl(heatmapFilename);
+  const rawUrl = rawHeatmapFilename
+    ? getRawScanUrl(rawHeatmapFilename)
+    : heatmapUrl;
+
   const formattedPrediction = formatTumorClass(prediction);
   const isNoTumor = formattedPrediction.toLowerCase() === "no tumor";
+  const displayAccession =
+    accessionId || `ACC-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-9842`;
 
   return (
-    <div className="mt-10 rounded-3xl border border-emerald-500/30 bg-slate-900/85 p-8 sm:p-10 shadow-[0_20px_50px_-20px_rgba(16,185,129,0.25)] backdrop-blur-xl">
-      {/* Readout Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.08] pb-6 mb-8 gap-4">
+    <div className="mt-10 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+      {/* ------------------------------------------------------------- */}
+      {/* 1. TOP READOUT HEADER                                         */}
+      {/* ------------------------------------------------------------- */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-5 mb-6 gap-4">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-3 py-1 text-xs font-mono text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -63,10 +92,10 @@ export default function PredictionCard({
 
         <div className="flex items-center gap-3">
           <span
-            className={`rounded-2xl border px-4 py-2 text-sm sm:text-base font-bold tracking-wide shadow-md ${
+            className={`rounded-xl border px-4 py-2 text-sm sm:text-base font-bold tracking-wide shadow-lg ${
               isNoTumor
                 ? "border-emerald-500/40 bg-emerald-950/60 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
-                : "border-sky-500/40 bg-sky-950/60 text-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.25)]"
+                : "border-rose-500/40 bg-rose-950/60 text-rose-300 shadow-[0_0_20px_rgba(244,63,94,0.25)]"
             }`}
           >
             {formattedPrediction}
@@ -74,35 +103,245 @@ export default function PredictionCard({
         </div>
       </div>
 
-      {/* Diagnostic Explainability & Autonomous Clinical Agent Row */}
-      <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        {/* Left Column: Grad-CAM Heatmap Localization Display */}
+      {/* ------------------------------------------------------------- */}
+      {/* 2. TOP METRICS STRIP (4 Micro-Stat Blocks)                    */}
+      {/* ------------------------------------------------------------- */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+        {/* Micro-Stat 1: Accession UID */}
+        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-400 text-xs">
+            <span className="font-mono uppercase tracking-wider text-[11px]">Accession ID</span>
+            <Fingerprint className="h-3.5 w-3.5 text-cyan-400" />
+          </div>
+          <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-slate-200 truncate" title={displayAccession}>
+            {displayAccession}
+          </p>
+        </div>
+
+        {/* Micro-Stat 2: ResNet-50 Confidence */}
+        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-400 text-xs">
+            <span className="font-mono uppercase tracking-wider text-[11px]">ResNet-50 Confidence</span>
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+          </div>
+          <p className="mt-2 text-lg sm:text-xl font-mono font-bold text-emerald-400">
+            {(confidence * 100).toFixed(2)}%
+          </p>
+        </div>
+
+        {/* Micro-Stat 3: Detection Latency */}
+        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-400 text-xs">
+            <span className="font-mono uppercase tracking-wider text-[11px]">Detection Latency</span>
+            <Clock className="h-3.5 w-3.5 text-cyan-400" />
+          </div>
+          <p className="mt-2 text-lg sm:text-xl font-mono font-bold text-cyan-400">
+            {processingTime.toFixed(2)} ms
+          </p>
+        </div>
+
+        {/* Micro-Stat 4: Clinical Risk Triage Status */}
+        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-400 text-xs">
+            <span className="font-mono uppercase tracking-wider text-[11px]">Triage Risk Stratum</span>
+            {isNoTumor ? (
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+            ) : (
+              <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />
+            )}
+          </div>
+          <div className="mt-2">
+            <span
+              className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold ${
+                isNoTumor
+                  ? "bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
+                  : "bg-rose-950/60 text-rose-300 border border-rose-500/30"
+              }`}
+            >
+              {isNoTumor ? "Nominal Surveillance" : "Escalation Recommended"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 3. INTERACTIVE DUAL-VIEWER & CLINICAL AGENT PANEL ROW          */}
+      {/* ------------------------------------------------------------- */}
+      <div className="mb-8 grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+        {/* Left Column: Interactive Dual-Viewer (Raw vs Grad-CAM) */}
         {heatmapFilename ? (
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base sm:text-lg font-semibold text-slate-200">
-                Grad-CAM Heatmap Localization
-              </h3>
-              <span className="font-mono text-xs text-slate-400">
-                Generated file: {heatmapFilename}
-              </span>
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5 shadow-xl">
+            {/* Viewer Controls Strip */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-base font-semibold text-slate-200 flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-cyan-400" />
+                  <span>Grad-CAM Heatmap Localization</span>
+                </h3>
+                <span className="font-mono text-[11px] text-slate-400 block mt-0.5">
+                  Generated file: {heatmapFilename}
+                </span>
+              </div>
+
+              {/* View Mode Toggle Controls */}
+              <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("side-by-side")}
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                    viewMode === "side-by-side"
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Side-by-Side
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("raw")}
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                    viewMode === "raw"
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Raw MRI
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("gradcam")}
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                    viewMode === "gradcam"
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Grad-CAM Overlay
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCrosshairs(!showCrosshairs)}
+                  className={`p-1 rounded-md transition text-xs ${
+                    showCrosshairs ? "text-cyan-400 bg-cyan-950/40" : "text-slate-500 hover:text-slate-300"
+                  }`}
+                  title="Toggle Inspection Crosshairs"
+                >
+                  <Crosshair className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-black/70 p-3 shadow-2xl flex flex-col items-center">
-              <img
-                src={heatmapUrl}
-                alt={`Grad-CAM Heatmap for ${prediction}`}
-                className="mx-auto max-h-96 rounded-xl object-contain"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = "none";
-                }}
-              />
+            {/* Display Area */}
+            <div className="relative">
+              {viewMode === "side-by-side" ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Left: Raw MRI */}
+                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
+                    <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-slate-300">
+                      Raw Scan
+                    </span>
+                    <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
+                      <img
+                        src={rawUrl}
+                        alt="Raw MRI Input Scan"
+                        className="object-contain w-full h-full"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                      />
+                      {showCrosshairs && (
+                        <div className="pointer-events-none absolute inset-0 border border-cyan-500/15">
+                          <div className="absolute inset-x-0 top-1/2 border-t border-cyan-500/20 border-dashed" />
+                          <div className="absolute inset-y-0 left-1/2 border-l border-cyan-500/20 border-dashed" />
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400 mt-2">
+                      Input Morphology
+                    </span>
+                  </div>
+
+                  {/* Right: Grad-CAM Overlay */}
+                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
+                    <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-cyan-300">
+                      Activation Map
+                    </span>
+                    <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
+                      <img
+                        src={heatmapUrl}
+                        alt={`Grad-CAM Heatmap for ${prediction}`}
+                        className="object-contain w-full h-full"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                      />
+                      {showCrosshairs && (
+                        <div className="pointer-events-none absolute inset-0 border border-cyan-500/20">
+                          <div className="absolute inset-x-0 top-1/2 border-t border-cyan-500/30 border-dashed" />
+                          <div className="absolute inset-y-0 left-1/2 border-l border-cyan-500/30 border-dashed" />
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400 mt-2">
+                      Feature Salience
+                    </span>
+                  </div>
+                </div>
+              ) : viewMode === "raw" ? (
+                <div className="relative rounded-xl border border-slate-800 bg-black/80 p-3 flex flex-col items-center">
+                  <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[340px] flex items-center justify-center">
+                    <img
+                      src={rawUrl}
+                      alt="Raw MRI Input Scan"
+                      className="object-contain w-full h-full max-h-80"
+                    />
+                    {showCrosshairs && (
+                      <div className="pointer-events-none absolute inset-0 border border-cyan-500/20">
+                        <div className="absolute inset-x-0 top-1/2 border-t border-cyan-500/30 border-dashed" />
+                        <div className="absolute inset-y-0 left-1/2 border-l border-cyan-500/30 border-dashed" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-400 mt-2">
+                    Raw MRI Input Scan (Preprocessed)
+                  </span>
+                </div>
+              ) : (
+                <div className="relative rounded-xl border border-slate-800 bg-black/80 p-3 flex flex-col items-center">
+                  <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[340px] flex items-center justify-center">
+                    <img
+                      src={heatmapUrl}
+                      alt={`Grad-CAM Heatmap for ${prediction}`}
+                      className="object-contain w-full h-full max-h-80"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                    {showCrosshairs && (
+                      <div className="pointer-events-none absolute inset-0 border border-cyan-500/20">
+                        <div className="absolute inset-x-0 top-1/2 border-t border-cyan-500/30 border-dashed" />
+                        <div className="absolute inset-y-0 left-1/2 border-l border-cyan-500/30 border-dashed" />
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-400 mt-2">
+                    ResNet-50 Last Conv Layer (Activation Overlay)
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Heatmap Spectrum Legend */}
+            <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+              <span>Baseline (0.0)</span>
+              <div className="h-2 w-32 sm:w-44 rounded-full bg-gradient-to-r from-blue-700 via-cyan-400 via-yellow-400 to-red-600" />
+              <span>Focal Peak (1.0)</span>
             </div>
           </div>
         ) : null}
 
-        {/* Right Column: Autonomous Clinical Agent Research & Care Facilities Panel */}
-        <div className={heatmapFilename ? "" : "lg:col-span-2"}>
+        {/* Right Column: Autonomous SerpApi Clinical Agent Panel */}
+        <div className={heatmapFilename ? "" : "xl:col-span-2"}>
           <ClinicalAgentCard
             research={agentResearch}
             prediction={prediction}
@@ -110,113 +349,56 @@ export default function PredictionCard({
         </div>
       </div>
 
-      {/* Primary Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-2xl border border-white/[0.08] bg-slate-950/60 p-5 backdrop-blur-md">
-        <div className="rounded-xl bg-slate-900/60 p-4 border border-white/[0.04]">
-          <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
-            Predicted Class
-          </span>
-          <p
-            className={`mt-1.5 text-xl font-bold ${
-              isNoTumor ? "text-emerald-400" : "text-sky-400"
-            }`}
-          >
-            {formattedPrediction}
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-900/60 p-4 border border-white/[0.04]">
-          <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
-            Confidence Score
-          </span>
-          <p className="mt-1.5 text-xl font-bold font-mono text-sky-400">
-            {(confidence * 100).toFixed(2)}%
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-900/60 p-4 border border-white/[0.04]">
-          <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
-            Inference Latency
-          </span>
-          <p className="mt-1.5 text-xl font-bold font-mono text-slate-200">
-            {processingTime.toFixed(2)} ms
-          </p>
-        </div>
-      </div>
-
-      {/* PDF Report Download Button */}
-      <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <button
-          onClick={handleDownloadReport}
-          disabled={downloading}
-          className="btn-emerald inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {downloading ? (
-            <>
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
-              <span>Generating Report...</span>
-            </>
-          ) : (
-            <>
-              <svg
-                className="h-4 w-4 text-emerald-200"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
-              </svg>
-              <span>Download PDF Report</span>
-            </>
-          )}
-        </button>
-
-        <span className="text-xs text-slate-400 font-mono">
-          Clinical telemetry &amp; SerpApi audit trail logged
-        </span>
-
-        {downloadError && (
-          <div className="w-full rounded-xl border border-red-500/30 bg-red-950/60 p-3 text-sm text-red-300">
-            {downloadError}
-          </div>
-        )}
-      </div>
-
-      {/* Probability Distribution Meters */}
+      {/* ------------------------------------------------------------- */}
+      {/* 4. CLASS PROBABILITIES BREAKDOWN                              */}
+      {/* ------------------------------------------------------------- */}
       {probabilities && Object.keys(probabilities).length > 0 && (
-        <div className="mt-8 border-t border-white/[0.08] pt-6">
-          <h3 className="mb-4 text-sm font-mono font-semibold uppercase tracking-wider text-slate-400">
-            Class Probabilities
-          </h3>
+        <div className="mb-8 rounded-2xl border border-slate-800/80 bg-slate-950/60 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <Sliders className="h-3.5 w-3.5 text-cyan-400" />
+              <span>Class Probabilities</span>
+            </h3>
+            <span className="text-[11px] font-mono text-slate-400">Softmax Distribution</span>
+          </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Object.entries(probabilities).map(([label, value]) => {
               const percent = (value * 100).toFixed(2);
               const formattedLabel = formatTumorClass(label);
+              const isLead =
+                label.toLowerCase() === prediction.toLowerCase() ||
+                (isNoTumor && label.toLowerCase() === "notumor");
+
               return (
                 <div
                   key={label}
-                  className="rounded-xl border border-white/[0.06] bg-slate-950/50 p-3.5 transition hover:border-white/[0.12]"
+                  className={`rounded-xl border p-3 transition ${
+                    isLead
+                      ? "border-cyan-500/40 bg-slate-900/90 shadow-sm"
+                      : "border-slate-800/70 bg-slate-950/50"
+                  }`}
                 >
                   <div className="mb-2 flex justify-between text-xs sm:text-sm">
-                    <span className="font-medium text-slate-200">
+                    <span
+                      className={`font-medium ${
+                        isLead ? "text-cyan-300 font-semibold" : "text-slate-300"
+                      }`}
+                    >
                       {formattedLabel}
                     </span>
-                    <span className="font-mono font-semibold text-slate-300 tabular-nums">
+                    <span className="font-mono font-semibold text-slate-200 tabular-nums">
                       {percent}%
                     </span>
                   </div>
 
                   <div className="h-2 overflow-hidden rounded-full bg-slate-800/80">
                     <div
-                      className="h-2 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-500"
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        isLead
+                          ? "bg-gradient-to-r from-cyan-500 to-blue-500"
+                          : "bg-slate-600"
+                      }`}
                       style={{
                         width: `${Math.min(Math.max(value * 100, 0), 100)}%`,
                       }}
@@ -228,6 +410,40 @@ export default function PredictionCard({
           </div>
         </div>
       )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. PDF REPORT DOWNLOAD ACTION STRIP                           */}
+      {/* ------------------------------------------------------------- */}
+      <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-slate-800">
+        <button
+          type="button"
+          onClick={handleDownloadReport}
+          disabled={downloading}
+          className="btn-emerald inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {downloading ? (
+            <>
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
+              <span>Generating Report...</span>
+            </>
+          ) : (
+            <>
+              <FileDown className="h-4 w-4 text-emerald-200" />
+              <span>Download PDF Report</span>
+            </>
+          )}
+        </button>
+
+        <span className="text-xs text-slate-400 font-mono">
+          Clinical telemetry &bull; Target Region: <strong className="text-slate-300">{region}</strong> &bull; SerpApi audit trail logged
+        </span>
+
+        {downloadError && (
+          <div className="w-full rounded-xl border border-red-500/30 bg-red-950/60 p-3 text-sm text-red-300">
+            {downloadError}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

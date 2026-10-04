@@ -1,7 +1,11 @@
+from datetime import datetime, timezone
+import uuid
+
 from fastapi import (
     FastAPI,
     UploadFile,
     File,
+    Form,
     Query,
     HTTPException,
 )
@@ -17,6 +21,8 @@ from app.predictor import Predictor
 from app.schemas import (
     PredictionResponse,
     StatisticsResponse,
+    AgentResearchRequest,
+    AgentResearchResponse,
 )
 from app.evaluation import (
     load_metrics,
@@ -146,15 +152,37 @@ The system will:
 )
 async def predict(
     file: UploadFile = File(...),
-    patient_city: Optional[str] = Query(
-        default="Jaipur",
-        description="Patient city for regional tertiary oncology center and surgical discovery",
+    region: Optional[str] = Form(
+        default=None,
+        description="Patient target city or region for oncology referral routing (multipart form field)",
+    ),
+    patient_city: Optional[str] = Form(
+        default=None,
+        description="Alternative form field for patient city",
+    ),
+    query_region: Optional[str] = Query(
+        default=None,
+        alias="region",
+        description="Query parameter fallback for patient target region",
+    ),
+    query_patient_city: Optional[str] = Query(
+        default=None,
+        alias="patient_city",
+        description="Query parameter fallback for patient city",
     ),
 ):
+    target_region = (
+        (region.strip() if region and region.strip() else None)
+        or (query_region.strip() if query_region and query_region.strip() else None)
+        or (patient_city.strip() if patient_city and patient_city.strip() else None)
+        or (query_patient_city.strip() if query_patient_city and query_patient_city.strip() else None)
+        or "Jaipur"
+    )
+
     logger.info(
-        "Prediction request received: %s | patient_city: %s",
+        "Prediction request received: %s | target_region: %s",
         file.filename,
-        patient_city,
+        target_region,
     )
 
     if file.content_type not in ALLOWED_IMAGE_TYPES:
@@ -251,20 +279,24 @@ async def predict(
         )
 
     logger.info(
-        "Prediction successful | File=%s | Class=%s | Confidence=%.2f%% | Time=%d ms",
+        "Prediction successful | File=%s | Class=%s | Confidence=%.2f%% | Time=%d ms | Region=%s",
         file.filename,
         prediction,
         confidence,
         processing_time_ms,
+        target_region,
     )
 
-    # Dispatch autonomous clinical oncology agent
-    city_str = patient_city.strip() if (patient_city and patient_city.strip()) else "Jaipur"
+    # Dispatch autonomous clinical oncology agent with dynamic target_region
     agent_research = run_oncology_research_agent(
         tumor_class=prediction,
         confidence=confidence,
-        patient_city=city_str,
+        patient_city=target_region,
     )
+
+    now_utc = datetime.now(timezone.utc)
+    accession_id = f"ACC-{now_utc.strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
+    raw_heatmap_filename = f"raw_{heatmap_filename}"
 
     save_prediction(
         filename=file.filename,
@@ -273,6 +305,9 @@ async def predict(
         processing_time_ms=processing_time_ms,
         heatmap_filename=heatmap_filename,
         agent_research=agent_research,
+        probabilities=probabilities,
+        accession_id=accession_id,
+        region=target_region,
     )
 
     return PredictionResponse(
@@ -281,8 +316,36 @@ async def predict(
         probabilities=probabilities,
         processing_time_ms=processing_time_ms,
         heatmap_filename=heatmap_filename,
+        raw_heatmap_filename=raw_heatmap_filename,
+        region=target_region,
+        accession_id=accession_id,
         agent_research=agent_research,
     )
+
+
+@app.post(
+    "/agent-research",
+    response_model=AgentResearchResponse,
+    tags=["Agent"],
+    summary="On-Demand Autonomous Oncology Research Agent",
+    description="""
+Execute an on-demand clinical search and regional referral localization query for any tumor class and target region
+without requiring an image re-upload.
+""",
+)
+def agent_research_endpoint(payload: AgentResearchRequest):
+    logger.info(
+        "On-demand clinical agent research requested for tumor_class=%s | region=%s",
+        payload.tumor_class,
+        payload.region,
+    )
+    research = run_oncology_research_agent(
+        tumor_class=payload.tumor_class,
+        confidence=payload.confidence,
+        patient_city=payload.region,
+    )
+    return AgentResearchResponse(**research)
+
 
 
 @app.get(
@@ -425,7 +488,12 @@ Generate and download a professional PDF diagnostic report for the latest predic
 including autonomous clinical literature evidence and regional oncology facilities.
 """,
 )
-def report():
+def report(
+    region: Optional[str] = Query(
+        default=None,
+        description="Optional target region override for the diagnostic dossier report",
+    ),
+):
 
     history = load_prediction_history()
 
@@ -451,6 +519,9 @@ def report():
         filename=latest["filename"],
         metrics=metrics,
         agent_research=latest.get("agent_research"),
+        probabilities=latest.get("probabilities"),
+        accession_id=latest.get("accession_id"),
+        region=region or latest.get("region"),
     )
 
     return StreamingResponse(

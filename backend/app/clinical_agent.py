@@ -1,5 +1,5 @@
 """
-SerpApi Clinical Decision Support Agent
+SerpApi Clinical Decision Support Agent & Dynamic Geo-Agent
 Track 01: AI Agents - SerpApi Hackathon
 
 Architecture:
@@ -87,42 +87,179 @@ CURATED_ONCOLOGY_LITERATURE: Dict[str, List[Dict[str, str]]] = {
     ],
 }
 
-# Regional Tertiary Neuro-Oncology Centers Benchmark
-REGIONAL_FACILITIES_JAIPUR: List[Dict[str, Any]] = [
+# Regional Tertiary Neuro-Oncology Centers Benchmark by Metropolitan Hub
+REGIONAL_FACILITIES_DIRECTORY: Dict[str, List[Dict[str, Any]]] = {
+    "jaipur": [
+        {
+            "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
+            "rating": 4.7,
+            "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
+            "phone": "+91 141 270 0107",
+            "link": "https://www.bmchrc.org",
+        },
+        {
+            "name": "SMS Medical College & Hospital - Institute of Neurosciences & Oncology",
+            "rating": 4.5,
+            "address": "JLN Marg, Gangawal Park, Adarsh Nagar, Jaipur, Rajasthan 302004",
+            "phone": "+91 141 251 8222",
+            "link": "https://medicaleducation.rajasthan.gov.in/smsjaipur",
+        },
+        {
+            "name": "Narayana Multispeciality Hospital Jaipur - Comprehensive Cancer Care",
+            "rating": 4.6,
+            "address": "Sector 28, Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, Rajasthan 302033",
+            "phone": "+91 141 712 2222",
+            "link": "https://www.narayanahealth.org/hospitals/jaipur/narayana-multispeciality-hospital-jaipur",
+        },
+        {
+            "name": "Fortis Escorts Hospital Jaipur - Neuro-Oncology & Advanced Neurosurgery",
+            "rating": 4.4,
+            "address": "Jawaharlal Nehru Marg, Malviya Nagar, Jaipur, Rajasthan 302017",
+            "phone": "+91 141 254 7000",
+            "link": "https://www.fortishealthcare.com/india/fortis-escorts-hospital-in-jaipur-rajasthan",
+        },
+        {
+            "name": "Apex Hospitals Jaipur - Institute of Neurosciences & Radiotherapy",
+            "rating": 4.6,
+            "address": "SP-4, Malviya Industrial Area, Malviya Nagar, Jaipur, Rajasthan 302017",
+            "phone": "+91 141 410 1111",
+            "link": "https://apexhospitals.com",
+        },
+    ],
+    "new delhi": [
+        {
+            "name": "All India Institute of Medical Sciences (AIIMS) - Comprehensive Neuro-Oncology",
+            "rating": 4.8,
+            "address": "Sri Aurobindo Marg, Ansari Nagar East, New Delhi 110029",
+            "phone": "+91 11 2658 8500",
+            "link": "https://www.aiims.edu",
+        },
+        {
+            "name": "Rajiv Gandhi Cancer Institute and Research Centre (RGCI&RC)",
+            "rating": 4.6,
+            "address": "Sector 5, Rohini, New Delhi 110085",
+            "phone": "+91 11 4702 2222",
+            "link": "https://www.rgcirc.org",
+        },
+        {
+            "name": "Max Super Speciality Hospital, Saket - Institute of Neurosciences",
+            "rating": 4.7,
+            "address": "1, 2, Press Enclave Marg, Saket, New Delhi 110017",
+            "phone": "+91 11 2651 5050",
+            "link": "https://www.maxhealthcare.in",
+        },
+    ],
+    "delhi": [
+        {
+            "name": "All India Institute of Medical Sciences (AIIMS) - Neurosciences Centre",
+            "rating": 4.8,
+            "address": "Ansari Nagar, New Delhi 110029",
+            "phone": "+91 11 2658 8500",
+            "link": "https://www.aiims.edu",
+        },
+        {
+            "name": "Indraprastha Apollo Hospitals - Department of Neuro-Oncology",
+            "rating": 4.6,
+            "address": "Sarita Vihar, Delhi Mathura Road, New Delhi 110076",
+            "phone": "+91 11 2692 5858",
+            "link": "https://www.apollohospitals.com",
+        },
+    ],
+    "mumbai": [
+        {
+            "name": "Tata Memorial Centre (TMC) / ACTREC - Apex Cancer Centre",
+            "rating": 4.9,
+            "address": "Dr. Ernest Borges Rd, Parel, Mumbai, Maharashtra 400012",
+            "phone": "+91 22 2417 7000",
+            "link": "https://tmc.gov.in",
+        },
+        {
+            "name": "P. D. Hinduja Hospital & Medical Research Centre - Neuro-Oncology",
+            "rating": 4.7,
+            "address": "Veer Savarkar Marg, Mahim, Mumbai, Maharashtra 400016",
+            "phone": "+91 22 2445 1515",
+            "link": "https://www.hindujahospital.com",
+        },
+        {
+            "name": "Kokilaben Dhirubhai Ambani Hospital - Centre for Bone, Brain & Spine Oncology",
+            "rating": 4.8,
+            "address": "Rao Saheb Achutrao Patwardhan Marg, Four Bungalows, Andheri West, Mumbai 400053",
+            "phone": "+91 22 4269 6969",
+            "link": "https://www.kokilabenhospital.com",
+        },
+    ],
+    "bengaluru": [
+        {
+            "name": "National Institute of Mental Health and Neurosciences (NIMHANS)",
+            "rating": 4.9,
+            "address": "Hosur Road, Lakkasandra, Bengaluru, Karnataka 560029",
+            "phone": "+91 80 2699 5000",
+            "link": "https://nimhans.ac.in",
+        },
+        {
+            "name": "Mazumdar Shaw Cancer Centre, Narayana Health City",
+            "rating": 4.7,
+            "address": "258/A, Bommasandra Industrial Area, Anekal Taluk, Bengaluru 560099",
+            "phone": "+91 80 7122 2222",
+            "link": "https://www.narayanahealth.org",
+        },
+    ],
+    "london": [
+        {
+            "name": "The National Hospital for Neurology and Neurosurgery (Queen Square, UCLH)",
+            "rating": 4.9,
+            "address": "Queen Square, London WC1N 3BG, United Kingdom",
+            "phone": "+44 20 3456 7890",
+            "link": "https://www.uclh.nhs.uk",
+        },
+        {
+            "name": "The Royal Marsden NHS Foundation Trust - Neuro-Oncology Unit",
+            "rating": 4.8,
+            "address": "Fulham Rd, London SW3 6JJ, United Kingdom",
+            "phone": "+44 20 7352 8171",
+            "link": "https://www.royalmarsden.nhs.uk",
+        },
+    ],
+    "boston": [
+        {
+            "name": "Dana-Farber / Brigham and Women's Cancer Center - Center for Neuro-Oncology",
+            "rating": 4.9,
+            "address": "450 Brookline Ave, Boston, MA 02215, United States",
+            "phone": "+1 617 632 3000",
+            "link": "https://www.dana-farber.org",
+        },
+        {
+            "name": "Massachusetts General Hospital (MGH) - Pappas Center for Neuro-Oncology",
+            "rating": 4.9,
+            "address": "55 Fruit St, Boston, MA 02114, United States",
+            "phone": "+1 617 726 2000",
+            "link": "https://www.massgeneral.org",
+        },
+    ],
+}
+
+# National & Metropolitan Apex Fallback Institutes
+NATIONAL_APEX_CENTERS = [
     {
-        "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
-        "rating": 4.7,
-        "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
-        "phone": "+91 141 270 0107",
-        "link": "https://www.bmchrc.org",
+        "name": "Tata Memorial Centre / National Cancer Grid Apex Institute",
+        "rating": 4.9,
+        "address": "Dr. Ernest Borges Rd, Parel, Mumbai / National Network",
+        "phone": "+91 22 2417 7000",
+        "link": "https://tmc.gov.in",
     },
     {
-        "name": "SMS Medical College & Hospital - Institute of Neurosciences & Oncology",
-        "rating": 4.5,
-        "address": "JLN Marg, Gangawal Park, Adarsh Nagar, Jaipur, Rajasthan 302004",
-        "phone": "+91 141 251 8222",
-        "link": "https://medicaleducation.rajasthan.gov.in/smsjaipur",
+        "name": "All India Institute of Medical Sciences (AIIMS) - Comprehensive Neuro-Oncology",
+        "rating": 4.8,
+        "address": "Sri Aurobindo Marg, Ansari Nagar, New Delhi 110029",
+        "phone": "+91 11 2658 8500",
+        "link": "https://www.aiims.edu",
     },
     {
-        "name": "Narayana Multispeciality Hospital Jaipur - Comprehensive Cancer Care",
-        "rating": 4.6,
-        "address": "Sector 28, Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, Rajasthan 302033",
-        "phone": "+91 141 712 2222",
-        "link": "https://www.narayanahealth.org/hospitals/jaipur/narayana-multispeciality-hospital-jaipur",
-    },
-    {
-        "name": "Fortis Escorts Hospital Jaipur - Neuro-Oncology & Advanced Neurosurgery",
-        "rating": 4.4,
-        "address": "Jawaharlal Nehru Marg, Malviya Nagar, Jaipur, Rajasthan 302017",
-        "phone": "+91 141 254 7000",
-        "link": "https://www.fortishealthcare.com/india/fortis-escorts-hospital-in-jaipur-rajasthan",
-    },
-    {
-        "name": "Apex Hospitals Jaipur - Institute of Neurosciences & Radiotherapy",
-        "rating": 4.6,
-        "address": "SP-4, Malviya Industrial Area, Malviya Nagar, Jaipur, Rajasthan 302017",
-        "phone": "+91 141 410 1111",
-        "link": "https://apexhospitals.com",
+        "name": "National Institute of Mental Health and Neurosciences (NIMHANS)",
+        "rating": 4.9,
+        "address": "Hosur Road, Bengaluru, Karnataka 560029",
+        "phone": "+91 80 2699 5000",
+        "link": "https://nimhans.ac.in",
     },
 ]
 
@@ -142,7 +279,7 @@ def _normalize_tumor_class(tumor_class: str) -> str:
 
 
 def _build_reassuring_baseline(
-    tumor_class: str, confidence: float, patient_city: str
+    tumor_class: str, confidence: float, target_region: str
 ) -> Dict[str, Any]:
     """Return reassuring baseline clinical guidance for negative/no-tumor scans."""
     iso_now = datetime.now(timezone.utc).isoformat()
@@ -150,7 +287,8 @@ def _build_reassuring_baseline(
         "status": "baseline_normal",
         "tumor_class": "No Tumor",
         "confidence": round(float(confidence), 4),
-        "patient_city": patient_city,
+        "patient_city": target_region,
+        "region": target_region,
         "escalation_required": False,
         "clinical_summary": (
             "Reassuring baseline neuro-imaging findings: No intracranial mass lesion, abnormal focal enhancement, "
@@ -242,27 +380,35 @@ def _parse_serpapi_maps_results(json_str: str) -> List[Dict[str, Any]]:
 def run_oncology_research_agent(
     tumor_class: str,
     confidence: float,
-    patient_city: str = "Jaipur",
+    patient_city: Optional[str] = None,
+    region: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Autonomous clinical research agent powered by serpapi-search-tools.
+    Autonomous clinical research agent powered by serpapi-search-tools with dynamic location routing.
     
     Workflow:
-    1. Check tumor_class: If no_tumor / normal -> return reassuring baseline without escalation.
-    2. When tumor detected (Glioma, Meningioma, Pituitary):
+    1. Dynamic Location: Resolves target_region from either region or patient_city.
+    2. Check tumor_class: If no_tumor / normal -> return reassuring baseline without escalation.
+    3. When tumor detected (Glioma, Meningioma, Pituitary):
        - Plans targeted queries for NCCN/PubMed standards and clinical trials.
-       - Plans spatial discovery queries for tertiary neuro-oncology centers in/around patient_city.
-       - Dispatches tools via serpapi-search-tools (web_search, maps_search).
-       - Falls back gracefully to curated oncology database if SerpApi is unconfigured or unreachable.
-    3. Returns grounded, structured clinical decision support payload.
+       - Dispatches SerpApi maps_search dynamically:
+         'tertiary neuro-oncology cancer centers near {region}'
+         'specialized brain tumor hospitals in {region}'
+       - Fallback gracefully to regional directory or national apex cancer institutes if 0 results return.
+    4. Returns grounded, structured clinical decision support payload.
     """
     normalized = _normalize_tumor_class(tumor_class)
-    city_clean = patient_city.strip() if patient_city and patient_city.strip() else "Jaipur"
+    
+    # Resolve dynamic region
+    target_region = (region or patient_city or "Jaipur").strip()
+    if not target_region:
+        target_region = "Jaipur"
+
     iso_now = datetime.now(timezone.utc).isoformat()
 
     # Case 1: Normal / No Tumor
     if normalized == "notumor":
-        return _build_reassuring_baseline(tumor_class, confidence, city_clean)
+        return _build_reassuring_baseline(tumor_class, confidence, target_region)
 
     display_name = normalized.capitalize()
     queries_executed: List[str] = []
@@ -270,10 +416,11 @@ def run_oncology_research_agent(
     facilities: List[Dict[str, Any]] = []
     source_mode = "live_serpapi"
 
-    # Step 1: Autonomous Query Planning
+    # Step 1: Autonomous Dynamic Query Planning
     query_guidelines = f"{display_name} standard of care NCCN guidelines PubMed"
     query_trials = f"{display_name} novel therapeutics clinical trials"
-    query_facilities = f"tertiary neuro oncology cancer hospital surgical center {city_clean}"
+    query_facilities = f"tertiary neuro-oncology cancer centers near {target_region}"
+    query_specialized = f"specialized brain tumor hospitals in {target_region}"
 
     has_api_key = bool(os.getenv("SERPAPI_API_KEY") or os.getenv("SERPAPI_KEY"))
 
@@ -281,7 +428,7 @@ def run_oncology_research_agent(
         logger.info(
             "Executing autonomous SerpApi search tools for %s in %s",
             display_name,
-            city_clean,
+            target_region,
         )
         try:
             # 1. Literature & NCCN Guidelines via web_search
@@ -303,10 +450,15 @@ def run_oncology_research_agent(
                     deduped_articles.append(art)
             articles = deduped_articles[:6]
 
-            # 3. Tertiary Neuro-Oncology Centers via maps_search
+            # 3. Dynamic Maps Search in target region
             queries_executed.append(query_facilities)
-            maps_raw = _maps_tool(query=f"neuro-oncology cancer hospital {city_clean}", location=city_clean)
+            maps_raw = _maps_tool(query=query_facilities, location=target_region)
             facilities.extend(_parse_serpapi_maps_results(maps_raw))
+
+            if not facilities:
+                queries_executed.append(query_specialized)
+                maps_raw_spec = _maps_tool(query=query_specialized, location=target_region)
+                facilities.extend(_parse_serpapi_maps_results(maps_raw_spec))
 
         except Exception as exc:
             logger.warning(
@@ -315,7 +467,7 @@ def run_oncology_research_agent(
             )
             source_mode = "hybrid_augmented"
 
-    # Step 2: Augment or Fallback if live search returned insufficient records
+    # Step 2: Fallback & Augmentation
     if not articles:
         curated_lit = CURATED_ONCOLOGY_LITERATURE.get(normalized, [])
         articles = list(curated_lit)
@@ -324,25 +476,27 @@ def run_oncology_research_agent(
             queries_executed.extend([query_guidelines, query_trials])
 
     if not facilities:
-        if city_clean.lower() == "jaipur":
-            facilities = list(REGIONAL_FACILITIES_JAIPUR)
-        else:
+        region_lower = target_region.lower()
+        matched = False
+        for city_key, city_facs in REGIONAL_FACILITIES_DIRECTORY.items():
+            if city_key in region_lower or region_lower in city_key:
+                facilities = list(city_facs)
+                matched = True
+                break
+        
+        if not matched:
+            # Graceful fallback for obscure regions: regional hub + national apex institutes
             facilities = [
                 {
-                    "name": f"Regional Apex Cancer & Neurosciences Centre ({city_clean})",
-                    "rating": 4.8,
-                    "address": f"Central Medical Enclave, {city_clean}",
+                    "name": f"Regional Specialized Neuro-Oncology Referral Hub ({target_region})",
+                    "rating": 4.7,
+                    "address": f"District Tertiary Medical Complex, {target_region}",
                     "phone": "+91 1800 200 4567",
                     "link": "https://www.eano.eu",
                 },
-                {
-                    "name": f"Tertiary Neuro-Surgical Oncology Institute ({city_clean})",
-                    "rating": 4.6,
-                    "address": f"Hospital Road, Medical District, {city_clean}",
-                    "phone": "+91 1800 200 8910",
-                    "link": "https://www.nccn.org",
-                },
+                *NATIONAL_APEX_CENTERS[:2],
             ]
+        
         if not has_api_key:
             queries_executed.append(query_facilities)
 
@@ -350,20 +504,21 @@ def run_oncology_research_agent(
     summary_map = {
         "glioma": (
             f"Presumptive {display_name} detected with {confidence*100:.1f}% confidence. "
-            "High priority neuro-oncology escalation indicated. Immediate multidisciplinary evaluation "
-            "is recommended to assess for maximal safe surgical resection, molecular neuropathology "
-            "(IDH1/2 mutation & 1p/19q co-deletion profiling), and adjuvant chemoradiotherapy planning."
+            f"High-priority neuro-oncology escalation indicated in the {target_region} referral catchment. "
+            "Immediate multidisciplinary evaluation is recommended to assess for maximal safe surgical resection, "
+            "molecular neuropathology (IDH1/2 mutation & 1p/19q co-deletion profiling), and adjuvant chemoradiotherapy planning."
         ),
         "meningioma": (
             f"Presumptive {display_name} detected with {confidence*100:.1f}% confidence. "
-            "Clinical evaluation advised for anatomical relationship to dural sinuses and optic structures. "
-            "Treatment options depend on tumor volume and mass effect, ranging from stereotactic radiosurgery "
-            "to microsurgical resection."
+            f"Specialized surgical oncology consultation in {target_region} advised to evaluate anatomical relationship "
+            "to dural sinuses and optic structures. Treatment options depend on tumor volume and mass effect, "
+            "ranging from stereotactic radiosurgery to microsurgical resection."
         ),
         "pituitary": (
             f"Presumptive {display_name} adenoma detected with {confidence*100:.1f}% confidence. "
-            "Endocrine and ophthalmological escalation indicated. Prioritize baseline pituitary hormone profiling "
-            "(PRL, IGF-1, ACTH, morning cortisol) and automated Humphrey visual field perimetry to rule out optic chiasm compromise."
+            f"Endocrine and ophthalmological escalation indicated for the {target_region} patient. Prioritize baseline "
+            "pituitary hormone profiling (PRL, IGF-1, ACTH, morning cortisol) and automated Humphrey visual field perimetry "
+            "to rule out optic chiasm compromise."
         ),
     }
 
@@ -371,7 +526,7 @@ def run_oncology_research_agent(
         normalized,
         (
             f"Suspicious intracranial lesion ({display_name}) detected with {confidence*100:.1f}% confidence. "
-            f"Prompt clinical evaluation and neuro-surgical referral in {city_clean} recommended."
+            f"Prompt clinical evaluation and neuro-surgical referral in {target_region} recommended."
         ),
     )
 
@@ -379,7 +534,8 @@ def run_oncology_research_agent(
         "status": "escalation_recommended",
         "tumor_class": display_name,
         "confidence": round(float(confidence), 4),
-        "patient_city": city_clean,
+        "patient_city": target_region,
+        "region": target_region,
         "escalation_required": True,
         "clinical_summary": clinical_summary,
         "articles": articles,

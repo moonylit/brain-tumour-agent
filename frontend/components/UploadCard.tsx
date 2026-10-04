@@ -9,13 +9,15 @@ import {
 
 import PredictionCard from "./PredictionCard";
 import HistoryCard from "./HistoryCard";
+import RegionSelector from "./RegionSelector";
+import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 export default function UploadCard() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [patientCity, setPatientCity] = useState("Jaipur");
+  const [region, setRegion] = useState("Jaipur");
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -75,11 +77,8 @@ export default function UploadCard() {
       setLoading(true);
       setErrorMessage(null);
 
-      // Send MRI for real model prediction & SerpApi agent research
-      const predictionData =
-        patientCity && patientCity.trim() !== "" && patientCity.trim().toLowerCase() !== "jaipur"
-          ? await predictMRI(selectedImage, patientCity.trim())
-          : await predictMRI(selectedImage);
+      // Send MRI for real model prediction & SerpApi agent research with dynamic region
+      const predictionData = await predictMRI(selectedImage, region);
 
       setResult(predictionData);
 
@@ -97,102 +96,89 @@ export default function UploadCard() {
   }
 
   return (
-    <section id="upload" className="mx-auto max-w-5xl px-6 sm:px-8 py-12">
-      <div className="glass-card rounded-3xl p-8 sm:p-10 border border-white/[0.08]">
+    <section id="upload" className="mx-auto max-w-[1680px] w-full px-6 sm:px-8 py-10">
+      <div className="glass-card rounded-3xl p-6 sm:p-10 border border-white/[0.08] shadow-2xl">
         <div className="mb-8">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              Upload MRI Scan
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+              <Upload className="h-7 w-7 text-cyan-400" />
+              <span>Upload MRI Scan</span>
             </h2>
-            <span className="rounded-full border border-sky-400/30 bg-sky-950/50 px-3 py-1 text-xs font-mono font-medium text-sky-300">
+            <span className="rounded-full border border-cyan-400/30 bg-cyan-950/50 px-3 py-1 text-xs font-mono font-medium text-cyan-300">
               Track 01: SerpApi Decision Agent
             </span>
           </div>
-          <p className="mt-1 text-sm text-slate-400 leading-relaxed">
-            Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability, and autonomous SerpApi clinical literature and hospital localization.
+          <p className="mt-1 text-sm text-slate-400 leading-relaxed max-w-4xl">
+            Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
           </p>
         </div>
 
-        {/* Diagnostic Ingest Dropzone */}
-        <div className="relative group rounded-2xl border-2 border-dashed border-slate-700/80 bg-slate-950/50 p-8 text-center transition-all duration-300 hover:border-sky-500/80 hover:bg-slate-950/80">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-sky-500/20 bg-sky-500/[0.08] text-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.15)] group-hover:scale-105 transition duration-300">
-            <svg
-              className="h-7 w-7"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+        {/* Diagnostic Ingest Dropzone & Region Selector */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* File Upload Box (2 cols on lg) */}
+          <div className="lg:col-span-2 relative group rounded-2xl border-2 border-dashed border-slate-700/80 bg-slate-950/50 p-8 text-center transition-all duration-300 hover:border-cyan-500/80 hover:bg-slate-950/80">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.08] text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.15)] group-hover:scale-105 transition duration-300">
+              <Upload className="h-7 w-7" />
+            </div>
+
+            <label
+              htmlFor="mri-file-input"
+              className="cursor-pointer block text-sm font-semibold text-slate-200 hover:text-white"
             >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
+              <span className="text-cyan-400 underline decoration-cyan-400/40 underline-offset-4 hover:decoration-cyan-400">
+                Browse neuroimaging file
+              </span>{" "}
+              or select from local directory
+            </label>
+
+            <input
+              type="file"
+              id="mri-file-input"
+              accept="image/jpeg,image/png"
+              onChange={handleImageChange}
+              className="mt-4 block w-full max-w-sm mx-auto cursor-pointer text-xs text-slate-400 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-800 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-slate-200 hover:file:bg-slate-700 transition"
+            />
+
+            <p className="mt-4 text-xs font-mono text-slate-400">
+              Supported formats: JPG, PNG • Max size: 10 MB
+            </p>
           </div>
 
-          <label
-            htmlFor="mri-file-input"
-            className="cursor-pointer block text-sm font-semibold text-slate-200 hover:text-white"
-          >
-            <span className="text-sky-400 underline decoration-sky-400/40 underline-offset-4 hover:decoration-sky-400">
-              Browse neuroimaging file
-            </span>{" "}
-            or select from local directory
-          </label>
-
-          <input
-            type="file"
-            id="mri-file-input"
-            accept="image/jpeg,image/png"
-            onChange={handleImageChange}
-            className="mt-4 block w-full max-w-sm mx-auto cursor-pointer text-xs text-slate-400 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-800 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-slate-200 hover:file:bg-slate-700 transition"
-          />
-
-          <p className="mt-4 text-xs font-mono text-slate-400">
-            Supported formats: JPG, PNG • Max size: 10 MB
-          </p>
+          {/* Region Configuration Card (1 col on lg) */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5 shadow-xl">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="h-4 w-4 text-cyan-400" />
+              <h3 className="text-sm font-semibold text-slate-200">
+                Geographic Referral Routing
+              </h3>
+            </div>
+            <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+              Target metropolitan region for autonomous hospital geolocation and tertiary surgical center referral routing:
+            </p>
+            <RegionSelector
+              value={region}
+              onChange={setRegion}
+              disabled={loading}
+            />
+          </div>
         </div>
 
         {/* Error Notification Banner */}
         {errorMessage && (
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-red-500/30 bg-red-950/60 p-4 text-red-200 shadow-[0_0_20px_rgba(239,68,68,0.15)] backdrop-blur-md">
-            <svg
-              className="mt-0.5 h-5 w-5 shrink-0 text-red-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-950/60 p-4 text-rose-200 shadow-[0_0_20px_rgba(244,63,94,0.15)] backdrop-blur-md">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
             <div className="flex-1 text-sm">
-              <strong className="block font-semibold text-red-300">
+              <strong className="block font-semibold text-rose-300">
                 Action Required
               </strong>
-              <span className="text-red-300/90">{errorMessage}</span>
+              <span className="text-rose-300/90">{errorMessage}</span>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
               aria-label="Dismiss error"
-              className="rounded-lg p-1 text-slate-400 hover:bg-red-900/40 hover:text-white transition"
+              className="rounded-lg p-1 text-slate-400 hover:bg-rose-900/40 hover:text-white transition"
             >
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <X className="h-4 w-4" />
             </button>
           </div>
         )}
@@ -205,7 +191,7 @@ export default function UploadCard() {
                 Selected Scan
               </span>
               <span className="font-mono text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-                Ready
+                Ready for Analysis
               </span>
             </div>
 
@@ -226,49 +212,25 @@ export default function UploadCard() {
                 <span className="text-slate-400">
                   {((selectedImage?.size || 0) / 1024).toFixed(1)} KB
                 </span>
-              </div>
-
-              {/* Regional Location Configuration */}
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <label
-                  htmlFor="patient-city-input"
-                  className="text-xs font-mono text-slate-400"
-                >
-                  📍 Patient Region:
-                </label>
-                <input
-                  id="patient-city-input"
-                  type="text"
-                  value={patientCity}
-                  onChange={(e) => setPatientCity(e.target.value)}
-                  placeholder="e.g. Jaipur"
-                  className="rounded-lg border border-white/[0.1] bg-slate-900/90 px-2.5 py-1 text-xs font-mono text-slate-200 focus:border-sky-500 focus:outline-none w-36 text-center"
-                />
+                <span className="text-slate-500">•</span>
+                <span className="text-cyan-400 font-semibold">
+                  Region: {region}
+                </span>
               </div>
 
               <button
                 onClick={handleUpload}
                 disabled={loading}
-                className="btn-primary mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn-primary mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 shadow-xl"
               >
                 {loading ? (
                   <>
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
-                    <span>Analyzing Brain MRI...</span>
+                    <span>Analyzing Brain MRI &amp; Querying SerpApi...</span>
                   </>
                 ) : (
                   <>
-                    <svg
-                      className="h-4 w-4 text-sky-200"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                    </svg>
+                    <Sparkles className="h-4 w-4 text-cyan-200" />
                     <span>Analyze MRI Scan</span>
                   </>
                 )}
@@ -285,6 +247,9 @@ export default function UploadCard() {
             probabilities={result.probabilities}
             processingTime={result.processing_time_ms}
             heatmapFilename={result.heatmap_filename}
+            rawHeatmapFilename={result.raw_heatmap_filename}
+            region={result.region || region}
+            accessionId={result.accession_id}
             agentResearch={result.agent_research}
           />
         )}

@@ -12,31 +12,32 @@ An autonomous AI clinical agent bridging Computer Vision perception and real-wor
 
 ```mermaid
 flowchart LR
-    A["Brain MRI Scan"] --> B["Perception Engine\n(ResNet50 + Grad-CAM)"]
-    B --> C["Autonomous Query Planning\n(Oncology Clinical Agent)"]
+    A["Brain MRI Scan\n& Dynamic Location"] --> B["Perception Engine\n(ResNet50 + Grad-CAM)"]
+    B --> C["Autonomous Query Planning\n(Dynamic Geo-Agent)"]
     C --> D["SerpApi Search Tools\n(serpapi-search-tools)"]
-    D --> E["web_search()\n(PubMed, NCCN, Trials)"]
-    D --> F["maps_search()\n(Tertiary Hospitals & Centers)"]
+    D --> E["web_search()\n(PubMed, NCCN, ASCO Trials)"]
+    D --> F["maps_search()\n(Regional Tertiary Centers)"]
     E --> G["Grounded Clinical Action\n& Triage Decision"]
     F --> G
-    G --> H["Interactive Dashboard\n& Diagnostic PDF Report"]
+    G --> H["Widescreen Dual-Viewer\n& Pathology-Grade PDF Dossier"]
 ```
 
 ### End-to-End Pipeline
 
 1. **Perception Engine**:
    - Deep neural network classification (`glioma`, `meningioma`, `pituitary`, `notumor`) powered by fine-tuned ResNet50.
-   - Explainability localization via Grad-CAM (Gradient-weighted Class Activation Mapping).
-2. **Autonomous Query Planning**:
-   - Analyzes detected class, confidence thresholds, and patient geographic region (default: Jaipur).
-   - Generates targeted medical literature queries and regional healthcare discovery intents.
+   - Explainability localization via Grad-CAM (Gradient-weighted Class Activation Mapping) with dual asset generation (raw preprocessed scan + salience heatmap overlay).
+2. **Autonomous Query Planning & Dynamic Geo-Routing**:
+   - Analyzes detected class, confidence thresholds, and dynamic patient geographic region (e.g., Jaipur, New Delhi, London, Boston, or browser auto-detected location).
+   - Generates targeted medical literature queries and regional healthcare discovery intents (`tertiary neuro-oncology cancer centers near {region}`).
 3. **SerpApi Search & Maps Tools**:
    - Built directly on **`serpapi-search-tools`**:
      * `web_search()`: Autonomously retrieves recent PubMed/NCCN standard-of-care guidelines and recruiting clinical trials.
-     * `maps_search()`: Discovers and geolocates tertiary neuro-oncology hospitals and specialized surgical centers in/around the patient's city.
-4. **Grounded Clinical Action**:
+     * `maps_search()`: Discovers and geolocates tertiary neuro-oncology hospitals and specialized surgical centers in/around the specified patient region.
+4. **Grounded Clinical Action & High-Density UI**:
    - Triage assessment: Reassuring baseline neuro-imaging guidance for normal scans; comprehensive multi-modal escalation plan for detected tumors.
-   - Structured JSON response, live UI panel alongside Grad-CAM visualization, and audit-ready PDF diagnostic report.
+   - Interactive Dual-Viewer with synchronized aspect ratios, crosshair inspection guides, and side-by-side vs focus toggles.
+   - Structured JSON response, live UI panel alongside Grad-CAM visualization, and audit-ready 2-page Pathology-Grade PDF Diagnostic Dossier.
 
 ---
 

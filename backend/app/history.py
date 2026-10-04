@@ -16,6 +16,9 @@ def save_prediction(
     processing_time_ms: float,
     heatmap_filename: str,
     agent_research: Optional[Dict[str, Any]] = None,
+    probabilities: Optional[Dict[str, float]] = None,
+    accession_id: Optional[str] = None,
+    region: Optional[str] = None,
 ):
     if HISTORY_PATH.exists():
         try:
@@ -37,6 +40,12 @@ def save_prediction(
 
     if agent_research is not None:
         record["agent_research"] = agent_research
+    if probabilities is not None:
+        record["probabilities"] = probabilities
+    if accession_id is not None:
+        record["accession_id"] = accession_id
+    if region is not None:
+        record["region"] = region
 
     history.append(record)
 

@@ -1,3 +1,5 @@
 reportlab
 serpapi-search-tools
 google-search-results
+tf_keras
+numpy<2.0.0

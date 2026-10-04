@@ -30,6 +30,7 @@ export interface AgentResearch {
   tumor_class: string;
   confidence: number;
   patient_city: string;
+  region?: string;
   escalation_required: boolean;
   clinical_summary: string;
   articles: ClinicalArticle[];
@@ -45,6 +46,9 @@ export interface PredictionResponse {
   probabilities: Record<string, number>;
   processing_time_ms: number;
   heatmap_filename: string;
+  raw_heatmap_filename?: string;
+  region?: string;
+  accession_id?: string;
   agent_research?: AgentResearch;
 }
 
@@ -55,6 +59,9 @@ export interface HistoryItem {
   confidence: number;
   processing_time_ms: number;
   heatmap_filename: string;
+  raw_heatmap_filename?: string;
+  region?: string;
+  accession_id?: string;
   agent_research?: AgentResearch;
 }
 
@@ -109,15 +116,25 @@ export interface HealthResponse {
   clinical_agent_ready?: boolean;
 }
 
+export interface AgentResearchRequest {
+  tumor_class: string;
+  confidence?: number;
+  region: string;
+}
+
 /**
  * Upload an MRI scan and request classification and autonomous clinical agent research
  */
 export async function predictMRI(
   file: File,
-  patientCity?: string,
+  region?: string,
 ): Promise<PredictionResponse> {
   const formData = new FormData();
   formData.append("file", file);
+  if (region && region.trim()) {
+    formData.append("region", region.trim());
+    formData.append("patient_city", region.trim());
+  }
 
   const config: {
     headers: Record<string, string>;
@@ -128,9 +145,10 @@ export async function predictMRI(
     },
   };
 
-  if (patientCity && patientCity.trim()) {
+  if (region && region.trim()) {
     config.params = {
-      patient_city: patientCity.trim(),
+      region: region.trim(),
+      patient_city: region.trim(),
     };
   }
 
@@ -140,6 +158,16 @@ export async function predictMRI(
     config,
   );
 
+  return response.data;
+}
+
+/**
+ * On-demand autonomous clinical agent research without MRI re-upload
+ */
+export async function fetchAgentResearch(
+  request: AgentResearchRequest
+): Promise<AgentResearch> {
+  const response = await apiClient.post<AgentResearch>("/agent-research", request);
   return response.data;
 }
 
@@ -195,8 +223,9 @@ export async function getEvaluationPlots(): Promise<EvaluationPlots> {
 /**
  * Download the latest prediction as a PDF report
  */
-export async function downloadReport(): Promise<void> {
+export async function downloadReport(region?: string): Promise<void> {
   const response = await apiClient.get("/report", {
+    params: region ? { region } : undefined,
     responseType: "blob",
   });
 
@@ -215,6 +244,17 @@ export async function downloadReport(): Promise<void> {
  * Construct the full URL for a Grad-CAM heatmap image
  */
 export function getHeatmapUrl(filename: string): string {
+  if (!filename) return "";
+  if (filename.startsWith("http://") || filename.startsWith("https://")) {
+    return filename;
+  }
+  return `${API_BASE_URL}/heatmaps/${encodeURIComponent(filename)}`;
+}
+
+/**
+ * Construct the full URL for a raw MRI scan image
+ */
+export function getRawScanUrl(filename: string): string {
   if (!filename) return "";
   if (filename.startsWith("http://") || filename.startsWith("https://")) {
     return filename;

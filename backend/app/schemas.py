@@ -72,8 +72,13 @@ class AgentResearchResponse(BaseModel):
     )
 
     patient_city: str = Field(
-        ...,
+        default="Jaipur",
         description="Patient city used for facility localization.",
+    )
+
+    region: Optional[str] = Field(
+        default="Jaipur",
+        description="Target geographical region for oncology referral routing.",
     )
 
     escalation_required: bool = Field(
@@ -109,6 +114,27 @@ class AgentResearchResponse(BaseModel):
     timestamp: str = Field(
         ...,
         description="UTC timestamp of the agent research execution.",
+    )
+
+
+class AgentResearchRequest(BaseModel):
+
+    tumor_class: str = Field(
+        ...,
+        description="Tumour classification to investigate.",
+        examples=["glioma"],
+    )
+
+    confidence: float = Field(
+        default=0.95,
+        description="Prediction confidence score.",
+        examples=[0.95],
+    )
+
+    region: str = Field(
+        default="Jaipur",
+        description="Patient target city or region.",
+        examples=["London"],
     )
 
 
@@ -149,6 +175,24 @@ class PredictionResponse(BaseModel):
         ...,
         description="Generated Grad-CAM heatmap filename.",
         examples=["4f9e83e9d0d741d8b89f6c5d0d1f0a2b.png"],
+    )
+
+    raw_heatmap_filename: Optional[str] = Field(
+        default=None,
+        description="Raw input MRI scan filename saved under /heatmaps.",
+        examples=["raw_4f9e83e9d0d741d8b89f6c5d0d1f0a2b.png"],
+    )
+
+    region: Optional[str] = Field(
+        default="Jaipur",
+        description="Patient target region used for referral routing.",
+        examples=["Jaipur"],
+    )
+
+    accession_id: Optional[str] = Field(
+        default=None,
+        description="Clinical accession UID.",
+        examples=["ACC-20261004-9842"],
     )
 
     agent_research: Optional[AgentResearchResponse] = Field(

@@ -90,3 +90,57 @@ def test_report_download_success(client):
     assert "brain_tumour_report.pdf" in response.headers.get("content-disposition", "")
     # Check standard PDF file signature
     assert response.content.startswith(b"%PDF")
+
+
+def test_predict_with_dynamic_region(client, sample_mri_path, preserve_history):
+    """
+    Test POST /predict with a dynamic region parameter (e.g., Boston).
+    """
+    with open(sample_mri_path, "rb") as image_file:
+        files = {
+            "file": (
+                sample_mri_path.name,
+                image_file,
+                "image/jpeg",
+            )
+        }
+        data = {"region": "Boston"}
+        response = client.post("/predict", files=files, data=data)
+
+    assert response.status_code == 200
+    res_json = response.json()
+    assert res_json["region"] == "Boston"
+    assert res_json["accession_id"] is not None
+    assert res_json["accession_id"].startswith("ACC-")
+    assert res_json["raw_heatmap_filename"] is not None
+    assert "agent_research" in res_json
+    assert res_json["agent_research"]["region"] == "Boston"
+
+
+def test_agent_research_endpoint(client):
+    """
+    Test POST /agent-research endpoint on-demand without image re-upload.
+    """
+    payload = {
+        "tumor_class": "glioma",
+        "confidence": 0.96,
+        "region": "New Delhi",
+    }
+    response = client.post("/agent-research", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["tumor_class"].lower() == "glioma"
+    assert data["region"] == "New Delhi"
+    assert len(data["articles"]) > 0
+    assert len(data["facilities"]) > 0
+
+
+def test_report_download_with_region_param(client):
+    """
+    Test GET /report?region=Mumbai returns valid PDF.
+    """
+    response = client.get("/report?region=Mumbai")
+    assert response.status_code == 200
+    assert response.headers.get("content-type") == "application/pdf"
+    assert response.content.startswith(b"%PDF")
+
