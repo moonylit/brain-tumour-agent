@@ -1,0 +1,170 @@
+[
+    {
+        "timestamp": "2026-07-14T19:16:20.066934",
+        "filename": "images (1).jpeg",
+        "prediction": "notumor",
+        "confidence": 0.4470270872116089,
+        "processing_time_ms": 2667.33,
+        "heatmap_filename": "d88a61aba45941ccb779a2a0352e660c.png"
+    },
+    {
+        "timestamp": "2026-07-14T19:22:54.185947",
+        "filename": "Te-aug-me_11.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9993172883987427,
+        "processing_time_ms": 395.05,
+        "heatmap_filename": "9a2c7760983b43eea698be323f33735a.png"
+    },
+    {
+        "timestamp": "2026-07-15T00:42:15.890264",
+        "filename": "Te-aug-me_7.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9999996423721313,
+        "processing_time_ms": 4426.83,
+        "heatmap_filename": "a9cc3c8cbbab4e21aee37b61928913d7.png"
+    },
+    {
+        "timestamp": "2026-07-15T01:43:13.662556",
+        "filename": "Te-aug-me_18.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9997816681861877,
+        "processing_time_ms": 3120.64,
+        "heatmap_filename": "d247b205ea8e4e1899f73985638231a0.png"
+    },
+    {
+        "timestamp": "2026-07-15T01:51:57.101887",
+        "filename": "Te-aug-me_32.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9999984502792358,
+        "processing_time_ms": 2584.29,
+        "heatmap_filename": "aa5da08460a548ccb05052230cc9fc58.png"
+    },
+    {
+        "timestamp": "2026-07-15T02:00:12.738811",
+        "filename": "Te-aug-me_18.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9997816681861877,
+        "processing_time_ms": 2165.15,
+        "heatmap_filename": "a55d8541f66b4f3bbfdcfa305338d489.png"
+    },
+    {
+        "timestamp": "2026-07-15T02:00:13.670096",
+        "filename": "Te-aug-me_18.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9997816681861877,
+        "processing_time_ms": 188.36,
+        "heatmap_filename": "4c294120d85c4a3cbe3b1b41aa4c8f02.png"
+    },
+    {
+        "timestamp": "2026-07-15T02:00:45.250988",
+        "filename": "Te-aug-me_18.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9997816681861877,
+        "processing_time_ms": 377.14,
+        "heatmap_filename": "e156de7b6df94995935198467663aa73.png"
+    },
+    {
+        "timestamp": "2026-07-16T11:48:22.782499",
+        "filename": "images (1).jpeg",
+        "prediction": "notumor",
+        "confidence": 0.4470270872116089,
+        "processing_time_ms": 5548.31,
+        "heatmap_filename": "ae72f05f8cc34b558be8780d711a1004.png"
+    },
+    {
+        "timestamp": "2026-07-16T11:51:29.911907",
+        "filename": "images (1).jpeg",
+        "prediction": "notumor",
+        "confidence": 0.4470270872116089,
+        "processing_time_ms": 562.78,
+        "heatmap_filename": "5d066f95743b45bf82addb9d06450bb9.png"
+    },
+    {
+        "timestamp": "2026-07-16T11:52:56.245551",
+        "filename": "images (1).jpeg",
+        "prediction": "notumor",
+        "confidence": 0.4470270872116089,
+        "processing_time_ms": 739.73,
+        "heatmap_filename": "4ba22acb4df84a96a15465a1fd641a74.png"
+    },
+    {
+        "timestamp": "2026-07-28T16:51:24.172149",
+        "filename": "Te-pi_7.jpg",
+        "prediction": "pituitary",
+        "confidence": 0.9999839067459106,
+        "processing_time_ms": 1687.13,
+        "heatmap_filename": "01e3a12002f2433eb66727197b71691c.png"
+    },
+    {
+        "timestamp": "2026-07-28T17:07:35.140808",
+        "filename": "images (1).jpeg",
+        "prediction": "notumor",
+        "confidence": 0.4470270872116089,
+        "processing_time_ms": 354.63,
+        "heatmap_filename": "e3619cc06aab4da7aad01e2f32b694a4.png"
+    },
+    {
+        "timestamp": "2026-07-28T22:37:15.929965",
+        "filename": "testing.jpeg",
+        "prediction": "pituitary",
+        "confidence": 0.9997335076332092,
+        "processing_time_ms": 2353.71,
+        "heatmap_filename": "1e392bede4d04e238bcd9363992ed8cc.png"
+    },
+    {
+        "timestamp": "2026-07-28T22:38:58.507414",
+        "filename": "testing.jpeg",
+        "prediction": "pituitary",
+        "confidence": 0.9997335076332092,
+        "processing_time_ms": 258.01,
+        "heatmap_filename": "14b17817c94c455f96c7c8aec08c3efd.png"
+    },
+    {
+        "timestamp": "2026-09-29T16:43:21.242851",
+        "filename": "image(15).jpg",
+        "prediction": "pituitary",
+        "confidence": 1.0,
+        "processing_time_ms": 1301.96,
+        "heatmap_filename": "4c9a4564e8a74091986f52e026e0c7bc.png"
+    },
+    {
+        "timestamp": "2026-09-29T17:05:37.246130",
+        "filename": "Tr-aug-me_35.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.998685896396637,
+        "processing_time_ms": 632.32,
+        "heatmap_filename": "f9d25c79d0b245e9a380315e696a0a5a.png"
+    },
+    {
+        "timestamp": "2026-09-29T17:30:21.171883",
+        "filename": "Tr-aug-me_1.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9999486207962036,
+        "processing_time_ms": 561.17,
+        "heatmap_filename": "2f16052aea604f2faa90ee96ee1ee8c3.png"
+    },
+    {
+        "timestamp": "2026-09-29T17:42:25.821540",
+        "filename": "Tr-aug-me_1.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9999486207962036,
+        "processing_time_ms": 638.44,
+        "heatmap_filename": "6bd2da4826f1490d97304a215143678e.png"
+    },
+    {
+        "timestamp": "2026-09-29T17:43:53.801633",
+        "filename": "Tr-aug-me_1.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9999486207962036,
+        "processing_time_ms": 651.92,
+        "heatmap_filename": "f9441b8a37264517ba87594948a294d1.png"
+    },
+    {
+        "timestamp": "2026-09-29T17:44:02.126009",
+        "filename": "Tr-aug-me_17.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9917919635772705,
+        "processing_time_ms": 591.19,
+        "heatmap_filename": "9438bcea1c584c66b5e5b7efc51b894c.png"
+    }
+]
