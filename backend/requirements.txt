@@ -1,1 +1,3 @@
 reportlab
+serpapi-search-tools
+google-search-results
