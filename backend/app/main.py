@@ -24,6 +24,7 @@ from app.evaluation import (
     load_evaluation_data,
 )
 from app.statistics import get_prediction_statistics
+from app.clinical_agent import run_oncology_research_agent
 
 import logging
 
@@ -38,30 +39,25 @@ from app.config import (
 )
 
 app = FastAPI(
-    title="Brain Tumour AI REST API",
+    title="Brain Tumour AI REST API & SerpApi Clinical Decision Support Agent",
     description="""
-## Brain Tumour MRI Classification API
+## Brain Tumour MRI Classification & Autonomous Oncology Research Agent
 
-A production-ready REST API for automated brain tumour classification
-using a ResNet50 Transfer Learning model.
+A production-ready neuro-oncology REST API pairing a ResNet50 Transfer Learning
+perception model with an autonomous SerpApi Clinical Decision Support Agent
+(Track 01: AI Agents).
 
 ### Features
 
-- Brain MRI classification
-- Grad-CAM explainability
-- Confidence score estimation
-- Class probability distribution
-- Inference time
-- PDF report generation
-- Prediction history
-- Model evaluation metrics
-
-### Supported Classes
-
-- Glioma
-- Meningioma
-- Pituitary
-- No Tumour
+- Brain MRI classification (Glioma, Meningioma, Pituitary, No Tumour)
+- Grad-CAM explainability localization
+- Autonomous Oncology Research Agent via `serpapi-search-tools`
+  - Real-time PubMed / NCCN standard-of-care guidelines retrieval (`web_search`)
+  - Active clinical trials investigation (`web_search`)
+  - Tertiary neuro-oncology hospitals and surgical centers geolocation (`maps_search`)
+- Diagnostic PDF report generation with literature citations and hospital referrals
+- Prediction history & statistical telemetry
+- Model evaluation metrics and visual curves
 """,
     version=API_VERSION,
 )
@@ -86,6 +82,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         FRONTEND_URL,
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -101,7 +99,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-logger.info("Brain Tumour AI backend started successfully.")
+logger.info("Brain Tumour AI backend and SerpApi Clinical Agent started successfully.")
 
 
 @app.get(
@@ -112,7 +110,9 @@ logger.info("Brain Tumour AI backend started successfully.")
 def root():
 
     return {
-        "message": "Brain Tumour AI Backend is Running!"
+        "message": "Brain Tumour AI & SerpApi Clinical Decision Support Agent Backend is Running!",
+        "track": "Track 01 — AI Agents (SerpApi Hackathon)",
+        "agent_tools": ["serpapi-search-tools:web_search", "serpapi-search-tools:maps_search"],
     }
 
 
@@ -126,32 +126,35 @@ def health():
     return {
         "status": "healthy",
         "model_loaded": predictor.model is not None,
+        "clinical_agent_ready": True,
     }
 
 
 @app.post(
     "/predict",
     response_model=PredictionResponse,
-    summary="Classify Brain MRI",
+    summary="Classify Brain MRI & Run Autonomous Clinical Decision Agent",
     description="""
 Upload a brain MRI image in JPG or PNG format.
 
-The API returns:
-
-- Predicted tumour class
-- Confidence score
-- Probability distribution
-- Inference time
-- Generated Grad-CAM heatmap filename
+The system will:
+1. Run ResNet50 Transfer Learning perception model
+2. Compute Grad-CAM explainability localization
+3. Run the autonomous SerpApi Clinical Decision Agent for PubMed/NCCN guidelines, clinical trials, and regional oncology centers
 """,
     tags=["Prediction"],
 )
 async def predict(
     file: UploadFile = File(...),
+    patient_city: Optional[str] = Query(
+        default="Jaipur",
+        description="Patient city for regional tertiary oncology center and surgical discovery",
+    ),
 ):
     logger.info(
-        "Prediction request received: %s",
+        "Prediction request received: %s | patient_city: %s",
         file.filename,
+        patient_city,
     )
 
     if file.content_type not in ALLOWED_IMAGE_TYPES:
@@ -255,12 +258,21 @@ async def predict(
         processing_time_ms,
     )
 
+    # Dispatch autonomous clinical oncology agent
+    city_str = patient_city.strip() if (patient_city and patient_city.strip()) else "Jaipur"
+    agent_research = run_oncology_research_agent(
+        tumor_class=prediction,
+        confidence=confidence,
+        patient_city=city_str,
+    )
+
     save_prediction(
         filename=file.filename,
         prediction=prediction,
         confidence=confidence,
         processing_time_ms=processing_time_ms,
         heatmap_filename=heatmap_filename,
+        agent_research=agent_research,
     )
 
     return PredictionResponse(
@@ -269,6 +281,7 @@ async def predict(
         probabilities=probabilities,
         processing_time_ms=processing_time_ms,
         heatmap_filename=heatmap_filename,
+        agent_research=agent_research,
     )
 
 
@@ -408,17 +421,8 @@ def get_statistics():
     tags=["Report"],
     summary="Download PDF Report",
     description="""
-Generate and download a professional PDF report for the latest prediction.
-
-The report contains:
-
-- MRI filename
-- Prediction
-- Confidence score
-- Inference time
-- Model evaluation metrics
-- Grad-CAM heatmap
-- Report metadata
+Generate and download a professional PDF diagnostic report for the latest prediction,
+including autonomous clinical literature evidence and regional oncology facilities.
 """,
 )
 def report():
@@ -446,6 +450,7 @@ def report():
         heatmap_filename=latest["heatmap_filename"],
         filename=latest["filename"],
         metrics=metrics,
+        agent_research=latest.get("agent_research"),
     )
 
     return StreamingResponse(
