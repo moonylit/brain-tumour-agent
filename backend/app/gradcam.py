@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-from app.config import IMAGE_SIZE
+from app.config import IMAGE_SIZE, HEATMAP_DIRECTORY
 
 
 class GradCAM:
@@ -51,16 +51,22 @@ class GradCAM:
             image_bytes,
         )
 
-        base_model = self.model.get_layer(
-            "resnet50",
-        )
-
-        last_conv_layer = base_model.get_layer(
-            last_conv_layer_name,
-        )
+        # Inspect model: extract resnet50 sub-model and last conv layer
+        if hasattr(self.model, "get_layer"):
+            layer_names = [l.name for l in self.model.layers]
+            if "resnet50" in layer_names:
+                base_model = self.model.get_layer("resnet50")
+                last_conv_layer = base_model.get_layer(last_conv_layer_name)
+                grad_model_input = base_model.input
+            else:
+                base_model = self.model
+                last_conv_layer = self.model.get_layer(last_conv_layer_name)
+                grad_model_input = self.model.input
+        else:
+            raise ValueError("Model does not support get_layer")
 
         grad_model = tf.keras.models.Model(
-            inputs=base_model.input,
+            inputs=grad_model_input,
             outputs=last_conv_layer.output,
         )
 
@@ -118,14 +124,19 @@ class GradCAM:
             0,
         )
 
-        heatmap /= (
-            tf.reduce_max(
-                heatmap,
+        # Adaptive fallback: if gradients vanish or ReLU zeros out all activations
+        max_val = float(tf.reduce_max(heatmap).numpy())
+        if max_val <= 1e-5:
+            fallback = tf.reduce_mean(
+                tf.abs(conv_outputs),
+                axis=-1,
             )
-            + 1e-8
-        )
+            fallback = fallback / (tf.reduce_max(fallback) + 1e-8)
+            heatmap = fallback
+        else:
+            heatmap = heatmap / (max_val + 1e-8)
 
-        return heatmap.numpy()
+        return heatmap.numpy() if hasattr(heatmap, "numpy") else np.array(heatmap)
 
     def save_heatmap(
         self,
@@ -157,11 +168,12 @@ class GradCAM:
             cv2.COLORMAP_JET,
         )
 
+        # Alpha blending: 0.45 heatmap over 0.55 original MRI for sharp contrast
         overlay = cv2.addWeighted(
             original,
-            0.6,
+            0.55,
             heatmap,
-            0.4,
+            0.45,
             0,
         )
 
@@ -169,15 +181,15 @@ class GradCAM:
             f"{uuid.uuid4().hex}.png"
         )
 
-        os.makedirs("heatmaps", exist_ok=True)
+        os.makedirs(HEATMAP_DIRECTORY, exist_ok=True)
 
         output_path = os.path.join(
-            "heatmaps",
+            HEATMAP_DIRECTORY,
             filename,
         )
 
         raw_output_path = os.path.join(
-            "heatmaps",
+            HEATMAP_DIRECTORY,
             f"raw_{filename}",
         )
 

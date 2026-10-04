@@ -21,6 +21,7 @@ import {
   Eye,
   Sliders,
   Crosshair,
+  Cpu,
 } from "lucide-react";
 
 type Props = {
@@ -104,9 +105,9 @@ export default function PredictionCard({
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* 2. TOP METRICS STRIP (4 Micro-Stat Blocks)                    */}
+      {/* 2. TOP METRICS STRIP (5 Micro-Stat Blocks)                    */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         {/* Micro-Stat 1: Accession UID */}
         <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs">
@@ -118,30 +119,41 @@ export default function PredictionCard({
           </p>
         </div>
 
-        {/* Micro-Stat 2: ResNet-50 Confidence */}
+        {/* Micro-Stat 2: Model Version */}
         <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">ResNet-50 Confidence</span>
+            <span className="font-mono uppercase tracking-wider text-[11px]">Model Engine</span>
+            <Cpu className="h-3.5 w-3.5 text-blue-400" />
+          </div>
+          <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-blue-300">
+            ResNet-50 v2
+          </p>
+        </div>
+
+        {/* Micro-Stat 3: Softmax Confidence */}
+        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-400 text-xs">
+            <span className="font-mono uppercase tracking-wider text-[11px]">Softmax Confidence</span>
             <Activity className="h-3.5 w-3.5 text-emerald-400" />
           </div>
-          <p className="mt-2 text-lg sm:text-xl font-mono font-bold text-emerald-400">
+          <p className="mt-2 text-base sm:text-lg font-mono font-bold text-emerald-400">
             {(confidence * 100).toFixed(2)}%
           </p>
         </div>
 
-        {/* Micro-Stat 3: Detection Latency */}
+        {/* Micro-Stat 4: Detection Latency */}
         <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span className="font-mono uppercase tracking-wider text-[11px]">Detection Latency</span>
             <Clock className="h-3.5 w-3.5 text-cyan-400" />
           </div>
-          <p className="mt-2 text-lg sm:text-xl font-mono font-bold text-cyan-400">
+          <p className="mt-2 text-base sm:text-lg font-mono font-bold text-cyan-400">
             {processingTime.toFixed(2)} ms
           </p>
         </div>
 
-        {/* Micro-Stat 4: Clinical Risk Triage Status */}
-        <div className="rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
+        {/* Micro-Stat 5: Clinical Risk Triage Status */}
+        <div className="col-span-2 sm:col-span-1 rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span className="font-mono uppercase tracking-wider text-[11px]">Triage Risk Stratum</span>
             {isNoTumor ? (
