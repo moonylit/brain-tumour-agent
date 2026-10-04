@@ -78,7 +78,10 @@ export default function UploadCard() {
       setErrorMessage(null);
 
       // Send MRI for real model prediction & SerpApi agent research with dynamic region
-      const predictionData = await predictMRI(selectedImage, region);
+      const predictionData =
+        region && region.trim() !== "" && region.trim().toLowerCase() !== "jaipur"
+          ? await predictMRI(selectedImage, region.trim())
+          : await predictMRI(selectedImage);
 
       setResult(predictionData);
 

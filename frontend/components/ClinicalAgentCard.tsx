@@ -195,7 +195,7 @@ export default function ClinicalAgentCard({
           }`}
         >
           <Building2 className="h-3.5 w-3.5" />
-          <span>Regional Referral Centers ({research.facilities?.length || 0})</span>
+          <span>Regional Care Centers ({research.facilities?.length || 0})</span>
         </button>
       </div>
 
@@ -279,8 +279,7 @@ export default function ClinicalAgentCard({
                   </h4>
                   {facility.rating !== null && facility.rating !== undefined && (
                     <span className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-amber-300 border border-amber-500/20">
-                      <Star className="h-2.5 w-2.5 fill-amber-300 text-amber-300" />
-                      <span>{facility.rating}</span>
+                      ★ {facility.rating}
                     </span>
                   )}
                 </div>
