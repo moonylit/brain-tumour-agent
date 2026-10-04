@@ -1,3 +1,15 @@
+from pathlib import Path
+import os
+import traceback
+from dotenv import load_dotenv
+
+# Explicit .env loading at the very top before any tools or routers are initialized
+_env_backend = Path(__file__).resolve().parent.parent / ".env"
+_env_root = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(_env_backend)
+load_dotenv(_env_root)
+load_dotenv()
+
 from datetime import datetime, timezone
 import uuid
 
@@ -150,6 +162,13 @@ The system will:
 """,
     tags=["Prediction"],
 )
+@app.post(
+    "/api/predict",
+    response_model=PredictionResponse,
+    summary="Classify Brain MRI & Run Autonomous Clinical Decision Agent (API alias)",
+    tags=["Prediction"],
+    include_in_schema=False,
+)
 async def predict(
     file: UploadFile = File(...),
     region: Optional[str] = Form(
@@ -288,6 +307,7 @@ async def predict(
     )
 
     # Dispatch autonomous clinical oncology agent with dynamic target_region
+    print(f"DEBUG: Triggering autonomous clinical agent for class '{prediction}' in region '{target_region}'")
     agent_research = run_oncology_research_agent(
         tumor_class=prediction,
         confidence=confidence,
@@ -333,15 +353,23 @@ Execute an on-demand clinical search and regional referral localization query fo
 without requiring an image re-upload.
 """,
 )
+@app.post(
+    "/api/agent-research",
+    response_model=AgentResearchResponse,
+    tags=["Agent"],
+    summary="On-Demand Autonomous Oncology Research Agent (API alias)",
+    include_in_schema=False,
+)
 def agent_research_endpoint(payload: AgentResearchRequest):
     logger.info(
         "On-demand clinical agent research requested for tumor_class=%s | region=%s",
         payload.tumor_class,
         payload.region,
     )
+    print(f"DEBUG: On-demand agent research requested for tumor_class='{payload.tumor_class}' in region='{payload.region}'")
     research = run_oncology_research_agent(
         tumor_class=payload.tumor_class,
-        confidence=payload.confidence,
+        confidence=payload.confidence or 0.95,
         patient_city=payload.region,
     )
     return AgentResearchResponse(**research)

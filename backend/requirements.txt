@@ -1,5 +1,6 @@
 reportlab
 serpapi-search-tools
 google-search-results
+python-dotenv
 tf_keras
 numpy<2.0.0
