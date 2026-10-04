@@ -15,6 +15,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 export default function UploadCard() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [patientCity, setPatientCity] = useState("Jaipur");
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -74,8 +75,12 @@ export default function UploadCard() {
       setLoading(true);
       setErrorMessage(null);
 
-      // Send MRI for real model prediction
-      const predictionData = await predictMRI(selectedImage);
+      // Send MRI for real model prediction & SerpApi agent research
+      const predictionData =
+        patientCity && patientCity.trim() !== "" && patientCity.trim().toLowerCase() !== "jaipur"
+          ? await predictMRI(selectedImage, patientCity.trim())
+          : await predictMRI(selectedImage);
+
       setResult(predictionData);
 
       // Trigger history & stats refresh
@@ -95,11 +100,16 @@ export default function UploadCard() {
     <section id="upload" className="mx-auto max-w-5xl px-6 sm:px-8 py-12">
       <div className="glass-card rounded-3xl p-8 sm:p-10 border border-white/[0.08]">
         <div className="mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-            Upload MRI Scan
-          </h2>
-          <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-            Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification and Grad-CAM explainability analysis.
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Upload MRI Scan
+            </h2>
+            <span className="rounded-full border border-sky-400/30 bg-sky-950/50 px-3 py-1 text-xs font-mono font-medium text-sky-300">
+              Track 01: SerpApi Decision Agent
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-slate-400 leading-relaxed">
+            Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability, and autonomous SerpApi clinical literature and hospital localization.
           </p>
         </div>
 
@@ -218,6 +228,24 @@ export default function UploadCard() {
                 </span>
               </div>
 
+              {/* Regional Location Configuration */}
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <label
+                  htmlFor="patient-city-input"
+                  className="text-xs font-mono text-slate-400"
+                >
+                  📍 Patient Region:
+                </label>
+                <input
+                  id="patient-city-input"
+                  type="text"
+                  value={patientCity}
+                  onChange={(e) => setPatientCity(e.target.value)}
+                  placeholder="e.g. Jaipur"
+                  className="rounded-lg border border-white/[0.1] bg-slate-900/90 px-2.5 py-1 text-xs font-mono text-slate-200 focus:border-sky-500 focus:outline-none w-36 text-center"
+                />
+              </div>
+
               <button
                 onClick={handleUpload}
                 disabled={loading}
@@ -257,6 +285,7 @@ export default function UploadCard() {
             probabilities={result.probabilities}
             processingTime={result.processing_time_ms}
             heatmapFilename={result.heatmap_filename}
+            agentResearch={result.agent_research}
           />
         )}
 

@@ -6,7 +6,9 @@ import {
   getHeatmapUrl,
   formatApiError,
   formatTumorClass,
+  AgentResearch,
 } from "@/lib/api";
+import ClinicalAgentCard from "./ClinicalAgentCard";
 
 type Props = {
   prediction: string;
@@ -14,6 +16,7 @@ type Props = {
   probabilities: Record<string, number>;
   processingTime: number;
   heatmapFilename: string;
+  agentResearch?: AgentResearch;
 };
 
 export default function PredictionCard({
@@ -22,6 +25,7 @@ export default function PredictionCard({
   probabilities,
   processingTime,
   heatmapFilename,
+  agentResearch,
 }: Props) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -70,30 +74,41 @@ export default function PredictionCard({
         </div>
       </div>
 
-      {/* Grad-CAM Heatmap Localization Display */}
-      {heatmapFilename && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base sm:text-lg font-semibold text-slate-200">
-              Grad-CAM Heatmap Localization
-            </h3>
-            <span className="font-mono text-xs text-slate-400">
-              Generated file: {heatmapFilename}
-            </span>
-          </div>
+      {/* Diagnostic Explainability & Autonomous Clinical Agent Row */}
+      <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left Column: Grad-CAM Heatmap Localization Display */}
+        {heatmapFilename ? (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-200">
+                Grad-CAM Heatmap Localization
+              </h3>
+              <span className="font-mono text-xs text-slate-400">
+                Generated file: {heatmapFilename}
+              </span>
+            </div>
 
-          <div className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-black/70 p-3 shadow-2xl flex flex-col items-center">
-            <img
-              src={heatmapUrl}
-              alt={`Grad-CAM Heatmap for ${prediction}`}
-              className="mx-auto max-h-96 rounded-xl object-contain"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = "none";
-              }}
-            />
+            <div className="relative overflow-hidden rounded-2xl border border-slate-700/80 bg-black/70 p-3 shadow-2xl flex flex-col items-center">
+              <img
+                src={heatmapUrl}
+                alt={`Grad-CAM Heatmap for ${prediction}`}
+                className="mx-auto max-h-96 rounded-xl object-contain"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = "none";
+                }}
+              />
+            </div>
           </div>
+        ) : null}
+
+        {/* Right Column: Autonomous Clinical Agent Research & Care Facilities Panel */}
+        <div className={heatmapFilename ? "" : "lg:col-span-2"}>
+          <ClinicalAgentCard
+            research={agentResearch}
+            prediction={prediction}
+          />
         </div>
-      )}
+      </div>
 
       {/* Primary Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-2xl border border-white/[0.08] bg-slate-950/60 p-5 backdrop-blur-md">
@@ -164,7 +179,7 @@ export default function PredictionCard({
         </button>
 
         <span className="text-xs text-slate-400 font-mono">
-          Clinical telemetry logged to audit trail
+          Clinical telemetry &amp; SerpApi audit trail logged
         </span>
 
         {downloadError && (

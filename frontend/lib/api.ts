@@ -10,12 +10,42 @@ export const apiClient = axios.create({
 
 export type PredictionClass = "glioma" | "meningioma" | "pituitary" | "notumor";
 
+export interface ClinicalArticle {
+  title: string;
+  snippet: string;
+  url?: string;
+  source?: string;
+}
+
+export interface ClinicalFacility {
+  name: string;
+  rating?: number | null;
+  address?: string;
+  phone?: string;
+  link?: string;
+}
+
+export interface AgentResearch {
+  status: string;
+  tumor_class: string;
+  confidence: number;
+  patient_city: string;
+  escalation_required: boolean;
+  clinical_summary: string;
+  articles: ClinicalArticle[];
+  facilities: ClinicalFacility[];
+  queries_executed: string[];
+  source_mode?: string;
+  timestamp: string;
+}
+
 export interface PredictionResponse {
   prediction: string;
   confidence: number;
   probabilities: Record<string, number>;
   processing_time_ms: number;
   heatmap_filename: string;
+  agent_research?: AgentResearch;
 }
 
 export interface HistoryItem {
@@ -25,6 +55,7 @@ export interface HistoryItem {
   confidence: number;
   processing_time_ms: number;
   heatmap_filename: string;
+  agent_research?: AgentResearch;
 }
 
 export interface HistoryQueryParams {
@@ -75,23 +106,38 @@ export interface EvaluationPlots {
 export interface HealthResponse {
   status: string;
   model_loaded: boolean;
+  clinical_agent_ready?: boolean;
 }
 
 /**
- * Upload an MRI scan and request classification
+ * Upload an MRI scan and request classification and autonomous clinical agent research
  */
-export async function predictMRI(file: File): Promise<PredictionResponse> {
+export async function predictMRI(
+  file: File,
+  patientCity?: string,
+): Promise<PredictionResponse> {
   const formData = new FormData();
   formData.append("file", file);
+
+  const config: {
+    headers: Record<string, string>;
+    params?: Record<string, string>;
+  } = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+
+  if (patientCity && patientCity.trim()) {
+    config.params = {
+      patient_city: patientCity.trim(),
+    };
+  }
 
   const response = await apiClient.post<PredictionResponse>(
     "/predict",
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
+    config,
   );
 
   return response.data;
@@ -245,4 +291,3 @@ export function formatTumorClass(className: string): string {
   }
   return className.charAt(0).toUpperCase() + className.slice(1).toLowerCase();
 }
-
