@@ -24,12 +24,14 @@ interface Props {
   research?: AgentResearch;
   prediction: string;
   loading?: boolean;
+  region?: string;
 }
 
 export default function ClinicalAgentCard({
   research,
   prediction,
   loading = false,
+  region,
 }: Props) {
   const [activeTab, setActiveTab] = useState<"literature" | "facilities">("literature");
   const [showQueries, setShowQueries] = useState(false);
@@ -66,7 +68,7 @@ export default function ClinicalAgentCard({
     );
   }
 
-  const effectiveRegion = research.region || research.patient_city || "Jaipur";
+  const effectiveRegion = region || research.region || research.patient_city || "Jaipur";
 
   return (
     <div className="flex flex-col rounded-2xl border border-cyan-500/30 bg-slate-950/85 p-6 backdrop-blur-xl shadow-[0_10px_35px_-15px_rgba(6,182,212,0.25)]">

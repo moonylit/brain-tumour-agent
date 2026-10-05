@@ -172,7 +172,7 @@ The system will:
 async def predict(
     file: UploadFile = File(...),
     region: Optional[str] = Form(
-        default=None,
+        default="Jaipur",
         description="Patient target city or region for oncology referral routing (multipart form field)",
     ),
     patient_city: Optional[str] = Form(
@@ -515,6 +515,12 @@ def get_statistics():
 Generate and download a professional PDF diagnostic report for the latest prediction,
 including autonomous clinical literature evidence and regional oncology facilities.
 """,
+)
+@app.get(
+    "/api/report",
+    tags=["Report"],
+    summary="Download PDF Report (API alias)",
+    include_in_schema=False,
 )
 def report(
     region: Optional[str] = Query(

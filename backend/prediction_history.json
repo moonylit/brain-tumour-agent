@@ -326,5 +326,85 @@
             "source_mode": "curated_clinical_benchmark",
             "timestamp": "2026-10-04T16:55:35.796364+00:00"
         }
+    },
+    {
+        "timestamp": "2026-10-05T01:55:37.387771",
+        "filename": "Te-aug-me_27.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9904564023017883,
+        "processing_time_ms": 629.67,
+        "heatmap_filename": "64f3490b953b4a918b8f927201a0db02.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Meningioma",
+            "confidence": 0.9905,
+            "patient_city": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Meningioma detected with 99.0% confidence. Clinical evaluation advised for anatomical relationship to dural sinuses and optic structures. Treatment options depend on tumor volume and mass effect, ranging from stereotactic radiosurgery to microsurgical resection.",
+            "articles": [
+                {
+                    "title": "EANO Guideline on Diagnosis and Management of Meningiomas",
+                    "snippet": "Standard multimodal recommendations emphasizing Simpson Grade I/II surgical resection, fractionated stereotactic radiotherapy for Grade 2/3 atypical variants, and DNA methylation profiling.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/34370845/",
+                    "source": "European Association of Neuro-Oncology / The Lancet Oncology"
+                },
+                {
+                    "title": "Stereotactic Radiosurgery (SRS) vs Surgical Decompression in Skull-Base Meningiomas",
+                    "snippet": "Prospective cohort analysis indicating >94% 5-year local control rates using Gamma Knife radiosurgery for symptomatic cavernous sinus and sphenoid wing meningiomas without new neurological deficits.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/32890638/",
+                    "source": "Journal of Neurosurgery"
+                },
+                {
+                    "title": "Clinical Trial NCT03880409: Multi-Arm Genomic Precision Trial for Recurrent Progressive Meningiomas",
+                    "snippet": "Phase II genomically driven trial assessing CDK4/6 and SMO targeted small-molecule inhibitors in patients with surgically refractory NF2 or SMO-altered intracranial meningiomas.",
+                    "url": "https://clinicaltrials.gov/study/NCT03880409",
+                    "source": "ClinicalTrials.gov"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
+                    "rating": 4.7,
+                    "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
+                    "phone": "+91 141 270 0107",
+                    "link": "https://www.bmchrc.org"
+                },
+                {
+                    "name": "SMS Medical College & Hospital - Institute of Neurosciences & Oncology",
+                    "rating": 4.5,
+                    "address": "JLN Marg, Gangawal Park, Adarsh Nagar, Jaipur, Rajasthan 302004",
+                    "phone": "+91 141 251 8222",
+                    "link": "https://medicaleducation.rajasthan.gov.in/smsjaipur"
+                },
+                {
+                    "name": "Narayana Multispeciality Hospital Jaipur - Comprehensive Cancer Care",
+                    "rating": 4.6,
+                    "address": "Sector 28, Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, Rajasthan 302033",
+                    "phone": "+91 141 712 2222",
+                    "link": "https://www.narayanahealth.org/hospitals/jaipur/narayana-multispeciality-hospital-jaipur"
+                },
+                {
+                    "name": "Fortis Escorts Hospital Jaipur - Neuro-Oncology & Advanced Neurosurgery",
+                    "rating": 4.4,
+                    "address": "Jawaharlal Nehru Marg, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 254 7000",
+                    "link": "https://www.fortishealthcare.com/india/fortis-escorts-hospital-in-jaipur-rajasthan"
+                },
+                {
+                    "name": "Apex Hospitals Jaipur - Institute of Neurosciences & Radiotherapy",
+                    "rating": 4.6,
+                    "address": "SP-4, Malviya Industrial Area, Malviya Nagar, Jaipur, Rajasthan 302017",
+                    "phone": "+91 141 410 1111",
+                    "link": "https://apexhospitals.com"
+                }
+            ],
+            "queries_executed": [
+                "Meningioma standard of care NCCN guidelines PubMed",
+                "Meningioma novel therapeutics clinical trials",
+                "tertiary neuro oncology cancer hospital surgical center Jaipur"
+            ],
+            "source_mode": "curated_clinical_benchmark",
+            "timestamp": "2026-10-04T20:25:37.385531+00:00"
+        }
     }
 ]

@@ -392,8 +392,8 @@ def run_oncology_research_agent(
 
     query_guidelines = f"{search_term} standard of care guidelines PubMed"
     query_trials = f"{search_term} novel therapeutics clinical trials"
-    query_facilities = f"tertiary neuro-oncology cancer centers near {target_region}"
-    query_specialized = f"specialized brain tumor hospitals in {target_region}"
+    query_facilities = f"tertiary neuro-oncology center hospital near {target_region}"
+    query_fallback = f"top cancer hospital in {target_region}"
 
     # 1. Dispatch guidelines query
     queries_executed.append(query_guidelines)
@@ -430,13 +430,14 @@ def run_oncology_research_agent(
     )
     facilities.extend(_parse_google_maps_results(res_maps))
 
+    # Fallback logic: If 0 results return, query top cancer hospital in {region}
     if not facilities:
-        queries_executed.append(query_specialized)
-        res_maps_spec = execute_serpapi_query(
-            query=query_specialized,
+        queries_executed.append(query_fallback)
+        res_maps_fallback = execute_serpapi_query(
+            query=query_fallback,
             engine="google_maps",
         )
-        facilities.extend(_parse_google_maps_results(res_maps_spec))
+        facilities.extend(_parse_google_maps_results(res_maps_fallback))
 
     # Step 3: Fallback & Augmentation if network/API calls returned empty
     if not articles:

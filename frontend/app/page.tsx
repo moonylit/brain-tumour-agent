@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
@@ -7,6 +10,8 @@ import Stats from "@/components/Stats";
 import Footer from "@/components/Footer";
 
 export default function Home() {
+  const [region, setRegion] = useState("Jaipur");
+
   return (
     <main className="relative min-h-screen bg-[#070A11] text-slate-100 selection:bg-cyan-600 selection:text-white">
       {/* Ambient background micro-grid */}
@@ -25,7 +30,7 @@ export default function Home() {
       <div className="relative z-10 flex flex-col max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Navbar />
         <Hero />
-        <UploadCard />
+        <UploadCard region={region} onRegionChange={setRegion} />
         <EvaluationCard />
         <Features />
         <Stats />

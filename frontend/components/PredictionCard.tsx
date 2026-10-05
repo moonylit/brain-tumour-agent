@@ -357,6 +357,7 @@ export default function PredictionCard({
           <ClinicalAgentCard
             research={agentResearch}
             prediction={prediction}
+            region={region}
           />
         </div>
       </div>

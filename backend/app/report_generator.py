@@ -48,13 +48,13 @@ def generate_diagnostic_dossier(
     region: Optional[str] = None,
 ) -> BytesIO:
     """
-    Generate a 2-page pathology-grade Neuro-Oncology Clinical Decision Dossier:
-    - Page 1: Institutional Header, Summary Table, Side-by-Side Imagery, Softmax Probability Table.
-    - Page 2: SerpApi Autonomous Oncology Intelligence, Evidence Citations, Regional Centers, Disclaimer & Verification Hash.
+    Generate an executive, publication-grade Neuro-Oncology Clinical Decision Dossier:
+    - Page 1: Formal Header, Diagnostic Summary Card, Side-by-Side 2.6" Radiology Plates, Softmax Probability Table.
+    - Page 2: SerpApi Live Intelligence (Evidence-Based Literature & Regional Referral Centers), CDS Disclaimer, Digital SHA-256 Hash.
     """
     buffer = BytesIO()
 
-    # Standard Letter size with clean 0.5-inch (36pt) margins
+    # Geometry & Margins: Standard Letter size with uniform 36pt (0.5 inch) margins
     document = SimpleDocTemplate(
         buffer,
         pagesize=letter,
@@ -66,13 +66,22 @@ def generate_diagnostic_dossier(
 
     styles = getSampleStyleSheet()
 
-    # Custom Typography & Styles
+    # Clinical Color Palette
+    # Navy: #0F172A, Slate: #334155, Border Slate: #CBD5E1, Medical Cyan: #0284C7
+    color_navy = colors.HexColor("#0F172A")
+    color_slate = colors.HexColor("#334155")
+    color_border = colors.HexColor("#CBD5E1")
+    color_cyan = colors.HexColor("#0284C7")
+    color_alert_red = colors.HexColor("#E11D48")
+    color_emerald = colors.HexColor("#059669")
+
+    # Typography Styles
     title_style = ParagraphStyle(
         "DocTitle",
         parent=styles["Heading1"],
         fontSize=13,
         leading=16,
-        textColor=colors.HexColor("#0F172A"),
+        textColor=color_navy,
         fontName="Helvetica-Bold",
         spaceAfter=2,
     )
@@ -82,7 +91,7 @@ def generate_diagnostic_dossier(
         parent=styles["Normal"],
         fontSize=8.5,
         leading=11,
-        textColor=colors.HexColor("#0284C7"),
+        textColor=color_cyan,
         fontName="Helvetica-Bold",
     )
 
@@ -116,11 +125,11 @@ def generate_diagnostic_dossier(
     section_header_style = ParagraphStyle(
         "SectionHeader",
         parent=styles["Heading2"],
-        fontSize=10.5,
+        fontSize=10,
         leading=13,
-        textColor=colors.HexColor("#0F172A"),
+        textColor=color_navy,
         fontName="Helvetica-Bold",
-        spaceBefore=8,
+        spaceBefore=6,
         spaceAfter=4,
     )
 
@@ -129,8 +138,18 @@ def generate_diagnostic_dossier(
         parent=styles["Normal"],
         fontSize=8,
         leading=11.5,
-        textColor=colors.HexColor("#334155"),
+        textColor=color_slate,
         fontName="Helvetica",
+    )
+
+    caption_style = ParagraphStyle(
+        "CaptionStyle",
+        parent=styles["Normal"],
+        fontSize=8,
+        leading=10,
+        textColor=color_navy,
+        fontName="Helvetica-Bold",
+        alignment=1,  # Center
     )
 
     card_title_style = ParagraphStyle(
@@ -138,7 +157,7 @@ def generate_diagnostic_dossier(
         parent=styles["Normal"],
         fontSize=8.5,
         leading=11,
-        textColor=colors.HexColor("#0F172A"),
+        textColor=color_navy,
         fontName="Helvetica-Bold",
     )
 
@@ -147,7 +166,7 @@ def generate_diagnostic_dossier(
         parent=styles["Normal"],
         fontSize=7.5,
         leading=9.5,
-        textColor=colors.HexColor("#0369A1"),
+        textColor=color_cyan,
         fontName="Helvetica",
     )
 
@@ -173,25 +192,27 @@ def generate_diagnostic_dossier(
         or (agent_research.get("region") if agent_research else None)
         or (agent_research.get("patient_city") if agent_research else None)
         or "Jaipur"
-    )
+    ).strip()
 
     uid = (
         accession_id
         or f"ACC-{now_utc.strftime('%Y%m%d')}-{hashlib.md5(filename.encode()).hexdigest()[:6].upper()}"
     )
 
+    doc_id = f"DOS-{hashlib.md5(f'{uid}-{date_str}'.encode()).hexdigest()[:8].upper()}"
+
     formatted_prediction = prediction.strip().title()
     is_normal = prediction.lower().replace("_", "").replace(" ", "") in {"notumor", "normal"}
     
     if is_normal:
         triage_status = "NOMINAL SURVEILLANCE"
-        triage_color = colors.HexColor("#059669")
+        triage_color = color_emerald
     else:
-        triage_status = "HIGH-PRIORITY ESCALATION"
-        triage_color = colors.HexColor("#E11D48")
+        triage_status = "CRITICAL REVIEW"
+        triage_color = color_alert_red
 
     # -------------------------------------------------------------
-    # 1. INSTITUTIONAL HEADER
+    # 1. FORMAL HEADER
     # -------------------------------------------------------------
     header_left = [
         Paragraph("<b>NEURO-ONCOLOGY CLINICAL DECISION DOSSIER</b>", title_style),
@@ -200,12 +221,12 @@ def generate_diagnostic_dossier(
     ]
 
     header_right_data = [
-        [Paragraph("Date &amp; Time:", meta_key_style), Paragraph(date_str, meta_val_style)],
+        [Paragraph("Document ID:", meta_key_style), Paragraph(doc_id, meta_val_style)],
+        [Paragraph("Date / Time:", meta_key_style), Paragraph(date_str, meta_val_style)],
         [Paragraph("Accession UID:", meta_key_style), Paragraph(uid, meta_val_style)],
-        [Paragraph("Target Region:", meta_key_style), Paragraph(_safe(target_region), meta_val_style)],
-        [Paragraph("Referring Dept:", meta_key_style), Paragraph("Neuro-Surgical Oncology", meta_val_style)],
+        [Paragraph("REGION:", meta_key_style), Paragraph(f"<b>{_safe(target_region.upper())}</b>", meta_val_style)],
     ]
-    header_right_table = Table(header_right_data, colWidths=[70, 140])
+    header_right_table = Table(header_right_data, colWidths=[75, 135])
     header_right_table.setStyle(
         TableStyle([
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
@@ -222,32 +243,33 @@ def generate_diagnostic_dossier(
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
             ("LEFTPADDING", (0, 0), (-1, -1), 0),
             ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
         ])
     )
     elements.append(header_table)
 
+    # Solid cyan horizontal rule separating header metadata from clinical findings
     elements.append(
         HRFlowable(
             width="100%",
             thickness=1.5,
-            color=colors.HexColor("#06B6D4"),
-            spaceBefore=4,
-            spaceAfter=8,
+            color=color_cyan,
+            spaceBefore=3,
+            spaceAfter=7,
         )
     )
 
     # -------------------------------------------------------------
-    # 2. PATIENT & DIAGNOSTIC SUMMARY TABLE
+    # 2. DIAGNOSTIC & PATIENT SUMMARY TABLE
     # -------------------------------------------------------------
     elements.append(Paragraph("<b>Diagnostic Summary &amp; Rapid Triage Stratification</b>", section_header_style))
 
     summary_data = [
         [
-            Paragraph("<b>Primary Neuro-Diagnosis</b>", meta_key_style),
-            Paragraph("<b>Softmax Confidence</b>", meta_key_style),
+            Paragraph("<b>Primary Classification</b>", meta_key_style),
+            Paragraph("<b>Confidence Percentage</b>", meta_key_style),
             Paragraph("<b>Inference Latency</b>", meta_key_style),
-            Paragraph("<b>Clinical Triage Action</b>", meta_key_style),
+            Paragraph("<b>Triage Priority Tag</b>", meta_key_style),
         ],
         [
             Paragraph(f"<font size=10 color='#0F172A'><b>{formatted_prediction}</b></font>", body_style),
@@ -261,7 +283,7 @@ def generate_diagnostic_dossier(
         TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F1F5F9")),
             ("BACKGROUND", (0, 1), (-1, 1), colors.HexColor("#F8FAFC")),
-            ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#CBD5E1")),
+            ("BOX", (0, 0), (-1, -1), 0.75, color_border),
             ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
             ("TOPPADDING", (0, 0), (-1, -1), 4),
             ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
@@ -269,40 +291,40 @@ def generate_diagnostic_dossier(
         ])
     )
     elements.append(summary_table)
-    elements.append(Spacer(1, 8))
+    elements.append(Spacer(1, 6))
 
     # -------------------------------------------------------------
-    # 3. SIDE-BY-SIDE NEURO-IMAGERY TABLE
+    # 3. SIDE-BY-SIDE RADIOLOGY FIGURES (2.6" x 2.6" each)
     # -------------------------------------------------------------
-    elements.append(Paragraph("<b>Comparative Neuroimaging Localization (2.7-inch Dual-Viewer)</b>", section_header_style))
+    elements.append(Paragraph("<b>Radiological Localization Plates</b>", section_header_style))
 
+    # Search for image assets in standard directories
     heatmaps_dir = Path(__file__).resolve().parents[1] / "heatmaps"
     heatmap_path = heatmaps_dir / heatmap_filename
     raw_path = heatmaps_dir / f"raw_{heatmap_filename}"
 
-    # Verify existing images on disk
-    img_size = 2.4 * inch
+    if not heatmap_path.exists():
+        fallback_dir = Path("heatmaps")
+        if (fallback_dir / heatmap_filename).exists():
+            heatmap_path = fallback_dir / heatmap_filename
+            raw_path = fallback_dir / f"raw_{heatmap_filename}"
+
+    img_size = 2.6 * inch
 
     if raw_path.exists():
         raw_cell = Image(str(raw_path), width=img_size, height=img_size)
     elif heatmap_path.exists():
         raw_cell = Image(str(heatmap_path), width=img_size, height=img_size)
     else:
-        raw_cell = Paragraph("Raw image asset unavailable.", body_style)
+        raw_cell = Paragraph("Raw scan asset unavailable.", body_style)
 
     if heatmap_path.exists():
         cam_cell = Image(str(heatmap_path), width=img_size, height=img_size)
     else:
         cam_cell = Paragraph("Grad-CAM overlay asset unavailable.", body_style)
 
-    caption_raw = Paragraph(
-        f"<b>Figure 1A:</b> Raw Input Neuro-MRI (<code>{_safe(filename)}</code>)",
-        dept_style,
-    )
-    caption_cam = Paragraph(
-        f"<b>Figure 1B:</b> Grad-CAM Activation Map (<code>{_safe(heatmap_filename)}</code>)",
-        dept_style,
-    )
+    caption_raw = Paragraph("<b>Original T1-Gd MRI</b>", caption_style)
+    caption_cam = Paragraph("<b>Grad-CAM Activation Overlay</b>", caption_style)
 
     imagery_data = [
         [raw_cell, cam_cell],
@@ -316,18 +338,18 @@ def generate_diagnostic_dossier(
             ("LEFTPADDING", (0, 0), (-1, -1), 4),
             ("RIGHTPADDING", (0, 0), (-1, -1), 4),
             ("TOPPADDING", (0, 0), (-1, 0), 2),
-            ("BOTTOMPADDING", (0, 0), (-1, 0), 3),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 2),
             ("TOPPADDING", (0, 1), (-1, 1), 2),
-            ("BOTTOMPADDING", (0, 1), (-1, 1), 4),
+            ("BOTTOMPADDING", (0, 1), (-1, 1), 3),
         ])
     )
     elements.append(imagery_table)
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 5))
 
     # -------------------------------------------------------------
-    # 4. QUANTITATIVE SOFTMAX PROBABILITY BREAKDOWN
+    # 4. QUANTITATIVE SOFTMAX PROBABILITY TABLE
     # -------------------------------------------------------------
-    elements.append(Paragraph("<b>Quantitative Softmax Probability Distribution &amp; Model Benchmark</b>", section_header_style))
+    elements.append(Paragraph("<b>Quantitative Softmax Probabilities &amp; Risk Stratification</b>", section_header_style))
 
     probs = probabilities or {
         "glioma": 0.0,
@@ -341,8 +363,8 @@ def generate_diagnostic_dossier(
     prob_rows = [
         [
             Paragraph("<b>Tumour Category</b>", meta_key_style),
-            Paragraph("<b>Softmax Probability</b>", meta_key_style),
-            Paragraph("<b>Confidence Metric</b>", meta_key_style),
+            Paragraph("<b>Probability (%)</b>", meta_key_style),
+            Paragraph("<b>Risk Classification</b>", meta_key_style),
             Paragraph("<b>Diagnostic Interpretation</b>", meta_key_style),
         ]
     ]
@@ -356,26 +378,34 @@ def generate_diagnostic_dossier(
 
     for cls_key, label in class_display_map.items():
         val = probs.get(cls_key, 0.0)
-        is_top = (cls_key == prediction.lower().replace("_", "").replace(" ", ""))
-        if is_top:
-            interp = f"<font color='{triage_color.hexval()}'><b>Primary Class Prediction ({val*100:.2f}%)</b></font>"
-            bar = "████████████████"
+        is_lead = (cls_key == prediction.lower().replace("_", "").replace(" ", ""))
+        is_malignant_top = is_lead and not is_normal
+
+        if is_malignant_top:
+            risk_tag = "<font color='#E11D48'><b>ELEVATED</b></font>"
+            interp = f"<font color='#0F172A'><b>Primary Detection Target ({val*100:.2f}%)</b></font>"
+        elif is_lead and is_normal:
+            risk_tag = "<font color='#059669'><b>NOMINAL</b></font>"
+            interp = "<font color='#059669'>Normal Diagnostic Benchmark</font>"
+        elif val > 0.15:
+            risk_tag = "<font color='#D97706'><b>ELEVATED</b></font>"
+            interp = "<font color='#D97706'>Differential Consideration</font>"
         else:
-            interp = "<font color='#64748B'>Sub-threshold / Rule Out</font>"
-            bar = "░░░░░░░░░░░░░░░░"
-        
+            risk_tag = "<font color='#64748B'><b>NOMINAL</b></font>"
+            interp = "<font color='#64748B'>Sub-Threshold / Rule Out</font>"
+
         prob_rows.append([
             Paragraph(label, body_style),
             Paragraph(f"<b>{val*100:.2f}%</b>", body_style),
-            Paragraph(f"<font color='#0284C7' size=7>{bar[:max(int(val*16), 1)]}</font>", body_style),
+            Paragraph(risk_tag, body_style),
             Paragraph(interp, body_style),
         ])
 
-    prob_table = Table(prob_rows, colWidths=[150, 95, 115, 180])
+    prob_table = Table(prob_rows, colWidths=[160, 90, 110, 180])
     prob_table.setStyle(
         TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F1F5F9")),
-            ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
+            ("BOX", (0, 0), (-1, -1), 0.5, color_border),
             ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
             ("TOPPADDING", (0, 0), (-1, -1), 3),
             ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
@@ -385,15 +415,14 @@ def generate_diagnostic_dossier(
     elements.append(prob_table)
 
     # -------------------------------------------------------------
-    # 5. PAGE BREAK TO PAGE 2 (SERPAPI INTELLIGENCE APPENDIX)
+    # 5. PAGE BREAK TO PAGE 2 (SERPAPI LIVE INTELLIGENCE SECTION)
     # -------------------------------------------------------------
     elements.append(PageBreak())
 
-    # Page 2 Institutional Header
     p2_header = Table([
         [
             Paragraph("<b>SERPAPI AUTONOMOUS CLINICAL AGENT INTELLIGENCE</b>", title_style),
-            Paragraph(f"Target Region: <b>{_safe(target_region)}</b> | UID: <b>{uid}</b>", meta_val_style),
+            Paragraph(f"REGION: <b>{_safe(target_region.upper())}</b> | UID: <b>{uid}</b>", meta_val_style),
         ]
     ], colWidths=[340, 200])
     p2_header.setStyle(TableStyle([
@@ -402,10 +431,10 @@ def generate_diagnostic_dossier(
         ("RIGHTPADDING", (0, 0), (-1, -1), 0),
     ]))
     elements.append(p2_header)
-    elements.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#06B6D4"), spaceBefore=4, spaceAfter=8))
+    elements.append(HRFlowable(width="100%", thickness=1.5, color=color_cyan, spaceBefore=3, spaceAfter=7))
 
-    # Clinical Decision Summary
-    elements.append(Paragraph(f"<b>Oncological Action Plan &amp; Regional Referral Pathway ({_safe(target_region)})</b>", section_header_style))
+    # Clinical Decision Action Plan
+    elements.append(Paragraph(f"<b>Synthesized Clinical Action Plan ({_safe(target_region)})</b>", section_header_style))
     summary_text = (
         agent_research.get("clinical_summary", "")
         if agent_research
@@ -414,8 +443,8 @@ def generate_diagnostic_dossier(
     elements.append(Paragraph(_safe(summary_text), body_style))
     elements.append(Spacer(1, 6))
 
-    # Evidence & Clinical Trials
-    elements.append(Paragraph("<b>Top Retrieved Evidence-Based Literature &amp; Active Clinical Trials</b>", section_header_style))
+    # Evidence-Based Literature (Top 3)
+    elements.append(Paragraph("<b>Evidence-Based Literature &amp; Ongoing Clinical Trials</b>", section_header_style))
     articles = (agent_research.get("articles", []) if agent_research else [])[:3]
 
     if not articles:
@@ -424,7 +453,7 @@ def generate_diagnostic_dossier(
         for idx, art in enumerate(articles, 1):
             art_title = _safe(art.get("title", f"Literature Record #{idx}"))
             snippet = _safe(art.get("snippet", ""))
-            source = _safe(art.get("source", "Peer-Reviewed Oncology Database"))
+            source = _safe(art.get("source", "PubMed / NCCN Clinical Registry"))
             url = _safe(art.get("url", ""))
 
             art_table_data = [
@@ -446,15 +475,15 @@ def generate_diagnostic_dossier(
 
     elements.append(Spacer(1, 4))
 
-    # Regional Referral Centers
-    elements.append(Paragraph(f"<b>Specialized Tertiary Oncology &amp; Surgical Referral Centers ({_safe(target_region)})</b>", section_header_style))
+    # Regional Referral Centers ({region}) (Top 3)
+    elements.append(Paragraph(f"<b>Regional Referral Centers ({_safe(target_region)})</b>", section_header_style))
     facilities = (agent_research.get("facilities", []) if agent_research else [])[:3]
 
     if not facilities:
-        elements.append(Paragraph(f"Scan indicates nominal baseline; specialized tertiary referral is not required in {_safe(target_region)}.", body_style))
+        elements.append(Paragraph(f"Scan indicates nominal baseline; specialized tertiary oncology referral is not required in {_safe(target_region)}.", body_style))
     else:
         for idx, fac in enumerate(facilities, 1):
-            fac_name = _safe(fac.get("name", f"Center #{idx}"))
+            fac_name = _safe(fac.get("name", f"Care Center #{idx}"))
             rating = fac.get("rating")
             rating_str = f"★ {rating}/5.0" if rating else "Verified Oncology Center"
             address = _safe(fac.get("address", ""))
@@ -489,19 +518,19 @@ def generate_diagnostic_dossier(
     # -------------------------------------------------------------
     # 6. INSTITUTIONAL FOOTER & DIGITAL HASH
     # -------------------------------------------------------------
-    doc_hash = hashlib.sha256(f"{uid}-{filename}-{prediction}-{confidence}".encode()).hexdigest()
-    elements.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#CBD5E1"), spaceBefore=4, spaceAfter=4))
+    doc_hash = hashlib.sha256(f"{uid}-{filename}-{prediction}-{confidence}-{target_region}".encode()).hexdigest()
+    elements.append(HRFlowable(width="100%", thickness=0.75, color=color_border, spaceBefore=4, spaceAfter=4))
     elements.append(Paragraph(
-        "<b>CLINICAL DECISION SUPPORT SYSTEM (CDSS) NOTICE:</b> This document is an automated clinical dossier "
-        "synthesized from deep transfer learning neuroimaging (ResNet-50) and autonomous real-time search agent tools (SerpApi). "
-        "It is strictly intended to aid clinical triaging, literature discovery, and patient referral routing under the supervision "
-        "of a licensed medical specialist. It is not an autonomous primary medical certification.",
+        "<b>CLINICAL DECISION SUPPORT SYSTEM (CDSS) NOTICE:</b> This diagnostic dossier is synthesized from "
+        "convolutional deep feature extraction and autonomous search agent tools (SerpApi). It is designed to assist "
+        "clinical evaluation, literature discovery, and patient referral routing under the supervision of a licensed physician. "
+        "It does not constitute a primary medical diagnosis or replace pathological confirmation.",
         disclaimer_style,
     ))
     elements.append(Spacer(1, 2))
     elements.append(Paragraph(
-        f"<b>Digital Verification Fingerprint:</b> <code>SHA256:{doc_hash[:40]}...</code> &bull; "
-        f"Model: ResNet50 Transfer Learning &bull; Validation Accuracy: {metrics.get('accuracy', 0.95)*100:.2f}%",
+        f"<b>Digital Verification Hash:</b> <code>SHA256:{doc_hash[:40]}...</code> &bull; "
+        f"<b>Model:</b> ResNet-50 v2 / Grad-CAM / SerpApi Agent &bull; <b>Validation Accuracy:</b> {metrics.get('accuracy', 0.95)*100:.2f}%",
         disclaimer_style,
     ))
 

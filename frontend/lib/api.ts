@@ -127,14 +127,13 @@ export interface AgentResearchRequest {
  */
 export async function predictMRI(
   file: File,
-  region?: string,
+  region: string = "Jaipur",
 ): Promise<PredictionResponse> {
+  const targetRegion = region && region.trim() ? region.trim() : "Jaipur";
   const formData = new FormData();
   formData.append("file", file);
-  if (region && region.trim()) {
-    formData.append("region", region.trim());
-    formData.append("patient_city", region.trim());
-  }
+  formData.append("region", targetRegion);
+  formData.append("patient_city", targetRegion);
 
   const config: {
     headers: Record<string, string>;
@@ -143,14 +142,11 @@ export async function predictMRI(
     headers: {
       "Content-Type": "multipart/form-data",
     },
+    params: {
+      region: targetRegion,
+      patient_city: targetRegion,
+    },
   };
-
-  if (region && region.trim()) {
-    config.params = {
-      region: region.trim(),
-      patient_city: region.trim(),
-    };
-  }
 
   const response = await apiClient.post<PredictionResponse>(
     "/predict",

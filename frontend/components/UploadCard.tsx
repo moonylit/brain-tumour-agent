@@ -15,9 +15,24 @@ import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
-export default function UploadCard() {
+interface UploadCardProps {
+  region?: string;
+  onRegionChange?: (region: string) => void;
+}
+
+export default function UploadCard({
+  region: propRegion,
+  onRegionChange,
+}: UploadCardProps = {}) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [region, setRegion] = useState("Jaipur");
+  const [localRegion, setLocalRegion] = useState("Jaipur");
+  const region = propRegion !== undefined ? propRegion : localRegion;
+
+  function handleRegionChange(newRegion: string) {
+    setLocalRegion(newRegion);
+    onRegionChange?.(newRegion);
+  }
+
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -78,10 +93,11 @@ export default function UploadCard() {
       setErrorMessage(null);
 
       // Send MRI for real model prediction & SerpApi agent research with dynamic region
+      const targetRegion = region && region.trim() ? region.trim() : "Jaipur";
       const predictionData =
-        region && region.trim() !== "" && region.trim().toLowerCase() !== "jaipur"
-          ? await predictMRI(selectedImage, region.trim())
-          : await predictMRI(selectedImage);
+        targetRegion.toLowerCase() === "jaipur"
+          ? await predictMRI(selectedImage)
+          : await predictMRI(selectedImage, targetRegion);
 
       setResult(predictionData);
 
@@ -160,7 +176,7 @@ export default function UploadCard() {
             </p>
             <RegionSelector
               value={region}
-              onChange={setRegion}
+              onChange={handleRegionChange}
               disabled={loading}
             />
           </div>

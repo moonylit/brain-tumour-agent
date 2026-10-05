@@ -11,9 +11,10 @@ interface RegionSelectorProps {
 
 const PRESET_REGIONS = [
   "Jaipur",
-  "New Delhi",
+  "Delhi",
   "Mumbai",
-  "Bengaluru",
+  "Bangalore",
+  "New York",
   "London",
   "Boston",
 ];
@@ -40,7 +41,7 @@ export default function RegionSelector({
         try {
           const { latitude, longitude } = position.coords;
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`,
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
             {
               headers: {
                 "Accept-Language": "en",
