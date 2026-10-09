@@ -10,7 +10,7 @@ import {
 import PredictionCard from "./PredictionCard";
 import HistoryCard from "./HistoryCard";
 import RegionSelector from "./RegionSelector";
-import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
+import { Upload, Sparkles, AlertTriangle, X, MapPin } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -115,151 +115,178 @@ export default function UploadCard({
   }
 
   return (
-    <section id="upload" className="mx-auto max-w-[1720px] w-full px-6 sm:px-8 py-10">
-      <div className="bg-white/90 backdrop-blur-md rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-12">
-        <div className="mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
-              <Upload className="h-8 w-8 text-blue-600" />
-              <span>Upload MRI Scan</span>
-            </h2>
-            <span className="rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-mono font-bold text-blue-800 shadow-xs">
-              Track 01: SerpApi Decision Agent
-            </span>
+    <section id="upload" className="w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mt-8 px-4">
+        {/* Left Column (Upload Card) */}
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
+                <Upload className="h-7 w-7 text-blue-600" />
+                <span>Upload MRI Scan</span>
+              </h2>
+              <span className="rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-xs">
+                Track 01: SerpApi Decision Agent
+              </span>
+            </div>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-6">
+              Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
+            </p>
+
+            {/* Upload Zone */}
+            <div className="border-2 border-dashed border-blue-400 p-12 bg-blue-50/50 rounded-xl text-center transition-all duration-300 hover:border-blue-600 hover:bg-blue-50/80">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25">
+                <Upload className="h-7 w-7 text-white" />
+              </div>
+
+              <label
+                htmlFor="mri-file-input"
+                className="cursor-pointer block text-base sm:text-lg font-bold text-slate-800 hover:text-blue-700"
+              >
+                <span className="text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-700">
+                  Browse neuroimaging file
+                </span>{" "}
+                or select from local directory
+              </label>
+
+              <input
+                type="file"
+                id="mri-file-input"
+                accept="image/jpeg,image/png"
+                onChange={handleImageChange}
+                className="mt-4 block w-full max-w-xs mx-auto cursor-pointer text-xs sm:text-sm text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-bold file:text-white hover:file:bg-blue-700 shadow-sm transition"
+              />
+
+              <p className="mt-4 text-xs font-mono font-medium text-slate-500">
+                Supported formats: JPG, PNG • Max size: 10 MB
+              </p>
+            </div>
           </div>
-          <p className="mt-2 text-base sm:text-lg text-slate-600 leading-relaxed max-w-4xl">
-            Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
-          </p>
+
+          {/* Error Notification Banner */}
+          {errorMessage && (
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50 p-4 text-rose-800 shadow-md">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
+              <div className="flex-1 text-sm sm:text-base">
+                <strong className="block font-bold text-rose-900">
+                  Action Required
+                </strong>
+                <span className="text-rose-800">{errorMessage}</span>
+              </div>
+              <button
+                onClick={() => setErrorMessage(null)}
+                aria-label="Dismiss error"
+                className="rounded-xl p-1 text-rose-500 hover:bg-rose-100 hover:text-rose-700 transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+
+          {/* Selected Image Preview & Action Button */}
+          {preview && (
+            <div className="mt-6 rounded-2xl border border-blue-200 bg-slate-50/70 p-5 shadow-inner">
+              <div className="flex items-center justify-between mb-3 border-b border-blue-200/60 pb-2">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
+                  Selected Scan
+                </span>
+                <span className="font-mono text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+                  Ready for Analysis
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <div className="relative overflow-hidden rounded-xl border border-slate-300 bg-black/90 p-2 shadow-sm">
+                  <img
+                    src={preview}
+                    alt="MRI Preview"
+                    className="max-h-[220px] rounded-lg object-contain mx-auto"
+                  />
+                </div>
+
+                <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-1 font-mono text-xs text-slate-700 border border-slate-200 shadow-2xs">
+                  <span className="font-bold text-slate-900 truncate max-w-[150px]">
+                    {selectedImage?.name}
+                  </span>
+                  <span className="text-slate-300">•</span>
+                  <span className="text-slate-600">
+                    {((selectedImage?.size || 0) / 1024).toFixed(1)} KB
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleUpload}
+                  disabled={loading}
+                  className="btn-primary mt-5 w-full inline-flex items-center justify-center gap-3 px-6 py-4 text-lg font-bold rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-lg shadow-blue-600/25 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {loading ? (
+                    <>
+                      <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent" />
+                      <span>Analyzing Brain MRI &amp; Querying SerpApi...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-5 w-5 text-cyan-200" />
+                      <span>Analyze MRI Scan</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Diagnostic Ingest Dropzone & Region Selector */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* File Upload Box (2 cols on lg) */}
-          <div className="lg:col-span-2 relative group bg-gradient-to-b from-blue-50/40 via-white to-indigo-50/20 rounded-3xl shadow-sm border-2 border-dashed border-blue-300 p-10 sm:p-14 text-center transition-all duration-300 hover:border-blue-600 hover:bg-blue-50/60">
-            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition duration-300">
-              <Upload className="h-8 w-8 text-white" />
-            </div>
-
-            <label
-              htmlFor="mri-file-input"
-              className="cursor-pointer block text-base sm:text-lg font-bold text-slate-800 hover:text-blue-700"
-            >
-              <span className="text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-700">
-                Browse neuroimaging file
-              </span>{" "}
-              or select from local directory
-            </label>
-
-            <input
-              type="file"
-              id="mri-file-input"
-              accept="image/jpeg,image/png"
-              onChange={handleImageChange}
-              className="mt-5 block w-full max-w-md mx-auto cursor-pointer text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-600 file:px-5 file:py-2.5 file:text-sm file:font-bold file:text-white hover:file:bg-blue-700 shadow-sm transition"
-            />
-
-            <p className="mt-5 text-xs sm:text-sm font-mono font-medium text-slate-500">
-              Supported formats: JPG, PNG • Max size: 10 MB
-            </p>
-          </div>
-
-          {/* Region Configuration Card (1 col on lg) */}
-          <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 rounded-3xl shadow-sm border-2 border-blue-200/80 p-7">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="h-5 w-5 text-blue-600" />
-              <h3 className="text-base font-bold text-slate-900">
+        {/* Right Column (SerpApi Geographic Referral Routing) */}
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <Sparkles className="h-6 w-6 text-blue-600" />
+              <h3 className="text-2xl font-extrabold text-slate-900">
                 Geographic Referral Routing
               </h3>
             </div>
-            <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
               Target metropolitan region for autonomous hospital geolocation and tertiary surgical center referral routing:
             </p>
+
             <RegionSelector
               value={region}
               onChange={handleRegionChange}
               disabled={loading}
             />
           </div>
+
+          {/* Map Integration Container */}
+          <div className="w-full h-64 mt-6 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden relative flex flex-col items-center justify-center text-slate-400 font-medium">
+            <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-transparent to-transparent" />
+            <div className="relative z-10 flex flex-col items-center text-center p-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-2 shadow-xs">
+                <MapPin className="h-6 w-6 animate-bounce" />
+              </div>
+              <span className="text-slate-700 font-bold text-sm">
+                Autonomous Catchment: <span className="text-blue-600">{region} Metro Zone</span>
+              </span>
+              <span className="text-xs text-slate-400 mt-1">
+                [Google Maps / SerpApi Route Visualization Container]
+              </span>
+              <div className="mt-3 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Tertiary Referral Center Active
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                  Radius: 45 km
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Error Notification Banner */}
-        {errorMessage && (
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50 p-5 text-rose-800 shadow-md">
-            <AlertTriangle className="mt-0.5 h-6 w-6 shrink-0 text-rose-600" />
-            <div className="flex-1 text-base">
-              <strong className="block font-bold text-rose-900">
-                Action Required
-              </strong>
-              <span className="text-rose-800">{errorMessage}</span>
-            </div>
-            <button
-              onClick={() => setErrorMessage(null)}
-              aria-label="Dismiss error"
-              className="rounded-xl p-1.5 text-rose-500 hover:bg-rose-100 hover:text-rose-700 transition"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        )}
-
-        {/* Selected Image Preview & Action Button */}
-        {preview && (
-          <div className="mt-10 rounded-3xl border-2 border-blue-200/90 bg-gradient-to-br from-slate-50 to-blue-50/30 p-8 sm:p-10 shadow-md">
-            <div className="flex items-center justify-between mb-5 border-b border-blue-200/60 pb-4">
-              <span className="text-sm font-mono font-bold uppercase tracking-wider text-slate-700">
-                Selected Scan
-              </span>
-              <span className="font-mono text-sm font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-3.5 py-1 rounded-full shadow-2xs">
-                Ready for Analysis
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-slate-300 bg-black/90 p-3 shadow-lg">
-                <img
-                  src={preview}
-                  alt="MRI Preview"
-                  className="max-h-[440px] rounded-xl object-contain"
-                />
-              </div>
-
-              <div className="mt-4 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-2 font-mono text-sm text-slate-700 border-2 border-blue-200 shadow-sm">
-                <span className="font-bold text-slate-900">
-                  {selectedImage?.name}
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-600">
-                  {((selectedImage?.size || 0) / 1024).toFixed(1)} KB
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="text-blue-700 font-bold">
-                  Region: {region}
-                </span>
-              </div>
-
-              <button
-                onClick={handleUpload}
-                disabled={loading}
-                className="btn-primary mt-8 inline-flex items-center justify-center gap-3 px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? (
-                  <>
-                    <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent" />
-                    <span>Analyzing Brain MRI &amp; Querying SerpApi...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-6 w-6 text-cyan-200" />
-                    <span>Analyze MRI Scan</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Prediction Results Display */}
-        {result && (
+      {/* Prediction Results Display */}
+      {result && (
+        <div className="max-w-7xl mx-auto mt-10 px-4">
           <PredictionCard
             prediction={result.prediction}
             confidence={result.confidence}
@@ -271,9 +298,11 @@ export default function UploadCard({
             accessionId={result.accession_id}
             agentResearch={result.agent_research}
           />
-        )}
+        </div>
+      )}
 
-        {/* History Component Embed */}
+      {/* History Component Embed */}
+      <div className="max-w-7xl mx-auto mt-10 px-4">
         <HistoryCard refreshTrigger={refreshTrigger} />
       </div>
     </section>

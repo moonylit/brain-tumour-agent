@@ -31,37 +31,34 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="bg-white/85 backdrop-blur-lg border-b border-blue-200/60 shadow-md shadow-blue-900/5 sticky top-0 z-50">
-      <nav className="mx-auto flex max-w-[1720px] items-center justify-between px-6 sm:px-10 py-5">
-        <div className="flex items-center gap-5">
-          <a
-            href="#"
-            className="group flex items-center gap-3 text-xl sm:text-2xl font-extrabold tracking-tight transition"
-          >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 transition group-hover:scale-105">
-              <svg
-                className="h-6 w-6 text-white"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z" />
-                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
-              </svg>
-            </div>
-            <span className="font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 bg-clip-text text-transparent">
-              BrainTumourAI
-            </span>
+    <header className="w-full flex flex-col items-center justify-center py-6 border-b border-slate-200 bg-white shadow-sm sticky top-0 z-50">
+      <div className="flex flex-col items-center gap-3 w-full max-w-7xl px-4 sm:px-6">
+        <div className="flex items-center gap-4 flex-wrap justify-center">
+          <a href="#" className="group flex items-center">
+            <h1 className="text-3xl font-extrabold text-slate-900 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition-all">
+                <svg
+                  className="h-7 w-7 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z" />
+                  <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
+                </svg>
+              </div>
+              <span>BrainTumourAI</span>
+            </h1>
           </a>
 
           {/* Minimal Backend Status Pill */}
           {isBackendOnline !== null && (
             <span
-              className={`hidden items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold sm:inline-flex transition shadow-xs ${
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold transition shadow-xs ${
                 isBackendOnline
                   ? "bg-emerald-100 text-emerald-700 text-emerald-400 border border-emerald-300"
                   : "border border-slate-300 bg-slate-100 text-slate-500 text-slate-400"
@@ -87,39 +84,40 @@ export default function Navbar() {
           )}
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-slate-700">
+        {/* Navigation Links */}
+        <nav className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-slate-600 mt-1">
           <a
             href="#upload"
-            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Upload
           </a>
           <a
             href="#evaluation"
-            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Evaluation
           </a>
           <a
             href="#stats"
-            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Statistics
           </a>
           <a
             href="#history"
-            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
           >
             History
           </a>
           <a
             href="#features"
-            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Features
           </a>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }
