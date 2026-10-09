@@ -80,7 +80,7 @@ export default function ClinicalAgentCard({
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-0.5 text-xs font-mono font-semibold text-cyan-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-600 animate-ping" />
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-600" />
               SerpApi AI Agent (Track 01)
             </span>
             <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-mono text-slate-700">
@@ -115,8 +115,7 @@ export default function ClinicalAgentCard({
           Autonomous Clinical Agent Research &amp; Care Facilities
         </h3>
         <p className="text-xs text-slate-500 mt-0.5 font-medium">
-          SerpApi Tools: <code className="text-cyan-700 font-mono">web_search</code> (PubMed/NCCN) &amp;{" "}
-          <code className="text-cyan-700 font-mono">maps_search</code> (Tertiary Oncology Centers in {effectiveRegion})
+          Automated clinical trial matching, regional tertiary center lookup, and staging guidelines.
         </p>
       </div>
 

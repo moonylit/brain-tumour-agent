@@ -364,7 +364,7 @@ export default function PredictionCard({
         </button>
 
         <span className="text-xs text-slate-500 font-mono">
-          Clinical telemetry &bull; Target Region: <strong className="text-slate-800">{region}</strong> &bull; SerpApi audit trail logged
+          Diagnostic dossier &bull; Referral Region: <strong className="text-slate-800">{region}</strong>
         </span>
 
         {downloadError && (
