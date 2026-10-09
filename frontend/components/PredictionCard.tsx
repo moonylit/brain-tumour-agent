@@ -75,7 +75,10 @@ export default function PredictionCard({
   const confidencePct = (confidence * 100).toFixed(2);
 
   return (
-    <div className="mt-10 rounded-3xl border border-slate-200/90 bg-white/95 p-6 sm:p-8 shadow-xl shadow-slate-200/50 backdrop-blur-xl">
+    <div className="relative overflow-hidden mt-10 rounded-3xl border border-slate-200/90 bg-white/95 p-6 sm:p-10 shadow-xl shadow-slate-200/50 backdrop-blur-xl">
+      {/* Subtle top cyan/violet accent line */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 via-sky-500 to-violet-600" />
+
       {/* ------------------------------------------------------------- */}
       {/* 1. TOP READOUT STATUS STRIP                                   */}
       {/* ------------------------------------------------------------- */}

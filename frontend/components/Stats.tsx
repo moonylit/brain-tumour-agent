@@ -77,19 +77,23 @@ export default function Stats({ refreshTrigger }: Props) {
   const allClasses = ["glioma", "meningioma", "pituitary", "notumor"];
 
   return (
-    <section id="stats" className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
+    <section id="stats" className="w-full">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-mono font-bold text-cyan-800 mb-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-600" />
+          <span>Real-Time Inference Analytics</span>
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
           Prediction Statistics &amp; Analytics
         </h2>
-        <p className="mt-1 text-sm text-slate-500 max-w-xl mx-auto leading-relaxed font-normal">
+        <p className="mt-1 text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed font-medium">
           Aggregated analytics computed in real-time from inference history.
         </p>
       </div>
 
       {/* Loading Skeleton */}
       {loading && !stats && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
@@ -121,66 +125,136 @@ export default function Stats({ refreshTrigger }: Props) {
       {/* Stats Display */}
       {stats && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {primaryCards.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl bg-white border border-slate-200 p-6 text-center shadow-sm"
-              >
-                <h3
-                  className={`text-3xl sm:text-4xl font-black font-mono tracking-tight ${stat.color}`}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {primaryCards.map((stat, idx) => {
+              const borderGradients = [
+                "from-cyan-500 to-sky-500",
+                "from-emerald-500 to-teal-500",
+                "from-amber-500 to-orange-500",
+                "from-violet-500 to-purple-500",
+              ];
+              const bgPillColors = [
+                "bg-cyan-50 text-cyan-700 border-cyan-200",
+                "bg-emerald-50 text-emerald-700 border-emerald-200",
+                "bg-amber-50 text-amber-700 border-amber-200",
+                "bg-violet-50 text-violet-700 border-violet-200",
+              ];
+
+              return (
+                <div
+                  key={stat.label}
+                  className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-cyan-300 hover:-translate-y-1 transition-all duration-300"
                 >
-                  {stat.value}
-                </h3>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${borderGradients[idx % 4]}`}
+                  />
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      {stat.label}
+                    </span>
+                    <span
+                      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${bgPillColors[idx % 4]}`}
+                    >
+                      Real-Time
+                    </span>
+                  </div>
+                  <h3
+                    className={`text-3xl sm:text-4xl font-black font-mono tracking-tight ${stat.color}`}
+                  >
+                    {stat.value}
+                  </h3>
+                  <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full bg-gradient-to-r ${borderGradients[idx % 4]} w-3/4`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Class Distribution Breakdown */}
           {stats.total_predictions > 0 && (
-            <div className="mt-8 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-sm">
-              <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-100 pb-3.5">
-                <h3 className="text-base font-bold tracking-tight text-slate-900">
-                  Class Distribution &amp; Percentages
-                </h3>
-                <span className="font-mono text-xs text-slate-400">
+            <div className="mt-10 rounded-3xl bg-white/95 border border-slate-200/90 p-6 sm:p-8 shadow-xl shadow-slate-200/40">
+              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="text-lg font-bold tracking-tight text-slate-900">
+                    Class Distribution &amp; Percentages
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">
+                    Empirical incidence rate breakdown across patient evaluations
+                  </p>
+                </div>
+                <span className="font-mono text-xs text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 font-semibold">
                   Based on {stats.total_predictions} historical records
                 </span>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {allClasses.map((cls) => {
                   const count = stats.class_distribution?.[cls] || 0;
                   const percentage = stats.class_percentages?.[cls] || 0;
                   const formattedClass = formatTumorClass(cls);
 
+                  const classColorStyles: Record<
+                    string,
+                    { border: string; bar: string; badge: string }
+                  > = {
+                    glioma: {
+                      border: "border-amber-200 bg-amber-50/40",
+                      bar: "from-amber-500 to-orange-500",
+                      badge: "bg-amber-100 text-amber-800 border-amber-200",
+                    },
+                    meningioma: {
+                      border: "border-rose-200 bg-rose-50/40",
+                      bar: "from-rose-500 to-pink-500",
+                      badge: "bg-rose-100 text-rose-800 border-rose-200",
+                    },
+                    pituitary: {
+                      border: "border-violet-200 bg-violet-50/40",
+                      bar: "from-violet-500 to-purple-500",
+                      badge: "bg-violet-100 text-violet-800 border-violet-200",
+                    },
+                    notumor: {
+                      border: "border-emerald-200 bg-emerald-50/40",
+                      bar: "from-emerald-500 to-teal-500",
+                      badge: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                    },
+                  };
+
+                  const currentStyle =
+                    classColorStyles[cls.toLowerCase()] || {
+                      border: "border-slate-200 bg-slate-50/60",
+                      bar: "from-cyan-600 to-violet-600",
+                      badge: "bg-slate-100 text-slate-800 border-slate-200",
+                    };
+
                   return (
                     <div
                       key={cls}
-                      className="rounded-xl border border-slate-100 bg-slate-50/70 p-4"
+                      className={`rounded-2xl border p-5 transition-all shadow-sm hover:shadow-md ${currentStyle.border}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-xs text-slate-800">
+                        <span className="font-bold text-sm text-slate-900">
                           {formattedClass}
                         </span>
-                        <span className="font-mono text-xs font-semibold text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-md">
+                        <span
+                          className={`font-mono text-xs font-bold px-2.5 py-0.5 rounded-full border ${currentStyle.badge}`}
+                        >
                           {count} {count === 1 ? "scan" : "scans"}
                         </span>
                       </div>
 
-                      <div className="mt-3 flex items-center justify-between text-xs font-mono text-slate-400">
+                      <div className="mt-4 flex items-center justify-between text-xs font-mono text-slate-500">
                         <span>Cohort Share</span>
-                        <span className="font-bold text-slate-700">
+                        <span className="font-bold text-slate-900 text-sm">
                           {percentage.toFixed(1)}%
                         </span>
                       </div>
 
-                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-200">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200/80">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-violet-600 transition-all duration-500"
+                          className={`h-full rounded-full bg-gradient-to-r ${currentStyle.bar} transition-all duration-500`}
                           style={{
                             width: `${Math.min(Math.max(percentage, 0), 100)}%`,
                           }}

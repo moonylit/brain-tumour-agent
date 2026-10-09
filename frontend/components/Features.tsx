@@ -64,35 +64,64 @@ export default function Features() {
   ];
 
   return (
-    <section id="features" className="mx-auto max-w-7xl px-6 sm:px-8 py-20">
-      <div className="mb-12 text-center">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+    <section id="features" className="w-full">
+      <div className="mb-10 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-mono font-bold text-cyan-800 mb-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-600" />
+          <span>Clinical Architecture</span>
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
           Features &amp; Capabilities
         </h2>
-        <p className="mt-2 text-sm text-slate-500 max-w-lg mx-auto leading-relaxed font-medium">
+        <p className="mt-1 text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed font-medium">
           Accurate MRI classification paired with transparent model interpretability.
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {features.map((feature) => (
-          <div
-            key={feature.title}
-            className="glass-card-interactive rounded-3xl p-7 bg-white/90 border border-slate-200/90 shadow-lg shadow-slate-200/40"
-          >
-            <div className="mb-5 inline-flex p-3 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-              {feature.icon}
+        {features.map((feature, idx) => {
+          const gradients = [
+            "from-cyan-500 to-sky-500",
+            "from-emerald-500 to-teal-500",
+            "from-violet-500 to-purple-500",
+          ];
+          const tags = ["< 180ms Latency", "Spatial Salience", "Multi-Class Softmax"];
+
+          return (
+            <div
+              key={feature.title}
+              className="group relative overflow-hidden rounded-3xl p-7 bg-white/95 border border-slate-200/90 shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-cyan-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+            >
+              <div
+                className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradients[idx % 3]}`}
+              />
+
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="inline-flex p-3 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm group-hover:scale-105 transition-transform">
+                    {feature.icon}
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                    {tags[idx % 3]}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+                  {feature.title}
+                </h3>
+
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">
+                  {feature.description}
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-mono text-slate-400">
+                <span>Integrated Protocol</span>
+                <span className="text-cyan-600 font-bold">WHO CNS-5</span>
+              </div>
             </div>
-
-            <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-              {feature.title}
-            </h3>
-
-            <p className="mt-2 text-sm leading-relaxed text-slate-600 font-medium">
-              {feature.description}
-            </p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

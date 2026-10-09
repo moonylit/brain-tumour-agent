@@ -100,18 +100,21 @@ export default function EvaluationCard({
   }
 
   return (
-    <section id="evaluation" className="mx-auto max-w-7xl px-6 sm:px-8 py-16">
-      <div className="glass-card rounded-3xl p-8 sm:p-10 border border-slate-200/90 bg-white/95 shadow-xl shadow-slate-200/50">
+    <section id="evaluation" className="w-full">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-white/95 p-6 sm:p-10 shadow-xl shadow-slate-200/50 backdrop-blur-xl">
+        {/* Subtle top cyan/violet accent line */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 via-sky-500 to-violet-600" />
+
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300 bg-cyan-50 px-3.5 py-1 text-xs font-mono font-bold text-cyan-800">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-600" />
               <span>Validated Test Performance</span>
             </div>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+            <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Model Evaluation
             </h2>
-            <p className="mt-2 text-sm text-slate-500 max-w-2xl leading-relaxed font-medium">
+            <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed font-medium">
               Performance metrics and diagnostic curves evaluated on the validation dataset using the trained ResNet-50 network.
             </p>
           </div>
@@ -119,7 +122,7 @@ export default function EvaluationCard({
           {error && (
             <button
               onClick={fetchEvaluationData}
-              className="btn-secondary inline-flex items-center gap-2 self-start rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900"
+              className="btn-secondary inline-flex items-center gap-2 self-start rounded-xl px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 shadow-sm"
             >
               Retry Load
             </button>
@@ -157,40 +160,76 @@ export default function EvaluationCard({
         {/* Evaluation Metrics Cards */}
         {metrics && (
           <div className="mb-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
-            <div className="glass-card-interactive rounded-2xl p-6 text-center bg-slate-50/80 border border-slate-200/90 shadow-sm">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
-                Accuracy
-              </span>
+            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  Accuracy
+                </span>
+                <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  Verified
+                </span>
+              </div>
               <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-emerald-600">
                 {(metrics.accuracy * 100).toFixed(2)}%
               </p>
+              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full bg-emerald-500 w-[98%]" />
+              </div>
             </div>
 
-            <div className="glass-card-interactive rounded-2xl p-6 text-center bg-slate-50/80 border border-slate-200/90 shadow-sm">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
-                Precision
-              </span>
+            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-cyan-300 hover:-translate-y-1 transition-all duration-300">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-sky-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  Precision
+                </span>
+                <span className="text-[10px] font-mono font-bold text-cyan-800 bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full">
+                  Verified
+                </span>
+              </div>
               <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-cyan-600">
                 {(metrics.precision * 100).toFixed(2)}%
               </p>
+              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full bg-cyan-500 w-[98%]" />
+              </div>
             </div>
 
-            <div className="glass-card-interactive rounded-2xl p-6 text-center bg-slate-50/80 border border-slate-200/90 shadow-sm">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
-                Recall
-              </span>
+            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-violet-300 hover:-translate-y-1 transition-all duration-300">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-purple-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  Recall
+                </span>
+                <span className="text-[10px] font-mono font-bold text-violet-800 bg-violet-50 border border-violet-200 px-2 py-0.5 rounded-full">
+                  Verified
+                </span>
+              </div>
               <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-violet-600">
                 {(metrics.recall * 100).toFixed(2)}%
               </p>
+              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full bg-violet-500 w-[98%]" />
+              </div>
             </div>
 
-            <div className="glass-card-interactive rounded-2xl p-6 text-center bg-slate-50/80 border border-slate-200/90 shadow-sm">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
-                F1 Score
-              </span>
+            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-500" />
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  F1 Score
+                </span>
+                <span className="text-[10px] font-mono font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+                  Verified
+                </span>
+              </div>
               <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-indigo-600">
                 {(metrics.f1_score * 100).toFixed(2)}%
               </p>
+              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-full rounded-full bg-indigo-500 w-[98%]" />
+              </div>
             </div>
           </div>
         )}
