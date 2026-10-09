@@ -71,4 +71,17 @@ describe("NeuroCommandCenter Component", () => {
     // 5 total scans now (4 initial + 1 new)
     expect(screen.getByText("5 Timed Scans")).toBeInTheDocument();
   });
+
+  it("triggers onOpenArchive callback when View Scan Archive button is clicked", () => {
+    const onOpenArchiveMock = vi.fn();
+    render(<NeuroCommandCenter onOpenArchive={onOpenArchiveMock} />);
+
+    const archiveButtons = screen.getAllByRole("button", {
+      name: /View Scan Archive/i,
+    });
+    expect(archiveButtons.length).toBeGreaterThanOrEqual(1);
+
+    fireEvent.click(archiveButtons[0]);
+    expect(onOpenArchiveMock).toHaveBeenCalledTimes(1);
+  });
 });

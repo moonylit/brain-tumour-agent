@@ -17,11 +17,13 @@ import { TrendingUp, Activity, AlertCircle, ShieldCheck } from "lucide-react";
 interface ProgressionChartProps {
   scans: ScanRecord[];
   patientName?: string;
+  onOpenArchive?: () => void;
 }
 
 export default function ProgressionChart({
   scans,
   patientName,
+  onOpenArchive,
 }: ProgressionChartProps) {
   // Format scans for recharts
   const chartData = scans.map((s) => ({
@@ -75,8 +77,20 @@ export default function ProgressionChart({
           )}
         </div>
 
-        {/* Growth Velocity Badge */}
-        <div className="flex items-center gap-2">
+        {/* Growth Velocity Badge & Secondary Archive Trigger Button */}
+        <div className="flex flex-wrap items-center gap-2">
+          {onOpenArchive && (
+            <button
+              type="button"
+              onClick={onOpenArchive}
+              className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-md px-2.5 py-1 text-xs font-medium shadow-sm transition"
+              title="View previous MRI scans and prediction history archive"
+            >
+              <span>📂</span>
+              <span>View Scan Archive</span>
+            </button>
+          )}
+
           {isRemission ? (
             <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 shadow-sm">
               <ShieldCheck className="h-4 w-4 text-emerald-600" />

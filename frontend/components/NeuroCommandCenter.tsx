@@ -31,10 +31,12 @@ interface NeuroCommandCenterProps {
     rawHeatmapFilename?: string;
     region?: string;
   } | null;
+  onOpenArchive?: () => void;
 }
 
 export default function NeuroCommandCenter({
   latestPredictionResult,
+  onOpenArchive,
 }: NeuroCommandCenterProps) {
   const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
   const [selectedPatientId, setSelectedPatientId] = useState<string>("PT-8821");
@@ -123,8 +125,20 @@ export default function NeuroCommandCenter({
           </div>
         </div>
 
-        {/* Patient Directory Dropdown */}
+        {/* Action Controls & Patient Directory Dropdown */}
         <div className="flex flex-wrap items-center gap-3">
+          {onOpenArchive && (
+            <button
+              type="button"
+              onClick={onOpenArchive}
+              className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-md px-3 py-2 text-xs font-medium shadow-sm transition"
+              title="Open Scan Archive Drawer"
+            >
+              <span>📂</span>
+              <span>View Scan Archive</span>
+            </button>
+          )}
+
           <PatientDirectory
             patients={patients}
             selectedPatientId={selectedPatientId}
@@ -215,6 +229,7 @@ export default function NeuroCommandCenter({
           <ProgressionChart
             scans={activeScans}
             patientName={activePatient.name}
+            onOpenArchive={onOpenArchive}
           />
         </div>
 

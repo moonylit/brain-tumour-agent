@@ -9,6 +9,7 @@ import Features from "@/components/Features";
 import Stats from "@/components/Stats";
 import Footer from "@/components/Footer";
 import NeuroCommandCenter from "@/components/NeuroCommandCenter";
+import PatientArchiveDrawer from "@/components/PatientArchiveDrawer";
 import { downloadReport, formatApiError, PredictionResponse } from "@/lib/api";
 import {
   MapPin,
@@ -36,6 +37,7 @@ export default function Home() {
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [latestPrediction, setLatestPrediction] = useState<PredictionResponse | null>(null);
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
 
   const handleAutoDetect = () => {
     if (!navigator.geolocation) {
@@ -265,6 +267,7 @@ export default function Home() {
                 }
               : null
           }
+          onOpenArchive={() => setIsArchiveOpen(true)}
         />
 
         <Hero />
@@ -278,6 +281,14 @@ export default function Home() {
         <Stats />
         <Footer />
       </div>
+
+      {/* ============================================================= */}
+      {/* SLIDE-OUT SCAN ARCHIVE & PREDICTION HISTORY DRAWER             */}
+      {/* ============================================================= */}
+      <PatientArchiveDrawer
+        isOpen={isArchiveOpen}
+        onClose={() => setIsArchiveOpen(false)}
+      />
     </main>
   );
 }
