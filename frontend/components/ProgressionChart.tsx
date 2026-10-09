@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { ScanRecord } from "@/lib/mockData";
 import { Sparkles, TrendingUp, Calendar, AlertCircle } from "lucide-react";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 export interface ProgressionChartProps {
   scans: ScanRecord[];
@@ -111,47 +112,48 @@ export default function ProgressionChart({
     : 0;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between">
-      {/* Header with Title & Action Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-3">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-              Estimated Lesion Area Progression (px)
-            </h3>
-            <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-mono font-semibold text-slate-600">
-              ({scans.length} Timed Scans)
-            </span>
-          </div>
-          {patientName && (
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
-              <span>Longitudinal trajectory for</span>
-              <span className="font-semibold text-slate-800">{patientName}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Action Controls Array */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* THE PREDICT TRAJECTORY BUTTON */}
-          <button
-            type="button"
-            onClick={() => setIsSimulatingFuture(!isSimulatingFuture)}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md ${
-              isSimulatingFuture
-                ? "bg-violet-700 text-white ring-2 ring-violet-400 shadow-violet-500/30"
-                : "bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-violet-500/25 hover:shadow-violet-500/40"
-            }`}
-            title="Toggle AI Forecasted Tumor Trajectory"
-          >
-            <Sparkles className="h-4 w-4 text-violet-200 animate-pulse" />
-            <span>🔮 Simulate Future Growth</span>
-            {isSimulatingFuture && (
-              <span className="ml-0.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
-                Active
+    <GlowingEffect className="h-full w-full shadow-xl shadow-slate-200/50">
+      <div className="flex flex-col p-5 sm:p-6 h-full justify-between">
+        {/* Header with Title & Action Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-3">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                Estimated Lesion Area Progression (px)
+              </h3>
+              <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-mono font-semibold text-slate-600">
+                ({scans.length} Timed Scans)
               </span>
+            </div>
+            {patientName && (
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+                <span>Longitudinal trajectory for</span>
+                <span className="font-semibold text-slate-800">{patientName}</span>
+              </p>
             )}
-          </button>
+          </div>
+
+          {/* Action Controls Array */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* THE PREDICT TRAJECTORY BUTTON */}
+            <button
+              type="button"
+              onClick={() => setIsSimulatingFuture(!isSimulatingFuture)}
+              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md ${
+                isSimulatingFuture
+                  ? "bg-violet-700 text-white ring-2 ring-violet-400 shadow-violet-500/30"
+                  : "bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-violet-500/25 hover:shadow-violet-500/40"
+              }`}
+              title="Simulate Future Trajectory"
+            >
+              <Sparkles className="h-4 w-4 text-violet-200 animate-pulse" />
+              <span>Simulate Future Growth Trajectory</span>
+              {isSimulatingFuture && (
+                <span className="ml-0.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
+                  Active
+                </span>
+              )}
+            </button>
 
           {onOpenArchive && (
             <button
@@ -336,5 +338,6 @@ export default function ProgressionChart({
         )}
       </div>
     </div>
+  </GlowingEffect>
   );
 }

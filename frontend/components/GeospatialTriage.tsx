@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Building2,
 } from "lucide-react";
+import { GlareCard } from "@/components/ui/glare-card";
 
 interface GeospatialTriageProps {
   severity?: "Routine" | "Critical";
@@ -93,76 +94,90 @@ export default function GeospatialTriage({
         </div>
       </div>
 
-      {/* 2. Referral Recommendation Block */}
-      <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3.5 flex flex-col gap-2.5">
-        <div className="flex items-center justify-between gap-2">
-          {/* Blue Badge: Referral Rec: High-Priority Routing */}
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-100/70 px-2.5 py-0.5 text-xs font-semibold text-blue-900">
-            <span className="h-1.5 w-1.5 rounded-full bg-blue-700" />
-            <span>
-              {isHighPriority
-                ? "Referral Rec: High-Priority Routing"
-                : "Referral Rec: Standard Clinical Route"}
+      {/* 2. Referral Recommendation Block using GlareCard */}
+      <GlareCard className="border-blue-200/80 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-2">
+            {/* Blue Badge: Referral Rec: High-Priority Routing */}
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-100/70 px-3 py-1 text-xs font-bold text-blue-900">
+              <span className="h-2 w-2 rounded-full bg-blue-700 animate-pulse" />
+              <span>
+                {isHighPriority
+                  ? "Referral Rec: High-Priority Routing"
+                  : "Referral Rec: Standard Clinical Route"}
+              </span>
             </span>
-          </span>
 
-          <span className="text-[11px] font-mono text-slate-500">
-            Facility ID: {primaryHospital.id}
-          </span>
-        </div>
-
-        {/* Primary Hospital Details */}
-        <div>
-          <h4 className="text-sm font-bold text-slate-900">
-            {primaryHospital.name}
-          </h4>
-          <p className="text-xs text-slate-600 mt-0.5 font-medium">
-            Distance: {primaryHospital.distanceKm} km | Neuro-ICU Beds Available ({primaryHospital.currentBedCapacity}) | {primaryHospital.equipmentLevel}
-          </p>
-        </div>
-
-        {/* Normal Text Buttons */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <button
-            type="button"
-            onClick={() => setReferralRequested(true)}
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 shadow-xs transition"
-          >
-            <FileText className="h-3.5 w-3.5 text-slate-500" />
-            <span>📄 Request Referral</span>
-          </button>
-
-          <a
-            href={`tel:${primaryHospital.contactPhone}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 shadow-xs transition"
-          >
-            <Phone className="h-3.5 w-3.5 text-slate-500" />
-            <span>📞 Call Center</span>
-          </a>
-
-          <a
-            href={`https://www.google.com/maps/dir/?api=1&origin=26.9124,75.7873&destination=${encodeURIComponent(
-              primaryHospital.name + " " + selectedCity
-            )}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700 hover:text-blue-900 hover:underline ml-auto"
-          >
-            <span>Open Maps Route</span>
-            <ExternalLink className="h-3 w-3" />
-          </a>
-        </div>
-
-        {/* Confirmation note */}
-        {referralRequested && (
-          <div className="mt-1 flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs text-emerald-800 font-medium animate-in fade-in">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-            <span>
-              Referral requisition confirmed for {primaryHospital.name}. Medical transfer dossier packaged.
+            <span className="text-xs font-mono font-semibold text-slate-500">
+              Facility ID: {primaryHospital.id}
             </span>
           </div>
-        )}
-      </div>
+
+          {/* Primary Hospital Details */}
+          <div>
+            <h4 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              {primaryHospital.name}
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
+              Distance: <strong className="text-slate-800">{primaryHospital.distanceKm} km</strong> | Neuro-ICU Beds Available ({primaryHospital.currentBedCapacity}) | {primaryHospital.equipmentLevel}
+            </p>
+          </div>
+
+          {/* Call to Action: Authorize Heli-Ambulance Transfer */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setReferralRequested(true)}
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-800 hover:to-indigo-700 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-md shadow-blue-700/25 transition cursor-pointer"
+            >
+              <span>🚁</span>
+              <span>Authorize Heli-Ambulance Transfer</span>
+            </button>
+          </div>
+
+          {/* Standard Text Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setReferralRequested(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-xs transition"
+            >
+              <FileText className="h-3.5 w-3.5 text-slate-500" />
+              <span>📄 Request Referral</span>
+            </button>
+
+            <a
+              href={`tel:${primaryHospital.contactPhone}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-xs transition"
+            >
+              <Phone className="h-3.5 w-3.5 text-slate-500" />
+              <span>📞 Call Center</span>
+            </a>
+
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&origin=26.9124,75.7873&destination=${encodeURIComponent(
+                primaryHospital.name + " " + selectedCity
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 hover:underline ml-auto"
+            >
+              <span>Open Maps Route</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+
+          {/* Confirmation note */}
+          {referralRequested && (
+            <div className="mt-1 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 font-semibold animate-in fade-in">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span>
+                Transfer requisition confirmed for {primaryHospital.name}. Acute transfer dossier dispatched.
+              </span>
+            </div>
+          )}
+        </div>
+      </GlareCard>
 
       {/* 3. Reference Street Map of Jaipur with deep blue route indicator path */}
       <div className="flex flex-col gap-1.5">

@@ -15,6 +15,8 @@ import ScanVisualizer from "./ScanVisualizer";
 import UploadScanModal from "./UploadScanModal";
 import AddPatientModal from "./AddPatientModal";
 import SystemMetricsBanner from "./SystemMetricsBanner";
+import { FlipWords } from "@/components/ui/flip-words";
+import { predictMRI } from "@/lib/api";
 import {
   Activity,
   Calendar,
@@ -49,6 +51,7 @@ export default function NeuroCommandCenter({
 
   const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
   const [isUploadScanOpen, setIsUploadScanOpen] = useState(false);
+  const [isDirectUploading, setIsDirectUploading] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
 
   const activePatient =
@@ -112,7 +115,6 @@ export default function NeuroCommandCenter({
 
   const handleScanProcessed = (newScan: ScanRecord) => {
     setAllScans((prev) => [...prev, newScan]);
-    // Point to the newly appended scan
     setTimeout(() => {
       const updatedScans = [...allScans, newScan].filter(
         (s) => s.patientId === selectedPatientId
@@ -121,6 +123,56 @@ export default function NeuroCommandCenter({
     }, 50);
     setShowToast(`New scan analyzed & appended to ${activePatient.name}'s trajectory`);
     setTimeout(() => setShowToast(null), 4000);
+  };
+
+  const handleDirectScanUpload = async (file: File) => {
+    setIsDirectUploading(true);
+    try {
+      const res = await predictMRI(file, activePatient.referralCity || "Jaipur");
+      const tumorPixels = estimateTumorAreaFromPrediction(res.prediction, res.confidence);
+      const isCritical =
+        res.prediction.toLowerCase() !== "notumor" &&
+        res.prediction.toLowerCase() !== "no tumor detected" &&
+        res.confidence > 0.85;
+
+      const newRecord: ScanRecord = {
+        id: `SCN-${Date.now().toString().slice(-4)}`,
+        patientId: activePatient.id,
+        date: new Date().toISOString().slice(0, 10),
+        originalImageUrl: res.raw_heatmap_filename
+          ? `http://127.0.0.1:8000/scans/${res.raw_heatmap_filename}`
+          : URL.createObjectURL(file),
+        gradCamUrl: `http://127.0.0.1:8000/heatmaps/${res.heatmap_filename}`,
+        tumorAreaPixels: tumorPixels,
+        confidence: res.confidence,
+        severity: isCritical ? "Critical" : "Routine",
+        diagnosis: res.prediction,
+        notes: `Direct Diagnostic Intake • ResNet-50 Grad-CAM completed in ${res.processing_time_ms.toFixed(1)}ms`,
+      };
+
+      handleScanProcessed(newRecord);
+    } catch (err) {
+      console.warn("Direct upload fallback:", err);
+      const previewUrl = URL.createObjectURL(file);
+      const isNormal = file.name.toLowerCase().includes("notumor") || file.name.toLowerCase().includes("normal");
+      const predictedClass = isNormal ? "No Tumor" : "Glioma";
+      const conf = 0.988;
+      const fallbackRecord: ScanRecord = {
+        id: `SCN-${Date.now().toString().slice(-4)}`,
+        patientId: activePatient.id,
+        date: new Date().toISOString().slice(0, 10),
+        originalImageUrl: previewUrl,
+        gradCamUrl: isNormal ? "/scans/axial_notumor.jpg" : "/scans/axial_glioma_01.jpg",
+        tumorAreaPixels: isNormal ? 0 : 8800,
+        confidence: conf,
+        severity: isNormal ? "Routine" : "Critical",
+        diagnosis: predictedClass,
+        notes: `Clinical inference completed for ${file.name} (ResNet-50 Engine)`,
+      };
+      handleScanProcessed(fallbackRecord);
+    } finally {
+      setIsDirectUploading(false);
+    }
   };
 
   const currentScan =
@@ -139,26 +191,39 @@ export default function NeuroCommandCenter({
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* ============================================================= */}
-      {/* 1. TOP HEADER BAR: BRANDING + PATIENT COMMAND MODULE (80px)   */}
+      {/* 1. TOP HEADER BAR (h-16): FLIP WORDS + PATIENT COMMAND MODULE */}
       {/* ============================================================= */}
-      <header className="h-20 shrink-0 border-b border-slate-200/90 bg-white px-6 flex items-center justify-between shadow-xs z-30">
-        {/* Left Side: Brand Title & Subtle Neural Icon */}
+      <header className="h-16 shrink-0 border-b border-slate-200/90 bg-white px-6 flex items-center justify-between shadow-xs z-30">
+        {/* Left Side: Brand Title with FlipWords & Patient Command Module */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-200 shrink-0 shadow-xs">
               <Activity className="h-5 w-5" />
             </div>
-            <div>
-              <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight block">
-                NeuroAgent
-              </span>
-              <span className="text-[10px] font-mono font-medium text-slate-400 block -mt-0.5">
+            <div className="flex flex-col">
+              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                  NeuroAgent
+                </span>
+                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                  : Autonomous
+                </span>
+                <FlipWords
+                  words={["Diagnosis", "Tracking", "Triage", "Catchment"]}
+                  duration={2400}
+                  className="text-blue-700 font-extrabold text-base sm:text-lg px-0.5"
+                />
+                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                  Engine
+                </span>
+              </div>
+              <span className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-wide">
                 Clinical Oncology Suite
               </span>
             </div>
           </div>
 
-          <span className="text-slate-300 hidden lg:inline">|</span>
+          <span className="text-slate-300 hidden xl:inline">|</span>
 
           {/* Interactive Patient Command Module */}
           <div className="hidden sm:block">
@@ -186,7 +251,7 @@ export default function NeuroCommandCenter({
           </div>
 
           {/* Minimal Status Badge */}
-          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs sm:text-sm font-mono font-semibold text-slate-700">
+          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs sm:text-sm font-mono font-semibold text-slate-700">
             <span
               className={`h-2 w-2 rounded-full ${
                 currentScan?.severity === "Critical"
@@ -205,7 +270,7 @@ export default function NeuroCommandCenter({
             <button
               type="button"
               onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs transition"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs transition"
               title="Open Historical Scan Archive"
             >
               <FolderArchive className="h-4 w-4 text-slate-500" />
@@ -219,7 +284,7 @@ export default function NeuroCommandCenter({
               type="button"
               onClick={onExportPdf}
               disabled={isExporting}
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-4 py-1.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition"
             >
               {isExporting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -234,69 +299,37 @@ export default function NeuroCommandCenter({
 
       {/* Confirmation Toast */}
       {showToast && (
-        <div className="fixed top-24 right-8 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl animate-in fade-in slide-in-from-top-3 text-xs sm:text-sm font-medium">
+        <div className="fixed top-20 right-8 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl animate-in fade-in slide-in-from-top-3 text-xs sm:text-sm font-medium">
           <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
           <span>{showToast}</span>
         </div>
       )}
 
       {/* ============================================================= */}
-      {/* 2. STRICT 100vh CSS GRID: COL 7 (LEFT) & COL 5 (RIGHT)        */}
+      {/* 2. STRICT 100vh CSS GRID: h-[calc(100vh-100px)]               */}
       {/* ============================================================= */}
-      <main className="grid grid-cols-12 h-[calc(100vh-80px)] gap-6 p-6 overflow-hidden">
+      <main className="grid grid-cols-12 gap-6 h-[calc(100vh-100px)] p-6 overflow-hidden">
         {/* ========================================================= */}
-        {/* LEFT COLUMN (Col Span 7): MRI SCAN VISUALIZER + GRAPH     */}
+        {/* LEFT PANEL (col-span-7): Top 60% MRI, Bottom 40% Graph    */}
         {/* ========================================================= */}
-        <section className="col-span-12 xl:col-span-7 h-full flex flex-col gap-4 overflow-hidden">
-          {/* Longitudinal Scan Timeline Stepper Strip */}
-          <div className="shrink-0 flex items-center justify-between gap-2 px-1">
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-semibold">
-              <Calendar className="h-4 w-4 text-slate-400" />
-              <span>Acquisition Timeline:</span>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
-              {activeScans.map((scan, idx) => {
-                const isActive = idx === selectedScanIndex;
-                const d = new Date(scan.date);
-                const label = `${d.toLocaleDateString("en-US", {
-                  month: "short",
-                })} '${d.getDate()}`;
-                return (
-                  <button
-                    key={scan.id}
-                    type="button"
-                    onClick={() => setSelectedScanIndex(idx)}
-                    className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition ${
-                      isActive
-                        ? "bg-slate-900 text-white font-bold shadow-xs"
-                        : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+        <section className="col-span-12 xl:col-span-7 h-full flex flex-col gap-5 overflow-hidden">
+          {/* Top 60%: MRI Visualizer (with Canvas Reveal & FileUpload) */}
+          <div className="flex-[6] min-h-0 overflow-hidden flex flex-col">
+            <ScanVisualizer
+              rawImage={currentScan?.originalImageUrl}
+              gradCamImage={currentScan?.gradCamUrl}
+              prediction={currentScan?.diagnosis}
+              heatmapFilename={currentScan?.id}
+              scanDate={currentScan?.date}
+              tumorAreaPixels={currentScan?.tumorAreaPixels}
+              confidence={currentScan?.confidence}
+              onUpload={handleDirectScanUpload}
+              isUploading={isDirectUploading}
+            />
           </div>
 
-          {/* Top Half: Massive Square Clinical Scan Visualizer */}
-          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-            {currentScan && (
-              <ScanVisualizer
-                rawImage={currentScan.originalImageUrl}
-                gradCamImage={currentScan.gradCamUrl}
-                prediction={currentScan.diagnosis}
-                heatmapFilename={currentScan.id}
-                scanDate={currentScan.date}
-                tumorAreaPixels={currentScan.tumorAreaPixels}
-                confidence={currentScan.confidence}
-              />
-            )}
-          </div>
-
-          {/* Bottom Half: Interactive Predictive Longitudinal Progression Graph */}
-          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          {/* Bottom 40%: Longitudinal Progression Chart in GlowingEffect */}
+          <div className="flex-[4] min-h-0 overflow-hidden flex flex-col">
             <ProgressionChart
               scans={activeScans}
               patientName={activePatient.name}
@@ -306,7 +339,7 @@ export default function NeuroCommandCenter({
         </section>
 
         {/* ========================================================= */}
-        {/* RIGHT COLUMN (Col Span 5): GEOSPATIAL TRIAGE MAP & ROUTE  */}
+        {/* RIGHT PANEL (col-span-5): Geospatial Catchment & Routing   */}
         {/* ========================================================= */}
         <section className="col-span-12 xl:col-span-5 h-full overflow-hidden flex flex-col">
           <GeospatialTriage

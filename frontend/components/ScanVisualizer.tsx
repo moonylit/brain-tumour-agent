@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Eye, Zap, Columns } from "lucide-react";
+import { Eye, Zap, Columns, UploadCloud, Loader2, RefreshCw } from "lucide-react";
+import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
+import { FileUpload } from "@/components/ui/file-upload";
 
 export interface ScanVisualizerProps {
-  rawImage: string;
+  rawImage?: string;
   gradCamImage?: string;
   prediction?: string;
   heatmapFilename?: string;
@@ -12,6 +14,8 @@ export interface ScanVisualizerProps {
   tumorAreaPixels?: number;
   confidence?: number;
   showCrosshairsDefault?: boolean;
+  onUpload?: (file: File) => void;
+  isUploading?: boolean;
 }
 
 export type VisualizerMode = "overlay" | "xray" | "side-by-side";
@@ -24,10 +28,13 @@ export default function ScanVisualizer({
   scanDate = "2026-10-09",
   tumorAreaPixels = 9280,
   confidence = 0.998,
+  onUpload,
+  isUploading = false,
 }: ScanVisualizerProps) {
   const [mode, setMode] = useState<VisualizerMode>("overlay");
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [isHovering, setIsHovering] = useState(false);
+  const [showUploadView, setShowUploadView] = useState<boolean>(!rawImage);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const effectiveGradCam = gradCamImage || rawImage;
@@ -60,9 +67,15 @@ export default function ScanVisualizer({
     ? `${(confidence * 100).toFixed(1)}% Confidence`
     : "99.8% Confidence";
 
+  const handleFileDrop = (files: File[]) => {
+    if (files.length > 0 && onUpload) {
+      onUpload(files[0]);
+    }
+  };
+
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between">
-      {/* Sub-Header Mode Switcher Array */}
+      {/* Sub-Header Mode Switcher & Re-upload Controls */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
         <div className="flex items-center gap-2">
           <span className="text-sm sm:text-base font-bold text-slate-900">
@@ -73,51 +86,94 @@ export default function ScanVisualizer({
           </span>
         </div>
 
-        {/* Minimalist button array */}
-        <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 text-xs sm:text-sm">
-          <button
-            type="button"
-            onClick={() => setMode("overlay")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              mode === "overlay"
-                ? "bg-white text-blue-700 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Eye className="h-3.5 w-3.5" />
-            <span>Overlay</span>
-          </button>
+        {/* Action Controls Array */}
+        <div className="flex items-center gap-2">
+          {rawImage && (
+            <button
+              type="button"
+              onClick={() => setShowUploadView(!showUploadView)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 shadow-xs transition"
+              title="Toggle Diagnostic Upload View"
+            >
+              <UploadCloud className="h-3.5 w-3.5 text-cyan-600" />
+              <span>{showUploadView ? "View Current MRI" : "Upload MRI"}</span>
+            </button>
+          )}
 
-          <button
-            type="button"
-            onClick={() => setMode("xray")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              mode === "xray"
-                ? "bg-white text-blue-700 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Zap className="h-3.5 w-3.5" />
-            <span>X-Ray Flashlight</span>
-          </button>
+          {!showUploadView && (
+            <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 text-xs">
+              <button
+                type="button"
+                onClick={() => setMode("overlay")}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  mode === "overlay"
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Eye className="h-3.5 w-3.5" />
+                <span>Overlay</span>
+              </button>
 
-          <button
-            type="button"
-            onClick={() => setMode("side-by-side")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              mode === "side-by-side"
-                ? "bg-white text-blue-700 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Columns className="h-3.5 w-3.5" />
-            <span>Side-by-Side</span>
-          </button>
+              <button
+                type="button"
+                onClick={() => setMode("xray")}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  mode === "xray"
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Zap className="h-3.5 w-3.5" />
+                <span>X-Ray Flashlight</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMode("side-by-side")}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  mode === "side-by-side"
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Columns className="h-3.5 w-3.5" />
+                <span>Side-by-Side</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Main Massive Square Clinical Scan Visualizer Stage */}
-      {mode === "side-by-side" ? (
+      {/* Main Visualizer Stage: Empty State (Canvas Reveal + FileUpload) vs Active State */}
+      {showUploadView || !rawImage ? (
+        <div className="relative aspect-square w-full max-h-[360px] sm:max-h-[380px] mx-auto rounded-xl overflow-hidden border border-slate-200 shadow-inner my-auto flex items-center justify-center">
+          {/* Idle Neural Synaptic Network: Canvas Reveal Effect */}
+          <CanvasRevealEffect
+            animationSpeed={0.5}
+            dotSize={2.5}
+            colors={[[37, 99, 235], [6, 182, 212], [99, 102, 241]]}
+            containerClassName="absolute inset-0 bg-slate-50"
+          />
+
+          {/* Overlaid File Upload Component */}
+          <div className="relative z-10 w-full max-w-sm px-4">
+            {isUploading ? (
+              <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-white/90 backdrop-blur-xl border border-cyan-200 shadow-xl">
+                <Loader2 className="h-8 w-8 animate-spin text-cyan-600 mb-2" />
+                <span className="text-sm font-bold text-slate-900">
+                  Executing ResNet-50 Inference
+                </span>
+                <span className="text-xs font-mono text-cyan-700 mt-1">
+                  Generating Grad-CAM localization...
+                </span>
+              </div>
+            ) : (
+              <FileUpload onChange={handleFileDrop} />
+            )}
+          </div>
+        </div>
+      ) : mode === "side-by-side" ? (
         <div className="grid grid-cols-2 gap-4 w-full my-auto">
           {/* Left: Raw 2D Axial MRI in Grayscale */}
           <div className="flex flex-col gap-1.5">
