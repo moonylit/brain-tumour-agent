@@ -84,21 +84,21 @@ export default function RegionSelector({
       <div className="flex items-center justify-between text-xs">
         <label
           htmlFor="region-input"
-          className="flex items-center gap-1.5 font-medium text-slate-300"
+          className="flex items-center gap-1.5 font-medium text-slate-700"
         >
-          <MapPin className="h-3.5 w-3.5 text-cyan-400" />
+          <MapPin className="h-3.5 w-3.5 text-sky-600" />
           <span>Patient Region &amp; Referral Routing</span>
         </label>
         <button
           type="button"
           onClick={handleAutoDetect}
           disabled={disabled || isDetecting}
-          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-cyan-400 hover:text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-800/40 transition disabled:opacity-50"
+          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-sky-700 hover:text-sky-800 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition disabled:opacity-50"
           title="Auto-detect current location via browser geolocation"
         >
           {isDetecting ? (
             <>
-              <Loader2 className="h-3 w-3 animate-spin text-cyan-400" />
+              <Loader2 className="h-3 w-3 animate-spin text-sky-600" />
               <span>Detecting...</span>
             </>
           ) : (
@@ -121,20 +121,20 @@ export default function RegionSelector({
           }}
           disabled={disabled}
           placeholder="e.g., Jaipur, New Delhi, London, Boston"
-          className="w-full bg-slate-950/80 border border-slate-800 focus:border-cyan-500/80 focus:ring-1 focus:ring-cyan-500/50 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition disabled:opacity-50"
+          className="w-full bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 outline-none transition disabled:opacity-50"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <Sparkles className="h-3.5 w-3.5 text-slate-600" />
+          <Sparkles className="h-3.5 w-3.5 text-slate-400" />
         </div>
       </div>
 
       {detectError && (
-        <p className="text-[11px] text-amber-400/90 pl-1">{detectError}</p>
+        <p className="text-[11px] text-amber-700 pl-1">{detectError}</p>
       )}
 
       {/* Preset Hubs */}
       <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-        <span className="text-[11px] text-slate-400 mr-0.5">Quick Hubs:</span>
+        <span className="text-[11px] text-slate-500 mr-0.5">Quick Hubs:</span>
         {PRESET_REGIONS.map((preset) => (
           <button
             key={preset}
@@ -146,8 +146,8 @@ export default function RegionSelector({
             }}
             className={`px-2 py-0.5 rounded-md text-[11px] font-medium transition ${
               value.trim().toLowerCase() === preset.toLowerCase()
-                ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-sm"
-                : "bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800"
+                ? "bg-sky-100 text-sky-800 border border-sky-300 shadow-xs font-semibold"
+                : "bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 border border-slate-200"
             }`}
           >
             {preset}

@@ -2,20 +2,20 @@ export default function Hero() {
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-20 pb-16 text-center">
       {/* Subtle Badge */}
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1 text-xs font-medium text-slate-300">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+      <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs font-medium text-slate-700 shadow-sm">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
         <span>AI Powered MRI Classification</span>
-        <span className="text-slate-600">•</span>
-        <span className="font-mono text-[11px] text-slate-400">ResNet-50</span>
+        <span className="text-slate-400">•</span>
+        <span className="font-mono text-[11px] text-slate-500">ResNet-50</span>
       </div>
 
       {/* Main Heading */}
-      <h1 className="mt-6 max-w-3xl text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
+      <h1 className="mt-6 max-w-3xl text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-tight">
         Brain Tumour Detector
       </h1>
 
       {/* Subtitle */}
-      <p className="mt-4 max-w-xl text-base sm:text-lg text-slate-400 leading-relaxed">
+      <p className="mt-4 max-w-xl text-base sm:text-lg text-slate-600 leading-relaxed">
         Upload an MRI scan to detect brain tumours and view Grad-CAM explainability heatmaps.
       </p>
 
@@ -23,7 +23,7 @@ export default function Hero() {
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
         <a
           href="#upload"
-          className="btn-primary inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-sm font-semibold text-white"
+          className="btn-primary inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-sm font-semibold text-white shadow-sm"
         >
           <svg
             className="h-4 w-4 text-sky-200"
@@ -44,10 +44,10 @@ export default function Hero() {
 
         <a
           href="#evaluation"
-          className="btn-secondary inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-slate-300"
+          className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm transition"
         >
           <svg
-            className="h-4 w-4 text-slate-400"
+            className="h-4 w-4 text-slate-500"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

@@ -66,10 +66,10 @@ export default function Features() {
   return (
     <section id="features" className="mx-auto max-w-7xl px-6 sm:px-8 py-20">
       <div className="mb-12 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-800">
           Features &amp; Capabilities
         </h2>
-        <p className="mt-2 text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+        <p className="mt-2 text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
           Accurate MRI classification paired with transparent model interpretability.
         </p>
       </div>
@@ -78,17 +78,17 @@ export default function Features() {
         {features.map((feature) => (
           <div
             key={feature.title}
-            className="glass-card-interactive rounded-2xl p-7"
+            className="bg-white rounded-xl shadow-sm border border-slate-200 p-7 hover:shadow-md transition-shadow duration-300"
           >
-            <div className="mb-5 inline-flex p-3 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+            <div className="mb-5 inline-flex p-3 rounded-xl border border-slate-200 bg-slate-50">
               {feature.icon}
             </div>
 
-            <h3 className="text-lg font-semibold text-white tracking-tight">
+            <h3 className="text-lg font-semibold text-slate-800 tracking-tight">
               {feature.title}
             </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
               {feature.description}
             </p>
           </div>

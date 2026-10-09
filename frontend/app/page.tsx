@@ -13,16 +13,16 @@ export default function Home() {
   const [region, setRegion] = useState("Jaipur");
 
   return (
-    <main className="relative min-h-screen bg-[#070A11] text-slate-100 selection:bg-cyan-600 selection:text-white">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
       {/* Ambient background micro-grid */}
       <div
-        className="pointer-events-none fixed inset-0 bg-grid-pattern opacity-60 z-0"
+        className="hidden"
         aria-hidden="true"
       />
 
       {/* Atmospheric radial gradient spotlight */}
       <div
-        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1680px] h-[650px] bg-radial-glow z-0"
+        className="hidden"
         aria-hidden="true"
       />
 
