@@ -76,27 +76,27 @@ export default function PredictionCard({
     accessionId || `ACC-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-9842`;
 
   return (
-    <div className="mt-10 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
+    <div className="mt-12 bg-white/95 backdrop-blur-md rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-12">
       {/* ------------------------------------------------------------- */}
       {/* 1. TOP READOUT HEADER                                         */}
       {/* ------------------------------------------------------------- */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-200/60 pb-6 mb-8 gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-mono text-emerald-800">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300 bg-emerald-100 px-3.5 py-1 text-sm font-mono font-bold text-emerald-900 shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
             <span>Inference Completed</span>
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-800 mt-2">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 mt-2">
             Prediction Result
           </h2>
         </div>
 
         <div className="flex items-center gap-3">
           <span
-            className={`rounded-xl border px-4 py-2 text-sm sm:text-base font-bold tracking-wide shadow-sm ${
+            className={`rounded-2xl border-2 px-6 py-3 text-lg sm:text-xl font-black tracking-wide shadow-md ${
               isNoTumor
-                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                : "border-rose-200 bg-rose-50 text-rose-800"
+                ? "border-emerald-300 bg-emerald-100 text-emerald-900"
+                : "border-rose-300 bg-rose-100 text-rose-900"
             }`}
           >
             {formattedPrediction}
@@ -107,67 +107,67 @@ export default function PredictionCard({
       {/* ------------------------------------------------------------- */}
       {/* 2. TOP METRICS STRIP (5 Micro-Stat Blocks)                    */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-10">
         {/* Micro-Stat 1: Accession UID */}
-        <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Accession ID</span>
-            <Fingerprint className="h-3.5 w-3.5 text-sky-600" />
+        <div className="rounded-2xl bg-gradient-to-br from-white to-slate-50 border-2 border-slate-200 p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-slate-600 text-xs">
+            <span className="font-mono font-bold uppercase tracking-wider text-xs">Accession ID</span>
+            <Fingerprint className="h-4 w-4 text-blue-600" />
           </div>
-          <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-slate-800 truncate" title={displayAccession}>
+          <p className="mt-3 text-sm sm:text-base font-mono font-bold text-slate-900 truncate" title={displayAccession}>
             {displayAccession}
           </p>
         </div>
 
         {/* Micro-Stat 2: Model Version */}
-        <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Model Engine</span>
-            <Cpu className="h-3.5 w-3.5 text-blue-600" />
+        <div className="rounded-2xl bg-gradient-to-br from-white to-blue-50/30 border-2 border-blue-200 p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-blue-800 text-xs">
+            <span className="font-mono font-bold uppercase tracking-wider text-xs">Model Engine</span>
+            <Cpu className="h-4 w-4 text-blue-600" />
           </div>
-          <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-blue-700">
+          <p className="mt-3 text-sm sm:text-base font-mono font-black text-blue-700">
             ResNet-50 v2
           </p>
         </div>
 
         {/* Micro-Stat 3: Softmax Confidence */}
-        <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Softmax Confidence</span>
-            <Activity className="h-3.5 w-3.5 text-emerald-600" />
+        <div className="rounded-2xl bg-gradient-to-br from-white to-emerald-50/30 border-2 border-emerald-200 p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-emerald-800 text-xs">
+            <span className="font-mono font-bold uppercase tracking-wider text-xs">Confidence</span>
+            <Activity className="h-4 w-4 text-emerald-600" />
           </div>
-          <p className="mt-2 text-base sm:text-lg font-mono font-bold text-emerald-700">
+          <p className="mt-3 text-xl sm:text-2xl font-mono font-black text-emerald-600">
             {(confidence * 100).toFixed(2)}%
           </p>
         </div>
 
         {/* Micro-Stat 4: Detection Latency */}
-        <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Detection Latency</span>
-            <Clock className="h-3.5 w-3.5 text-sky-600" />
+        <div className="rounded-2xl bg-gradient-to-br from-white to-sky-50/30 border-2 border-sky-200 p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-sky-800 text-xs">
+            <span className="font-mono font-bold uppercase tracking-wider text-xs">Inference Time</span>
+            <Clock className="h-4 w-4 text-sky-600" />
           </div>
-          <p className="mt-2 text-base sm:text-lg font-mono font-bold text-sky-700">
+          <p className="mt-3 text-xl sm:text-2xl font-mono font-black text-sky-600">
             {processingTime.toFixed(2)} ms
           </p>
         </div>
 
         {/* Micro-Stat 5: Clinical Risk Triage Status */}
-        <div className="col-span-2 sm:col-span-1 rounded-xl bg-slate-50 border border-slate-200 p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Triage Risk Stratum</span>
+        <div className="col-span-2 sm:col-span-1 rounded-2xl bg-gradient-to-br from-white to-rose-50/30 border-2 border-rose-200 p-5 flex flex-col justify-between shadow-xs">
+          <div className="flex items-center justify-between text-slate-700 text-xs">
+            <span className="font-mono font-bold uppercase tracking-wider text-xs">Triage Stratum</span>
             {isNoTumor ? (
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             ) : (
-              <ShieldAlert className="h-3.5 w-3.5 text-rose-600" />
+              <ShieldAlert className="h-4 w-4 text-rose-600" />
             )}
           </div>
-          <div className="mt-2">
+          <div className="mt-3">
             <span
-              className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold ${
+              className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold ${
                 isNoTumor
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : "bg-rose-50 text-rose-800 border border-rose-200"
+                  ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                  : "bg-rose-100 text-rose-800 border border-rose-300"
               }`}
             >
               {isNoTumor ? "Nominal Surveillance" : "Escalation Recommended"}
@@ -427,32 +427,32 @@ export default function PredictionCard({
       {/* ------------------------------------------------------------- */}
       {/* 5. PDF REPORT DOWNLOAD ACTION STRIP                           */}
       {/* ------------------------------------------------------------- */}
-      <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-slate-200">
+      <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t-2 border-blue-200/60">
         <button
           type="button"
           onClick={handleDownloadReport}
           disabled={downloading}
-          className="btn-emerald inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-emerald inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 shadow-xl shadow-emerald-600/30 transition-all hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {downloading ? (
             <>
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
+              <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent" />
               <span>Generating Report...</span>
             </>
           ) : (
             <>
-              <FileDown className="h-4 w-4 text-emerald-200" />
+              <FileDown className="h-5 w-5 text-emerald-100" />
               <span>Download PDF Report</span>
             </>
           )}
         </button>
 
-        <span className="text-xs text-slate-500 font-mono">
-          Clinical telemetry &bull; Target Region: <strong className="text-slate-700">{region}</strong> &bull; SerpApi audit trail logged
+        <span className="text-sm text-slate-600 font-mono font-medium">
+          Clinical telemetry &bull; Target Region: <strong className="text-blue-700 font-bold">{region}</strong> &bull; SerpApi audit trail logged
         </span>
 
         {downloadError && (
-          <div className="w-full rounded-xl border border-red-500/30 bg-red-950/60 p-3 text-sm text-red-300">
+          <div className="w-full rounded-2xl border-2 border-red-300 bg-red-50 p-4 text-sm font-semibold text-red-800">
             {downloadError}
           </div>
         )}

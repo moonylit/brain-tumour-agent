@@ -115,36 +115,36 @@ export default function UploadCard({
   }
 
   return (
-    <section id="upload" className="mx-auto max-w-[1680px] w-full px-6 sm:px-8 py-10">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
+    <section id="upload" className="mx-auto max-w-[1720px] w-full px-6 sm:px-8 py-10">
+      <div className="bg-white/90 backdrop-blur-md rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-12">
         <div className="mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
-              <Upload className="h-7 w-7 text-sky-600" />
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+              <Upload className="h-8 w-8 text-blue-600" />
               <span>Upload MRI Scan</span>
             </h2>
-            <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-mono font-medium text-sky-800">
+            <span className="rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-sm font-mono font-bold text-blue-800 shadow-xs">
               Track 01: SerpApi Decision Agent
             </span>
           </div>
-          <p className="mt-1 text-sm text-slate-600 leading-relaxed max-w-4xl">
+          <p className="mt-2 text-base sm:text-lg text-slate-600 leading-relaxed max-w-4xl">
             Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
           </p>
         </div>
 
         {/* Diagnostic Ingest Dropzone & Region Selector */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* File Upload Box (2 cols on lg) */}
-          <div className="lg:col-span-2 relative group bg-white rounded-xl shadow-sm border-2 border-dashed border-slate-300 p-8 text-center transition-all duration-300 hover:border-sky-500 hover:bg-slate-50/50">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 text-sky-600 shadow-sm group-hover:scale-105 transition duration-300">
-              <Upload className="h-7 w-7" />
+          <div className="lg:col-span-2 relative group bg-gradient-to-b from-blue-50/40 via-white to-indigo-50/20 rounded-3xl shadow-sm border-2 border-dashed border-blue-300 p-10 sm:p-14 text-center transition-all duration-300 hover:border-blue-600 hover:bg-blue-50/60">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition duration-300">
+              <Upload className="h-8 w-8 text-white" />
             </div>
 
             <label
               htmlFor="mri-file-input"
-              className="cursor-pointer block text-sm font-semibold text-slate-800 hover:text-slate-900"
+              className="cursor-pointer block text-base sm:text-lg font-bold text-slate-800 hover:text-blue-700"
             >
-              <span className="text-sky-600 underline decoration-sky-300 underline-offset-4 hover:decoration-sky-600">
+              <span className="text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-700">
                 Browse neuroimaging file
               </span>{" "}
               or select from local directory
@@ -155,23 +155,23 @@ export default function UploadCard({
               id="mri-file-input"
               accept="image/jpeg,image/png"
               onChange={handleImageChange}
-              className="mt-4 block w-full max-w-sm mx-auto cursor-pointer text-xs text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-slate-700 hover:file:bg-slate-200 transition"
+              className="mt-5 block w-full max-w-md mx-auto cursor-pointer text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-600 file:px-5 file:py-2.5 file:text-sm file:font-bold file:text-white hover:file:bg-blue-700 shadow-sm transition"
             />
 
-            <p className="mt-4 text-xs font-mono text-slate-600">
+            <p className="mt-5 text-xs sm:text-sm font-mono font-medium text-slate-500">
               Supported formats: JPG, PNG • Max size: 10 MB
             </p>
           </div>
 
           {/* Region Configuration Card (1 col on lg) */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+          <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 rounded-3xl shadow-sm border-2 border-blue-200/80 p-7">
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="h-4 w-4 text-sky-600" />
-              <h3 className="text-sm font-semibold text-slate-800">
+              <Sparkles className="h-5 w-5 text-blue-600" />
+              <h3 className="text-base font-bold text-slate-900">
                 Geographic Referral Routing
               </h3>
             </div>
-            <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+            <p className="text-sm text-slate-600 mb-4 leading-relaxed">
               Target metropolitan region for autonomous hospital geolocation and tertiary surgical center referral routing:
             </p>
             <RegionSelector
@@ -184,55 +184,55 @@ export default function UploadCard({
 
         {/* Error Notification Banner */}
         {errorMessage && (
-          <div className="mt-6 flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-800 shadow-sm">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
-            <div className="flex-1 text-sm">
-              <strong className="block font-semibold text-rose-800">
+          <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50 p-5 text-rose-800 shadow-md">
+            <AlertTriangle className="mt-0.5 h-6 w-6 shrink-0 text-rose-600" />
+            <div className="flex-1 text-base">
+              <strong className="block font-bold text-rose-900">
                 Action Required
               </strong>
-              <span className="text-rose-700">{errorMessage}</span>
+              <span className="text-rose-800">{errorMessage}</span>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
               aria-label="Dismiss error"
-              className="rounded-lg p-1 text-rose-500 hover:bg-rose-100 hover:text-rose-700 transition"
+              className="rounded-xl p-1.5 text-rose-500 hover:bg-rose-100 hover:text-rose-700 transition"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
         )}
 
         {/* Selected Image Preview & Action Button */}
         {preview && (
-          <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-200 pb-3">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+          <div className="mt-10 rounded-3xl border-2 border-blue-200/90 bg-gradient-to-br from-slate-50 to-blue-50/30 p-8 sm:p-10 shadow-md">
+            <div className="flex items-center justify-between mb-5 border-b border-blue-200/60 pb-4">
+              <span className="text-sm font-mono font-bold uppercase tracking-wider text-slate-700">
                 Selected Scan
               </span>
-              <span className="font-mono text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              <span className="font-mono text-sm font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-3.5 py-1 rounded-full shadow-2xs">
                 Ready for Analysis
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-black/90 p-2 shadow-sm">
+              <div className="relative overflow-hidden rounded-2xl border-2 border-slate-300 bg-black/90 p-3 shadow-lg">
                 <img
                   src={preview}
                   alt="MRI Preview"
-                  className="max-h-96 rounded-lg object-contain"
+                  className="max-h-[440px] rounded-xl object-contain"
                 />
               </div>
 
-              <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-1 font-mono text-xs text-slate-600 border border-slate-200 shadow-sm">
-                <span className="font-medium text-slate-800">
+              <div className="mt-4 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-2 font-mono text-sm text-slate-700 border-2 border-blue-200 shadow-sm">
+                <span className="font-bold text-slate-900">
                   {selectedImage?.name}
                 </span>
-                <span className="text-slate-400">•</span>
+                <span className="text-slate-300">•</span>
                 <span className="text-slate-600">
                   {((selectedImage?.size || 0) / 1024).toFixed(1)} KB
                 </span>
-                <span className="text-slate-400">•</span>
-                <span className="text-sky-700 font-semibold">
+                <span className="text-slate-300">•</span>
+                <span className="text-blue-700 font-bold">
                   Region: {region}
                 </span>
               </div>
@@ -240,16 +240,16 @@ export default function UploadCard({
               <button
                 onClick={handleUpload}
                 disabled={loading}
-                className="btn-primary mt-6 inline-flex items-center justify-center gap-2.5 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn-primary mt-8 inline-flex items-center justify-center gap-3 px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
+                    <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent" />
                     <span>Analyzing Brain MRI &amp; Querying SerpApi...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-5 w-5 text-cyan-200" />
+                    <Sparkles className="h-6 w-6 text-cyan-200" />
                     <span>Analyze MRI Scan</span>
                   </>
                 )}

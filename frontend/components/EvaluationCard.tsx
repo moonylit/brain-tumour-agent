@@ -99,18 +99,18 @@ export default function EvaluationCard({
   }
 
   return (
-    <section id="evaluation" className="mx-auto max-w-7xl px-6 sm:px-8 py-16">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
-        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+    <section id="evaluation" className="mx-auto max-w-[1720px] w-full px-6 sm:px-8 py-16">
+      <div className="bg-white/90 backdrop-blur-md rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-12">
+        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1 text-xs font-mono text-sky-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-300 bg-sky-100/80 px-4 py-1.5 text-sm font-mono font-bold text-sky-900">
+              <span className="h-2 w-2 rounded-full bg-sky-600" />
               <span>Validated Test Performance</span>
             </div>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-slate-800">
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900">
               Model Evaluation
             </h2>
-            <p className="mt-2 text-sm text-slate-600 max-w-2xl leading-relaxed">
+            <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-3xl leading-relaxed">
               Performance metrics and diagnostic curves evaluated on the validation dataset using the trained ResNet-50 network.
             </p>
           </div>
@@ -118,7 +118,7 @@ export default function EvaluationCard({
           {error && (
             <button
               onClick={fetchEvaluationData}
-              className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 shadow-sm"
+              className="inline-flex items-center gap-2 self-start rounded-xl border-2 border-blue-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-sm"
             >
               Retry Load
             </button>
@@ -132,21 +132,21 @@ export default function EvaluationCard({
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center"
+                  className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-8 text-center"
                 >
                   <div className="mx-auto h-4 w-20 rounded bg-slate-200" />
-                  <div className="mx-auto mt-3 h-8 w-24 rounded bg-slate-100" />
+                  <div className="mx-auto mt-3 h-10 w-28 rounded bg-slate-100" />
                 </div>
               ))}
             </div>
-            <div className="h-40 rounded-xl border border-slate-200 bg-slate-50" />
+            <div className="h-44 rounded-2xl border-2 border-slate-200 bg-slate-50" />
           </div>
         )}
 
         {/* Error State */}
         {error && !metrics && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center shadow-sm">
-            <p className="font-semibold text-red-800">
+          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-8 text-center shadow-sm">
+            <p className="font-bold text-lg text-red-800">
               Unable to load model evaluation data
             </p>
             <p className="mt-1 text-sm text-red-700">{error}</p>
@@ -155,39 +155,39 @@ export default function EvaluationCard({
 
         {/* Evaluation Metrics Cards */}
         {metrics && (
-          <div className="mb-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center shadow-xs">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+          <div className="mb-12 grid grid-cols-2 gap-5 sm:gap-6 md:grid-cols-4">
+            <div className="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/70 via-white to-emerald-50/30 p-8 text-center shadow-md">
+              <span className="text-sm font-mono font-bold uppercase tracking-wider text-emerald-800">
                 Accuracy
               </span>
-              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-emerald-600">
+              <p className="mt-3 text-4xl sm:text-5xl font-black font-mono tracking-tight text-emerald-600">
                 {(metrics.accuracy * 100).toFixed(2)}%
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center shadow-xs">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+            <div className="rounded-2xl border-2 border-cyan-200 bg-gradient-to-br from-cyan-50/70 via-white to-cyan-50/30 p-8 text-center shadow-md">
+              <span className="text-sm font-mono font-bold uppercase tracking-wider text-cyan-800">
                 Precision
               </span>
-              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-sky-600">
+              <p className="mt-3 text-4xl sm:text-5xl font-black font-mono tracking-tight text-cyan-600">
                 {(metrics.precision * 100).toFixed(2)}%
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center shadow-xs">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+            <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50/70 via-white to-blue-50/30 p-8 text-center shadow-md">
+              <span className="text-sm font-mono font-bold uppercase tracking-wider text-blue-800">
                 Recall
               </span>
-              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-blue-600">
+              <p className="mt-3 text-4xl sm:text-5xl font-black font-mono tracking-tight text-blue-600">
                 {(metrics.recall * 100).toFixed(2)}%
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center shadow-xs">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+            <div className="rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50/70 via-white to-purple-50/30 p-8 text-center shadow-md">
+              <span className="text-sm font-mono font-bold uppercase tracking-wider text-purple-800">
                 F1 Score
               </span>
-              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-purple-600">
+              <p className="mt-3 text-4xl sm:text-5xl font-black font-mono tracking-tight text-purple-600">
                 {(metrics.f1_score * 100).toFixed(2)}%
               </p>
             </div>
@@ -195,16 +195,16 @@ export default function EvaluationCard({
         )}
 
         {/* Buttons for Curves & Matrix (Click to toggle display) */}
-        <div className="mb-4 border-b border-slate-200 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500">
+        <div className="mb-4 border-b border-blue-200/60 pb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <span className="text-sm font-mono font-bold uppercase tracking-wider text-slate-700">
               Evaluation Visualizations
             </span>
             {activeTab && (
               <button
                 type="button"
                 onClick={() => setActiveTab(null)}
-                className="text-xs text-slate-500 hover:text-slate-800 transition flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+                className="text-sm text-slate-500 hover:text-blue-700 font-semibold transition flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
               >
                 <span>Hide Visualization</span>
                 <span>✕</span>
@@ -215,7 +215,7 @@ export default function EvaluationCard({
           <div
             role="tablist"
             aria-label="Model Evaluation Visualizations"
-            className="flex flex-wrap items-center gap-2.5"
+            className="flex flex-wrap items-center gap-3.5"
           >
             {TAB_CONFIG.map((tab) => {
               const isSelected = activeTab === tab.id;
@@ -227,20 +227,20 @@ export default function EvaluationCard({
                   aria-selected={isSelected}
                   aria-controls={`panel-${tab.id}`}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  className={`inline-flex items-center gap-2.5 rounded-2xl px-7 py-3.5 text-sm sm:text-base font-bold transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? "bg-blue-600 text-white border border-blue-600 shadow-sm"
-                      : "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 hover:text-slate-900"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-2 border-blue-500 shadow-lg shadow-blue-500/25"
+                      : "bg-white text-slate-700 border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 hover:text-blue-800 shadow-xs"
                   }`}
                 >
                   <span
-                    className={`h-2 w-2 rounded-full ${
+                    className={`h-2.5 w-2.5 rounded-full ${
                       isSelected ? "bg-white" : "bg-slate-400"
                     }`}
                   />
                   <span>{tab.label}</span>
                   {isSelected && (
-                    <span className="text-xs text-blue-100 font-mono ml-0.5">✓</span>
+                    <span className="text-sm text-blue-100 font-mono ml-0.5">✓</span>
                   )}
                 </button>
               );

@@ -87,14 +87,14 @@ export default function HistoryCard({
   return (
     <div
       id="history"
-      className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10"
+      className="mt-14 bg-white/95 backdrop-blur-md rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-12"
     >
-      <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center border-b border-slate-200 pb-5">
+      <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center border-b border-blue-200/60 pb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-800">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
             Prediction History
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1.5 text-base text-slate-600">
             Log of past MRI scans and model predictions.
           </p>
         </div>
@@ -102,16 +102,16 @@ export default function HistoryCard({
         <button
           onClick={fetchHistoryData}
           disabled={loading}
-          className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 shadow-sm disabled:opacity-50"
+          className="inline-flex items-center gap-2 self-start rounded-xl border-2 border-blue-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 shadow-sm transition disabled:opacity-50"
         >
           {loading ? (
             <>
-              <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-400 border-r-transparent" />
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-r-transparent" />
               <span>Refreshing...</span>
             </>
           ) : (
             <>
-              <svg className="h-3.5 w-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="h-4 w-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="23 4 23 10 17 10" />
                 <polyline points="1 20 1 14 7 14" />
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
@@ -123,16 +123,16 @@ export default function HistoryCard({
       </div>
 
       {/* Query Controls */}
-      <div className="mb-6 grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-3">
+      <div className="mb-8 grid grid-cols-1 gap-5 rounded-2xl border-2 border-blue-100 bg-gradient-to-br from-blue-50/40 via-white to-indigo-50/20 p-6 sm:grid-cols-3 shadow-xs">
         {/* Class Filter */}
         <div>
-          <label className="mb-1.5 block text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+          <label className="mb-2 block text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
             Filter by Class
           </label>
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-500 focus:outline-none shadow-xs transition"
+            className="w-full rounded-xl border-2 border-blue-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-600 focus:outline-none shadow-xs transition"
           >
             {VALID_CLASSES.map((cls) => (
               <option key={cls.value} value={cls.value}>
@@ -144,13 +144,13 @@ export default function HistoryCard({
 
         {/* Sort Order */}
         <div>
-          <label className="mb-1.5 block text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+          <label className="mb-2 block text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
             Sort Order
           </label>
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as "desc" | "asc")}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-500 focus:outline-none shadow-xs transition"
+            className="w-full rounded-xl border-2 border-blue-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-600 focus:outline-none shadow-xs transition"
           >
             <option value="desc">Newest First (Desc)</option>
             <option value="asc">Oldest First (Asc)</option>
@@ -159,7 +159,7 @@ export default function HistoryCard({
 
         {/* Limit */}
         <div>
-          <label className="mb-1.5 block text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+          <label className="mb-2 block text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
             Display Limit
           </label>
           <select
@@ -167,7 +167,7 @@ export default function HistoryCard({
             onChange={(e) =>
               setLimit(e.target.value ? Number(e.target.value) : undefined)
             }
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 focus:border-blue-500 focus:outline-none shadow-xs transition"
+            className="w-full rounded-xl border-2 border-blue-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 focus:border-blue-600 focus:outline-none shadow-xs transition"
           >
             <option value="5">5 records</option>
             <option value="10">10 records</option>

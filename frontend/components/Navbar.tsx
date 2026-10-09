@@ -31,20 +31,20 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="bg-white/70 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 sm:px-8 py-4">
-        <div className="flex items-center gap-4">
+    <header className="bg-white/85 backdrop-blur-lg border-b border-blue-200/60 shadow-md shadow-blue-900/5 sticky top-0 z-50">
+      <nav className="mx-auto flex max-w-[1720px] items-center justify-between px-6 sm:px-10 py-5">
+        <div className="flex items-center gap-5">
           <a
             href="#"
-            className="group flex items-center gap-2.5 text-base sm:text-lg font-bold tracking-tight text-slate-900 transition hover:text-sky-600"
+            className="group flex items-center gap-3 text-xl sm:text-2xl font-extrabold tracking-tight transition"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-sky-200 bg-sky-50 text-sky-600 shadow-sm transition group-hover:border-sky-300 group-hover:bg-sky-100">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 transition group-hover:scale-105">
               <svg
-                className="h-5 w-5"
+                className="h-6 w-6 text-white"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
@@ -53,7 +53,7 @@ export default function Navbar() {
                 <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
               </svg>
             </div>
-            <span className="font-semibold tracking-tight text-slate-900">
+            <span className="font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 bg-clip-text text-transparent">
               BrainTumourAI
             </span>
           </a>
@@ -61,10 +61,10 @@ export default function Navbar() {
           {/* Minimal Backend Status Pill */}
           {isBackendOnline !== null && (
             <span
-              className={`hidden items-center gap-2 px-3 py-1 rounded-full text-sm font-medium sm:inline-flex transition ${
+              className={`hidden items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold sm:inline-flex transition shadow-xs ${
                 isBackendOnline
-                  ? "bg-emerald-100 text-emerald-700 text-emerald-400 border border-emerald-200"
-                  : "border border-slate-200 bg-slate-100 text-slate-500 text-slate-400"
+                  ? "bg-emerald-100 text-emerald-700 text-emerald-400 border border-emerald-300"
+                  : "border border-slate-300 bg-slate-100 text-slate-500 text-slate-400"
               }`}
               title={
                 isBackendOnline
@@ -72,12 +72,12 @@ export default function Navbar() {
                   : "Backend is currently unreachable"
               }
             >
-              <span className="relative flex h-2 w-2">
+              <span className="relative flex h-2.5 w-2.5">
                 {isBackendOnline && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
                 )}
                 <span
-                  className={`relative inline-flex rounded-full h-2 w-2 ${
+                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
                     isBackendOnline ? "bg-emerald-500" : "bg-slate-500"
                   }`}
                 />
@@ -87,34 +87,34 @@ export default function Navbar() {
           )}
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium text-slate-700">
+        <div className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-semibold text-slate-700">
           <a
             href="#upload"
-            className="rounded-lg px-3 py-1.5 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Upload
           </a>
           <a
             href="#evaluation"
-            className="rounded-lg px-3 py-1.5 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Evaluation
           </a>
           <a
             href="#stats"
-            className="rounded-lg px-3 py-1.5 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Statistics
           </a>
           <a
             href="#history"
-            className="rounded-lg px-3 py-1.5 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
           >
             History
           </a>
           <a
             href="#features"
-            className="rounded-lg px-3 py-1.5 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-4 py-2 transition hover:bg-blue-50 hover:text-blue-700"
           >
             Features
           </a>

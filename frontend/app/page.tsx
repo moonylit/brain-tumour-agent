@@ -13,7 +13,7 @@ export default function Home() {
   const [region, setRegion] = useState("Jaipur");
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/50 text-slate-900">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/40 text-slate-900 selection:bg-blue-500 selection:text-white">
       {/* Ambient background micro-grid */}
       <div
         className="hidden"
@@ -27,7 +27,7 @@ export default function Home() {
       />
 
       {/* Widescreen Content wrapper */}
-      <div className="relative z-10 flex flex-col max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="relative z-10 flex flex-col max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-8 space-y-12">
         <Navbar />
         <Hero />
         <UploadCard region={region} onRegionChange={setRegion} />

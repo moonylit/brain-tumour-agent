@@ -71,67 +71,67 @@ export default function ClinicalAgentCard({
   const effectiveRegion = region || research.region || research.patient_city || "Jaipur";
 
   return (
-    <div className="flex flex-col rounded-2xl border border-blue-100 bg-white/90 p-6 sm:p-8 shadow-md">
+    <div className="flex flex-col rounded-3xl border-2 border-blue-200/80 bg-white/95 p-8 sm:p-10 shadow-xl shadow-blue-900/5">
       {/* Panel Header */}
-      <div className="border-b border-slate-100 pb-4 mb-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs font-mono font-medium text-sky-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-500 animate-ping" />
+      <div className="border-b border-blue-200/60 pb-5 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-300 bg-blue-100/80 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-2xs">
+              <span className="h-2 w-2 rounded-full bg-blue-600 animate-ping" />
               SerpApi AI Agent (Track 01)
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-mono text-slate-700">
-              <MapPin className="h-3 w-3 text-sky-600" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-xs font-mono font-bold text-slate-700">
+              <MapPin className="h-3.5 w-3.5 text-blue-600" />
               {effectiveRegion}
             </span>
           </div>
 
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+            className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-bold ${
               isNoTumor
-                ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
-                : "border border-amber-200 bg-amber-50 text-amber-800"
+                ? "border border-emerald-300 bg-emerald-100 text-emerald-800"
+                : "border border-amber-300 bg-amber-100 text-amber-900"
             }`}
           >
             {isNoTumor ? (
               <>
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span>Baseline Guidance</span>
               </>
             ) : (
               <>
-                <ShieldAlert className="h-3.5 w-3.5 text-amber-600" />
+                <ShieldAlert className="h-4 w-4 text-amber-600" />
                 <span>Escalation Recommended</span>
               </>
             )}
           </span>
         </div>
 
-        <h3 className="text-lg font-bold text-slate-800 tracking-tight flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-sky-600" />
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <Sparkles className="h-6 w-6 text-blue-600" />
           Autonomous Clinical Agent Research &amp; Care Facilities
         </h3>
-        <p className="text-xs text-slate-500 mt-0.5">
-          SerpApi Tools: <code className="text-sky-700 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-100">web_search</code> (PubMed/NCCN) &amp;{" "}
-          <code className="text-sky-700 font-mono bg-sky-50 px-1 py-0.5 rounded border border-sky-100">maps_search</code> (Tertiary Oncology Centers in {effectiveRegion})
+        <p className="text-sm text-slate-500 mt-1 font-medium">
+          SerpApi Tools: <code className="text-blue-700 font-mono font-bold bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">web_search</code> (PubMed/NCCN) &amp;{" "}
+          <code className="text-blue-700 font-mono font-bold bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">maps_search</code> (Tertiary Oncology Centers in {effectiveRegion})
         </p>
       </div>
 
       {/* Clinical Guidance / Decision Support Summary */}
       <div
-        className={`mb-5 rounded-xl border p-4 text-xs leading-relaxed ${
+        className={`mb-6 rounded-2xl border-2 p-6 text-sm leading-relaxed ${
           isNoTumor
-            ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-            : "border-sky-200 bg-sky-50 text-slate-800"
+            ? "border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/40 text-emerald-950"
+            : "border-blue-200 bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/40 text-slate-900"
         }`}
       >
-        <div className="flex items-center gap-2 mb-1.5 font-semibold">
-          <Zap className={`h-4 w-4 ${isNoTumor ? "text-emerald-600" : "text-sky-600"}`} />
-          <span className="text-xs font-mono uppercase tracking-wider text-slate-700">
+        <div className="flex items-center gap-2 mb-2 font-bold">
+          <Zap className={`h-5 w-5 ${isNoTumor ? "text-emerald-600" : "text-blue-600"}`} />
+          <span className="text-sm font-mono font-bold uppercase tracking-wider text-slate-800">
             Synthesized Clinical Action Plan
           </span>
         </div>
-        <p className="leading-relaxed">{research.clinical_summary}</p>
+        <p className="leading-relaxed font-medium">{research.clinical_summary}</p>
       </div>
 
       {/* Autonomous Queries Collapsible */}

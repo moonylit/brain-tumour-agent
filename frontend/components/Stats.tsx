@@ -54,16 +54,22 @@ export default function Stats({ refreshTrigger }: Props) {
       value: stats ? stats.total_predictions.toLocaleString() : "-",
       label: "Total Predictions",
       color: "text-sky-600",
+      bg: "border-2 border-sky-200 bg-gradient-to-br from-sky-50/80 via-white to-sky-50/30 shadow-lg shadow-sky-500/10",
+      labelColor: "text-sky-900",
     },
     {
       value: stats ? formatConfidence(stats.average_confidence) : "-",
       label: "Average Confidence",
       color: "text-emerald-600",
+      bg: "border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 shadow-lg shadow-emerald-500/10",
+      labelColor: "text-emerald-900",
     },
     {
       value: stats ? formatTime(stats.average_processing_time_ms) : "-",
       label: "Average Inference",
       color: "text-amber-600",
+      bg: "border-2 border-amber-200 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/30 shadow-lg shadow-amber-500/10",
+      labelColor: "text-amber-900",
     },
     {
       value: stats?.most_common_prediction
@@ -71,18 +77,20 @@ export default function Stats({ refreshTrigger }: Props) {
         : "N/A",
       label: "Most Common Class",
       color: "text-purple-600",
+      bg: "border-2 border-purple-200 bg-gradient-to-br from-purple-50/80 via-white to-purple-50/30 shadow-lg shadow-purple-500/10",
+      labelColor: "text-purple-900",
     },
   ];
 
   const allClasses = ["glioma", "meningioma", "pituitary", "notumor"];
 
   return (
-    <section id="stats" className="mx-auto max-w-7xl px-6 sm:px-8 py-20">
+    <section id="stats" className="mx-auto max-w-[1720px] w-full px-6 sm:px-8 py-20">
       <div className="mb-14 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-800">
+        <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">
           Prediction Statistics &amp; Analytics
         </h2>
-        <p className="mt-2 text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+        <p className="mt-3 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Aggregated analytics computed in real-time from inference history.
         </p>
       </div>
@@ -93,7 +101,7 @@ export default function Stats({ refreshTrigger }: Props) {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="animate-pulse rounded-xl border border-slate-200 bg-slate-50 p-8 text-center"
+              className="animate-pulse rounded-2xl border-2 border-slate-200 bg-slate-50 p-10 text-center"
             >
               <div className="mx-auto h-12 w-24 rounded bg-slate-200" />
               <div className="mx-auto mt-4 h-4 w-32 rounded bg-slate-100" />
@@ -104,14 +112,14 @@ export default function Stats({ refreshTrigger }: Props) {
 
       {/* Error Banner */}
       {error && !stats && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center shadow-sm">
-          <p className="font-semibold text-red-800">
+        <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-10 text-center shadow-sm">
+          <p className="font-bold text-lg text-red-800">
             Failed to load statistics from backend
           </p>
           <p className="mt-1 text-sm text-red-700">{error}</p>
           <button
             onClick={fetchStats}
-            className="mt-4 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm"
+            className="mt-5 rounded-xl border-2 border-red-300 bg-white px-6 py-3 text-sm font-bold text-red-700 hover:bg-red-50 shadow-sm"
           >
             Retry Connection
           </button>
@@ -125,14 +133,14 @@ export default function Stats({ refreshTrigger }: Props) {
             {primaryCards.map((stat) => (
               <div
                 key={stat.label}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 text-center"
+                className={`rounded-3xl p-10 text-center transition-all hover:scale-102 hover:shadow-xl ${stat.bg}`}
               >
                 <h3
-                  className={`text-4xl sm:text-5xl font-bold font-mono tracking-tight ${stat.color}`}
+                  className={`text-5xl sm:text-6xl font-black font-mono tracking-tight ${stat.color}`}
                 >
                   {stat.value}
                 </h3>
-                <p className="mt-3 text-xs font-mono font-medium uppercase tracking-wider text-slate-600">
+                <p className={`mt-4 text-sm font-mono font-bold uppercase tracking-wider ${stat.labelColor}`}>
                   {stat.label}
                 </p>
               </div>
@@ -141,12 +149,12 @@ export default function Stats({ refreshTrigger }: Props) {
 
           {/* Class Distribution Breakdown */}
           {stats.total_predictions > 0 && (
-            <div className="bg-white/80 backdrop-blur-sm mt-12 rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
-              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
-                <h3 className="text-2xl font-bold tracking-tight text-slate-800">
+            <div className="bg-white/90 backdrop-blur-md mt-14 rounded-3xl border-2 border-blue-200/80 shadow-2xl shadow-blue-900/10 p-8 sm:p-14">
+              <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-blue-200/60 pb-5">
+                <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
                   Class Distribution &amp; Percentages
                 </h3>
-                <span className="font-mono text-xs text-slate-500">
+                <span className="font-mono text-sm font-bold text-blue-700 bg-blue-100 border border-blue-300 px-3 py-1 rounded-full">
                   Based on {stats.total_predictions} historical records
                 </span>
               </div>
@@ -160,27 +168,27 @@ export default function Stats({ refreshTrigger }: Props) {
                   return (
                     <div
                       key={cls}
-                      className="rounded-xl border border-slate-200 bg-slate-50 p-5"
+                      className="rounded-2xl border-2 border-blue-100 bg-gradient-to-b from-white to-blue-50/30 p-6 shadow-sm hover:border-blue-300 transition"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-700">
+                        <span className="font-bold text-base text-slate-900">
                           {formattedClass}
                         </span>
-                        <span className="font-mono text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-bold text-blue-800 bg-blue-100 border border-blue-300 px-2.5 py-1 rounded-md">
                           {count} {count === 1 ? "scan" : "scans"}
                         </span>
                       </div>
 
-                      <div className="mt-4 flex items-center justify-between text-xs font-mono text-slate-500">
-                        <span>Cohort Share</span>
-                        <span className="font-semibold text-slate-700">
+                      <div className="mt-5 flex items-center justify-between text-xs font-mono text-slate-600">
+                        <span className="font-semibold">Cohort Share</span>
+                        <span className="font-bold text-slate-900 text-sm">
                           {percentage.toFixed(1)}%
                         </span>
                       </div>
 
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+                      <div className="mt-2.5 h-3 overflow-hidden rounded-full bg-slate-200">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-500"
+                          className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
                           style={{
                             width: `${Math.min(Math.max(percentage, 0), 100)}%`,
                           }}

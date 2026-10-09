@@ -1,36 +1,41 @@
 export default function Hero() {
   return (
-    <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-20 pb-16 text-center">
+    <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-24 pb-20 text-center">
       {/* Subtle Badge */}
-      <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs font-medium text-slate-700 shadow-sm">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      <div className="inline-flex items-center gap-2.5 rounded-full border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2 text-sm font-semibold text-blue-900 shadow-sm">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+        </span>
         <span>AI Powered MRI Classification</span>
-        <span className="text-slate-400">•</span>
-        <span className="font-mono text-[11px] text-slate-500">ResNet-50</span>
+        <span className="text-blue-300">•</span>
+        <span className="font-mono text-xs font-bold text-indigo-700">ResNet-50</span>
       </div>
 
       {/* Main Heading */}
-      <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-4 leading-tight">
-        Brain Tumour Detector
+      <h1 className="mt-8 text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight mb-6 leading-[1.1]">
+        <span className="bg-gradient-to-r from-slate-950 via-blue-950 to-indigo-950 bg-clip-text text-transparent">
+          Brain Tumour Detector
+        </span>
       </h1>
 
       {/* Subtitle */}
-      <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+      <p className="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal">
         Upload an MRI scan to detect brain tumours and view Grad-CAM explainability heatmaps.
       </p>
 
       {/* Action Buttons */}
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <div className="mt-12 flex flex-wrap items-center justify-center gap-5">
         <a
           href="#upload"
-          className="btn-primary inline-flex items-center justify-center gap-2.5 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-white"
+          className="btn-primary inline-flex items-center justify-center gap-3 px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95"
         >
           <svg
-            className="h-5 w-5 text-sky-200"
+            className="h-6 w-6 text-cyan-200"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
@@ -44,14 +49,14 @@ export default function Hero() {
 
         <a
           href="#evaluation"
-          className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+          className="inline-flex items-center justify-center gap-3 px-10 py-5 text-xl font-bold rounded-2xl text-slate-800 bg-white/95 border-2 border-blue-200/80 hover:bg-blue-50/80 hover:border-blue-400 hover:text-blue-900 shadow-lg shadow-blue-900/5 transition-all hover:scale-105 active:scale-95"
         >
           <svg
-            className="h-5 w-5 text-slate-500"
+            className="h-6 w-6 text-indigo-600"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
