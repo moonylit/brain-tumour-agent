@@ -249,7 +249,11 @@ export default function PredictionCard({
               {viewMode === "side-by-side" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Left: Raw MRI */}
-                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
+                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center overflow-hidden shadow-2xl">
+                    <div className="hud-corner hud-tl" />
+                    <div className="hud-corner hud-tr" />
+                    <div className="hud-corner hud-bl" />
+                    <div className="hud-corner hud-br" />
                     <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-slate-300">
                       Original MRI (T1-Gd)
                     </span>
@@ -275,7 +279,11 @@ export default function PredictionCard({
                   </div>
 
                   {/* Right: Grad-CAM Overlay */}
-                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
+                  <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center overflow-hidden shadow-2xl">
+                    <div className="hud-corner hud-tl" />
+                    <div className="hud-corner hud-tr" />
+                    <div className="hud-corner hud-bl" />
+                    <div className="hud-corner hud-br" />
                     <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-cyan-300">
                       Grad-CAM Overlay (Lesion Localization)
                     </span>
@@ -428,21 +436,21 @@ export default function PredictionCard({
       {/* ------------------------------------------------------------- */}
       {/* 5. PDF REPORT DOWNLOAD ACTION STRIP                           */}
       {/* ------------------------------------------------------------- */}
-      <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-slate-800">
+      <div className="pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-slate-800">
         <button
           type="button"
           onClick={handleDownloadReport}
           disabled={downloading}
-          className="btn-emerald inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+          className="tactile-button inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 px-8 py-4 text-sm font-bold text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:shadow-[0_0_45px_rgba(16,185,129,0.7)] transition disabled:cursor-not-allowed disabled:opacity-50"
         >
           {downloading ? (
             <>
               <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent" />
-              <span>Generating Report...</span>
+              <span>Generating Clinical Report...</span>
             </>
           ) : (
             <>
-              <FileDown className="h-4 w-4 text-emerald-200" />
+              <FileDown className="h-5 w-5 text-emerald-100 animate-bounce" style={{ animationDuration: '2.5s' }} />
               <span>Download PDF Report</span>
             </>
           )}
