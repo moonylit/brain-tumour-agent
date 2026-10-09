@@ -116,9 +116,9 @@ export default function UploadCard({
 
   return (
     <section id="upload" className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mt-8 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mt-8 px-4 items-start">
         {/* Left Column (Upload Card) */}
-        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between">
+        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col gap-6">
           <div>
             <div className="flex items-center justify-between gap-3 mb-4">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
@@ -165,7 +165,7 @@ export default function UploadCard({
 
           {/* Error Notification Banner */}
           {errorMessage && (
-            <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50/90 p-4 text-rose-800 shadow-md">
+            <div className="flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50/90 p-4 text-rose-800 shadow-md">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
               <div className="flex-1 text-sm sm:text-base">
                 <strong className="block font-bold text-rose-900">
@@ -185,7 +185,7 @@ export default function UploadCard({
 
           {/* Selected Image Preview & Action Button */}
           {preview && (
-            <div className="mt-6 rounded-2xl border border-white/60 bg-white/60 backdrop-blur-md p-5 shadow-inner">
+            <div className="rounded-2xl border border-white/60 bg-white/60 backdrop-blur-md p-5 shadow-inner">
               <div className="flex items-center justify-between mb-3 border-b border-blue-200/60 pb-2">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
                   Selected Scan
@@ -237,7 +237,7 @@ export default function UploadCard({
         </div>
 
         {/* Right Column (SerpApi Geographic Referral Routing) */}
-        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between">
+        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <Sparkles className="h-6 w-6 text-blue-600" />
@@ -256,19 +256,17 @@ export default function UploadCard({
             />
           </div>
 
-          {/* Live Interactive Map */}
-          <div className="w-full h-72 mt-6 rounded-2xl overflow-hidden border border-white/60 shadow-inner relative">
+          {/* Live Interactive Map with Nearby Hospitals */}
+          <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
             <iframe
               width="100%"
               height="100%"
               style={{ border: 0 }}
               loading="lazy"
               allowFullScreen
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                region && region.trim().toLowerCase() !== "jaipur"
-                  ? `${region.trim()} Hospital`
-                  : "SMS Medical College, Jaipur"
-              )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+              src={`https://maps.google.com/maps?q=hospitals+near+${encodeURIComponent(
+                region && region.trim() ? region.trim() : "Jaipur"
+              )}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
             ></iframe>
           </div>
         </div>

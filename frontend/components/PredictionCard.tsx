@@ -18,10 +18,9 @@ import {
   CheckCircle2,
   FileDown,
   Layers,
-  Eye,
-  Sliders,
   Crosshair,
   Cpu,
+  Sliders,
 } from "lucide-react";
 
 type Props = {
@@ -182,25 +181,25 @@ export default function PredictionCard({
       <div className="mb-8 grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
         {/* Left Column: Interactive Dual-Viewer (Raw vs Grad-CAM) */}
         {heatmapFilename ? (
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-sm">
             {/* Viewer Controls Strip */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-slate-200 pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-200 pb-3">
               <div>
-                <h3 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-sky-600" />
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <Layers className="h-5 w-5 text-sky-600" />
                   <span>Grad-CAM Heatmap Localization</span>
                 </h3>
-                <span className="font-mono text-[11px] text-slate-500 block mt-0.5">
+                <span className="font-mono text-xs text-slate-500 block mt-0.5">
                   Generated file: {heatmapFilename}
                 </span>
               </div>
 
               {/* View Mode Toggle Controls */}
-              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200">
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
                 <button
                   type="button"
                   onClick={() => setViewMode("side-by-side")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
                     viewMode === "side-by-side"
                       ? "bg-white text-sky-800 border border-slate-200 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
@@ -211,7 +210,7 @@ export default function PredictionCard({
                 <button
                   type="button"
                   onClick={() => setViewMode("raw")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
                     viewMode === "raw"
                       ? "bg-white text-sky-800 border border-slate-200 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
@@ -222,7 +221,7 @@ export default function PredictionCard({
                 <button
                   type="button"
                   onClick={() => setViewMode("gradcam")}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
                     viewMode === "gradcam"
                       ? "bg-white text-sky-800 border border-slate-200 shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
@@ -233,26 +232,26 @@ export default function PredictionCard({
                 <button
                   type="button"
                   onClick={() => setShowCrosshairs(!showCrosshairs)}
-                  className={`p-1 rounded-md transition text-xs ${
+                  className={`p-1.5 rounded-lg transition text-xs ${
                     showCrosshairs ? "text-sky-700 bg-sky-50" : "text-slate-400 hover:text-slate-600"
                   }`}
                   title="Toggle Inspection Crosshairs"
                 >
-                  <Crosshair className="h-3.5 w-3.5" />
+                  <Crosshair className="h-4 w-4" />
                 </button>
               </div>
             </div>
 
-            {/* Display Area */}
+            {/* Display Area - High Resolution Sizing */}
             <div className="relative">
               {viewMode === "side-by-side" ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Left: Raw MRI */}
-                  <div className="relative rounded-xl border border-slate-200 bg-black/90 p-2 flex flex-col items-center">
-                    <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-slate-300">
+                  <div className="relative rounded-2xl border border-slate-300 bg-black/95 p-3 flex flex-col items-center shadow-md">
+                    <span className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-md bg-black/80 border border-slate-700 text-xs font-mono font-bold text-slate-300">
                       Raw Scan
                     </span>
-                    <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
+                    <div className="relative overflow-hidden rounded-xl w-full h-[360px] sm:h-[420px] flex items-center justify-center">
                       <img
                         src={rawUrl}
                         alt="Raw MRI Input Scan"
@@ -268,17 +267,17 @@ export default function PredictionCard({
                         </div>
                       )}
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 mt-2">
+                    <span className="text-xs font-mono font-medium text-slate-400 mt-2">
                       Input Morphology
                     </span>
                   </div>
 
                   {/* Right: Grad-CAM Overlay */}
-                  <div className="relative rounded-xl border border-slate-200 bg-black/90 p-2 flex flex-col items-center">
-                    <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-cyan-300">
+                  <div className="relative rounded-2xl border border-slate-300 bg-black/95 p-3 flex flex-col items-center shadow-md">
+                    <span className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-md bg-black/80 border border-slate-700 text-xs font-mono font-bold text-cyan-300">
                       Activation Map
                     </span>
-                    <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
+                    <div className="relative overflow-hidden rounded-xl w-full h-[360px] sm:h-[420px] flex items-center justify-center">
                       <img
                         src={heatmapUrl}
                         alt={`Grad-CAM Heatmap for ${prediction}`}
@@ -294,18 +293,18 @@ export default function PredictionCard({
                         </div>
                       )}
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 mt-2">
+                    <span className="text-xs font-mono font-medium text-slate-400 mt-2">
                       Feature Salience
                     </span>
                   </div>
                 </div>
               ) : viewMode === "raw" ? (
-                <div className="relative rounded-xl border border-slate-200 bg-black/90 p-3 flex flex-col items-center">
-                  <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[340px] flex items-center justify-center">
+                <div className="relative rounded-2xl border border-slate-300 bg-black/95 p-4 flex flex-col items-center shadow-md">
+                  <div className="relative overflow-hidden rounded-xl w-full h-[450px] sm:h-[500px] flex items-center justify-center">
                     <img
                       src={rawUrl}
                       alt="Raw MRI Input Scan"
-                      className="object-contain w-full h-full max-h-80"
+                      className="object-contain w-full h-full"
                     />
                     {showCrosshairs && (
                       <div className="pointer-events-none absolute inset-0 border border-cyan-500/20">
@@ -314,17 +313,17 @@ export default function PredictionCard({
                       </div>
                     )}
                   </div>
-                  <span className="text-[11px] font-mono text-slate-400 mt-2">
+                  <span className="text-xs font-mono font-medium text-slate-400 mt-3">
                     Raw MRI Input Scan (Preprocessed)
                   </span>
                 </div>
               ) : (
-                <div className="relative rounded-xl border border-slate-200 bg-black/90 p-3 flex flex-col items-center">
-                  <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[340px] flex items-center justify-center">
+                <div className="relative rounded-2xl border border-slate-300 bg-black/95 p-4 flex flex-col items-center shadow-md">
+                  <div className="relative overflow-hidden rounded-xl w-full h-[450px] sm:h-[500px] flex items-center justify-center">
                     <img
                       src={heatmapUrl}
                       alt={`Grad-CAM Heatmap for ${prediction}`}
-                      className="object-contain w-full h-full max-h-80"
+                      className="object-contain w-full h-full"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";
                       }}
@@ -336,7 +335,7 @@ export default function PredictionCard({
                       </div>
                     )}
                   </div>
-                  <span className="text-[11px] font-mono text-slate-400 mt-2">
+                  <span className="text-xs font-mono font-medium text-slate-400 mt-3">
                     ResNet-50 Last Conv Layer (Activation Overlay)
                   </span>
                 </div>
@@ -344,9 +343,9 @@ export default function PredictionCard({
             </div>
 
             {/* Heatmap Spectrum Legend */}
-            <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500">
+            <div className="mt-5 pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-mono text-slate-500">
               <span>Baseline (0.0)</span>
-              <div className="h-2 w-32 sm:w-44 rounded-full bg-gradient-to-r from-blue-700 via-cyan-400 via-yellow-400 to-red-600" />
+              <div className="h-2.5 w-36 sm:w-56 rounded-full bg-gradient-to-r from-blue-700 via-cyan-400 via-yellow-400 to-red-600 shadow-xs" />
               <span>Focal Peak (1.0)</span>
             </div>
           </div>
@@ -366,16 +365,16 @@ export default function PredictionCard({
       {/* 4. CLASS PROBABILITIES BREAKDOWN                              */}
       {/* ------------------------------------------------------------- */}
       {probabilities && Object.keys(probabilities).length > 0 && (
-        <div className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5">
+        <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50/80 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-800 flex items-center gap-2">
-              <Sliders className="h-3.5 w-3.5 text-sky-600" />
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+              <Sliders className="h-4 w-4 text-sky-600" />
               <span>Class Probabilities</span>
             </h3>
-            <span className="text-[11px] font-mono text-slate-500">Softmax Distribution</span>
+            <span className="text-xs font-mono text-slate-500">Softmax Distribution</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {Object.entries(probabilities).map(([label, value]) => {
               const percent = (value * 100).toFixed(2);
               const formattedLabel = formatTumorClass(label);
@@ -386,28 +385,28 @@ export default function PredictionCard({
               return (
                 <div
                   key={label}
-                  className={`rounded-xl border p-3 transition ${
+                  className={`rounded-xl border p-3.5 transition ${
                     isLead
                       ? "border-sky-300 bg-white shadow-xs"
                       : "border-slate-200 bg-white"
                   }`}
                 >
-                  <div className="mb-2 flex justify-between text-xs sm:text-sm">
+                  <div className="mb-2 flex justify-between text-sm">
                     <span
-                      className={`font-medium ${
-                        isLead ? "text-sky-800 font-semibold" : "text-slate-700"
+                      className={`font-semibold ${
+                        isLead ? "text-sky-800" : "text-slate-700"
                       }`}
                     >
                       {formattedLabel}
                     </span>
-                    <span className="font-mono font-semibold text-slate-800 tabular-nums">
+                    <span className="font-mono font-bold text-slate-800 tabular-nums">
                       {percent}%
                     </span>
                   </div>
 
-                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className={`h-2 rounded-full transition-all duration-500 ${
+                      className={`h-2.5 rounded-full transition-all duration-500 ${
                         isLead
                           ? "bg-gradient-to-r from-sky-500 to-blue-600"
                           : "bg-slate-300"
@@ -427,7 +426,7 @@ export default function PredictionCard({
       {/* ------------------------------------------------------------- */}
       {/* 5. PDF REPORT DOWNLOAD ACTION STRIP                           */}
       {/* ------------------------------------------------------------- */}
-      <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t-2 border-blue-200/60">
+      <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t-2 border-blue-200/60">
         <button
           type="button"
           onClick={handleDownloadReport}
