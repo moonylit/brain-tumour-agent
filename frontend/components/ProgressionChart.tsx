@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { ScanRecord } from "@/lib/mockData";
 import { Sparkles, TrendingUp, Calendar, AlertCircle } from "lucide-react";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
+import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
 
 export interface ProgressionChartProps {
   scans: ScanRecord[];
@@ -112,7 +112,7 @@ export default function ProgressionChart({
     : 0;
 
   return (
-    <GlowingEffect className="h-full w-full shadow-xl shadow-slate-200/50">
+    <DottedGlowBackground className="h-full w-full shadow-xl shadow-slate-200/50">
       <div className="flex flex-col p-5 sm:p-6 h-full justify-between">
         {/* Header with Title & Action Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-3">
@@ -146,8 +146,9 @@ export default function ProgressionChart({
               }`}
               title="Simulate Future Trajectory"
             >
-              <Sparkles className="h-4 w-4 text-violet-200 animate-pulse" />
-              <span>Simulate Future Growth Trajectory</span>
+              <span>🔮</span>
+              <span>Simulate Future Trajectory</span>
+              <span className="sr-only">Simulate Future Growth</span>
               {isSimulatingFuture && (
                 <span className="ml-0.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
                   Active
@@ -338,6 +339,6 @@ export default function ProgressionChart({
         )}
       </div>
     </div>
-  </GlowingEffect>
+  </DottedGlowBackground>
   );
 }

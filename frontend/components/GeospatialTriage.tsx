@@ -123,15 +123,14 @@ export default function GeospatialTriage({
             </p>
           </div>
 
-          {/* Call to Action: Authorize Heli-Ambulance Transfer */}
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          {/* Call to Action: Request Standard Referral */}
+          <div className="pt-2">
             <button
               type="button"
               onClick={() => setReferralRequested(true)}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-800 hover:to-indigo-700 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-md shadow-blue-700/25 transition cursor-pointer"
+              className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium shadow-sm hover:bg-blue-700"
             >
-              <span>🚁</span>
-              <span>Authorize Heli-Ambulance Transfer</span>
+              Request Standard Referral
             </button>
           </div>
 

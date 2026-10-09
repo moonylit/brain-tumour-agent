@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Eye, Zap, Columns, UploadCloud, Loader2, RefreshCw } from "lucide-react";
+import { Eye, Zap, Columns, UploadCloud } from "lucide-react";
 import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { FileUpload } from "@/components/ui/file-upload";
+import { LoaderOne } from "@/components/ui/loader-one";
 
 export interface ScanVisualizerProps {
   rawImage?: string;
@@ -37,7 +38,8 @@ export default function ScanVisualizer({
   const [showUploadView, setShowUploadView] = useState<boolean>(!rawImage);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const effectiveGradCam = gradCamImage || rawImage;
+  const scanUrl = rawImage || "/scans/axial_glioma_01.jpg";
+  const effectiveGradCam = gradCamImage || rawImage || "/scans/axial_glioma_01.jpg";
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -74,9 +76,9 @@ export default function ScanVisualizer({
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between">
+    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between overflow-hidden">
       {/* Sub-Header Mode Switcher & Re-upload Controls */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+      <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-2 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-sm sm:text-base font-bold text-slate-900">
             2D Axial MRI Analysis
@@ -145,126 +147,130 @@ export default function ScanVisualizer({
         </div>
       </div>
 
-      {/* Main Visualizer Stage: Empty State (Canvas Reveal + FileUpload) vs Active State */}
-      {showUploadView || !rawImage ? (
-        <div className="relative aspect-square w-full max-h-[360px] sm:max-h-[380px] mx-auto rounded-xl overflow-hidden border border-slate-200 shadow-inner my-auto flex items-center justify-center">
-          {/* Idle Neural Synaptic Network: Canvas Reveal Effect */}
-          <CanvasRevealEffect
-            animationSpeed={0.5}
-            dotSize={2.5}
-            colors={[[37, 99, 235], [6, 182, 212], [99, 102, 241]]}
-            containerClassName="absolute inset-0 bg-slate-50"
-          />
+      {/* Main Visualizer Stage */}
+      <div className="flex-1 min-h-0 flex items-center justify-center my-auto">
+        {showUploadView || !rawImage ? (
+          /* Empty State: Aceternity Canvas Reveal Effect + File Upload */
+          <div className="relative w-full aspect-square max-w-lg mx-auto bg-black rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 shadow-sm">
+            <CanvasRevealEffect
+              animationSpeed={0.5}
+              dotSize={2.5}
+              colors={[[37, 99, 235], [6, 182, 212], [99, 102, 241]]}
+              containerClassName="absolute inset-0 bg-slate-900"
+            />
 
-          {/* Overlaid File Upload Component */}
-          <div className="relative z-10 w-full max-w-sm px-4">
-            {isUploading ? (
-              <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-white/90 backdrop-blur-xl border border-cyan-200 shadow-xl">
-                <Loader2 className="h-8 w-8 animate-spin text-cyan-600 mb-2" />
-                <span className="text-sm font-bold text-slate-900">
-                  Executing ResNet-50 Inference
-                </span>
-                <span className="text-xs font-mono text-cyan-700 mt-1">
-                  Generating Grad-CAM localization...
-                </span>
-              </div>
-            ) : (
+            <div className="relative z-10 w-full max-w-sm px-4">
               <FileUpload onChange={handleFileDrop} />
+            </div>
+
+            {/* When an image is uploading/processing, overlay Aceternity loader-one */}
+            {isUploading && (
+              <LoaderOne
+                message="Processing MRI Scan..."
+                subMessage="Executing ResNet-50 inference & Grad-CAM localization..."
+              />
             )}
           </div>
-        </div>
-      ) : mode === "side-by-side" ? (
-        <div className="grid grid-cols-2 gap-4 w-full my-auto">
-          {/* Left: Raw 2D Axial MRI in Grayscale */}
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
-              Original Axial MRI (T1-Gd)
-            </span>
-            <div className="aspect-square w-full rounded-xl bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center shadow-inner">
-              <img
-                src={rawImage}
-                alt="Raw MRI Input Scan"
-                onError={(e) => {
-                  (e.currentTarget as HTMLElement).style.display = "none";
-                }}
-                className="w-full h-full object-contain grayscale filter select-none"
-              />
+        ) : mode === "side-by-side" ? (
+          /* Side-by-side comparative split */
+          <div className="grid grid-cols-2 gap-4 w-full max-w-lg mx-auto">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
+                Original Axial MRI
+              </span>
+              <div className="relative w-full aspect-square bg-black rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 shadow-sm">
+                <img
+                  src={scanUrl}
+                  className="object-contain w-full h-full grayscale filter select-none"
+                  alt="MRI Scan"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = "none";
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
+                Grad-CAM Localization
+              </span>
+              <div className="relative w-full aspect-square bg-black rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 shadow-sm">
+                <img
+                  src={effectiveGradCam}
+                  className="object-contain w-full h-full select-none"
+                  alt={`Grad-CAM Heatmap for ${prediction}`}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = "none";
+                  }}
+                />
+              </div>
             </div>
           </div>
+        ) : (
+          /* Active State: Exact Master Blueprint Container & Image Classes */
+          <div
+            ref={containerRef}
+            onMouseMove={mode === "xray" ? handleMouseMove : undefined}
+            onMouseLeave={mode === "xray" ? handleMouseLeave : undefined}
+            className="relative w-full aspect-square max-w-lg mx-auto bg-black rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 shadow-sm"
+          >
+            {/* Primary MRI Image - EXACT Blueprint Classes */}
+            <img
+              src={scanUrl}
+              className="object-contain w-full h-full"
+              alt="MRI Scan"
+              onError={(e) => {
+                (e.currentTarget as HTMLElement).style.display = "none";
+              }}
+            />
 
-          {/* Right: Grad-CAM Heatmap */}
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
-              Grad-CAM Localization
-            </span>
-            <div className="aspect-square w-full rounded-xl bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center shadow-inner">
+            {/* Grad-CAM Overlay Layer */}
+            {mode === "overlay" ? (
               <img
                 src={effectiveGradCam}
-                alt={`Grad-CAM Heatmap for ${prediction}`}
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-85 mix-blend-screen"
+                alt={`Grad-CAM Heatmap for ${prediction.toLowerCase()}`}
                 onError={(e) => {
                   (e.currentTarget as HTMLElement).style.display = "none";
                 }}
-                className="w-full h-full object-contain select-none"
               />
-            </div>
+            ) : (
+              /* 120px Circular Flashlight Reveal */
+              <img
+                src={effectiveGradCam}
+                style={{ clipPath: xrayClipPath }}
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none transition-[clip-path] duration-75"
+                alt={`Grad-CAM Heatmap for ${prediction.toLowerCase()}`}
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = "none";
+                }}
+              />
+            )}
+
+            {/* Flashlight Target Ring */}
+            {mode === "xray" && isHovering && cursorPos && (
+              <div
+                className="pointer-events-none absolute h-[240px] w-[240px] rounded-full border border-cyan-400/80 shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-transform duration-75"
+                style={{
+                  left: `${cursorPos.x - 120}px`,
+                  top: `${cursorPos.y - 120}px`,
+                }}
+              />
+            )}
+
+            {/* When an image is uploading/processing, overlay Aceternity loader-one */}
+            {isUploading && (
+              <LoaderOne
+                message="Processing MRI Scan..."
+                subMessage="Executing ResNet-50 inference & Grad-CAM localization..."
+              />
+            )}
           </div>
-        </div>
-      ) : (
-        /* Single Massive Perfect Square Stage: Overlay or 120px X-Ray Flashlight */
-        <div
-          ref={containerRef}
-          onMouseMove={mode === "xray" ? handleMouseMove : undefined}
-          onMouseLeave={mode === "xray" ? handleMouseLeave : undefined}
-          className="relative aspect-square w-full max-h-[360px] sm:max-h-[380px] mx-auto rounded-xl bg-black overflow-hidden border border-slate-200 cursor-crosshair select-none flex items-center justify-center shadow-inner my-auto"
-        >
-          {/* Base Real 2D Axial MRI in Grayscale */}
-          <img
-            src={rawImage}
-            alt="Raw MRI Input Scan"
-            onError={(e) => {
-              (e.currentTarget as HTMLElement).style.display = "none";
-            }}
-            className="w-full h-full object-contain grayscale filter pointer-events-none"
-          />
+        )}
+      </div>
 
-          {/* Heatmap Layer */}
-          {mode === "overlay" ? (
-            <img
-              src={effectiveGradCam}
-              alt={`Grad-CAM Heatmap for ${prediction}`}
-              onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = "none";
-              }}
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-85 mix-blend-screen"
-            />
-          ) : (
-            /* Precise 120px circular mask X-Ray Flashlight */
-            <img
-              src={effectiveGradCam}
-              alt={`Grad-CAM Heatmap for ${prediction}`}
-              onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = "none";
-              }}
-              style={{ clipPath: xrayClipPath }}
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none transition-[clip-path] duration-75"
-            />
-          )}
-
-          {/* Subtle cursor guide ring for flashlight */}
-          {mode === "xray" && isHovering && cursorPos && (
-            <div
-              className="pointer-events-none absolute h-[240px] w-[240px] rounded-full border border-blue-400/70 shadow-[0_0_16px_rgba(59,130,246,0.4)] transition-transform duration-75"
-              style={{
-                left: `${cursorPos.x - 120}px`,
-                top: `${cursorPos.y - 120}px`,
-              }}
-            />
-          )}
-        </div>
-      )}
-
-      {/* Sub-metrics: Single Line of Small Monospace Text with Subtle Borders */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border border-slate-200/90 rounded-xl bg-slate-50 text-xs font-mono text-slate-600">
+      {/* Sub-metrics Strip */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-4 py-2 border border-slate-200/90 rounded-xl bg-slate-50 text-xs font-mono text-slate-600 shrink-0">
         <span className="font-semibold text-slate-800">
           Scan Date: {scanDate}
         </span>

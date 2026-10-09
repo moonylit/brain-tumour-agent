@@ -191,40 +191,39 @@ export default function NeuroCommandCenter({
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* ============================================================= */}
-      {/* 1. TOP HEADER BAR (h-16): FLIP WORDS + PATIENT COMMAND MODULE */}
+      {/* 1. TOP HEADER BAR (h-16): FIXED FLEXBOX, NO BUTTON WRAP       */}
       {/* ============================================================= */}
-      <header className="h-16 shrink-0 border-b border-slate-200/90 bg-white px-6 flex items-center justify-between shadow-xs z-30">
-        {/* Left Side: Brand Title with FlipWords & Patient Command Module */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-200 shrink-0 shadow-xs">
-              <Activity className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-                  NeuroAgent
-                </span>
-                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-                  : Autonomous
-                </span>
-                <FlipWords
-                  words={["Diagnosis", "Tracking", "Triage", "Catchment"]}
-                  duration={2400}
-                  className="text-blue-700 font-extrabold text-base sm:text-lg px-0.5"
-                />
-                <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-                  Engine
-                </span>
-              </div>
-              <span className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-wide">
-                Clinical Oncology Suite
+      <header className="h-16 w-full flex items-center justify-between px-6 bg-white border-b border-slate-200 shrink-0 flex-nowrap z-30">
+        {/* Left Side: Brand Title using Aceternity FlipWords */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-200 shrink-0 shadow-xs">
+            <Activity className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col">
+            <div className="flex items-baseline gap-1 whitespace-nowrap">
+              <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                NeuroAgent
+              </span>
+              <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                : Autonomous
+              </span>
+              <FlipWords
+                words={["Diagnosis", "Tracking", "Triage", "Catchment"]}
+                duration={2400}
+                className="text-blue-700 font-extrabold text-base sm:text-lg px-0.5"
+              />
+              <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                Engine
               </span>
             </div>
+            <span className="text-[10px] text-slate-500 font-medium tracking-wide">
+              Clinical Oncology Suite
+            </span>
           </div>
+        </div>
 
-          <span className="text-slate-300 hidden xl:inline">|</span>
-
+        {/* Right Side: Patient Dropdown, Add New Patient, Upload Scan & Actions (No Wrap) */}
+        <div className="flex items-center gap-3 shrink-0 flex-nowrap">
           {/* Interactive Patient Command Module */}
           <div className="hidden sm:block">
             <PatientCommandModule
@@ -235,23 +234,9 @@ export default function NeuroCommandCenter({
               onOpenUploadScan={() => setIsUploadScanOpen(true)}
             />
           </div>
-        </div>
-
-        {/* Right Side: Severity Badge + System Metrics + View Scan Archive + Export PDF */}
-        <div className="flex items-center gap-3">
-          {/* Mobile Patient Command Trigger fallback */}
-          <div className="sm:hidden">
-            <button
-              type="button"
-              onClick={() => setIsUploadScanOpen(true)}
-              className="p-2 rounded-xl bg-blue-700 text-white"
-            >
-              📤
-            </button>
-          </div>
 
           {/* Minimal Status Badge */}
-          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs sm:text-sm font-mono font-semibold text-slate-700">
+          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs sm:text-sm font-mono font-semibold text-slate-700 shrink-0">
             <span
               className={`h-2 w-2 rounded-full ${
                 currentScan?.severity === "Critical"
@@ -270,7 +255,7 @@ export default function NeuroCommandCenter({
             <button
               type="button"
               onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs transition"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs transition shrink-0"
               title="Open Historical Scan Archive"
             >
               <FolderArchive className="h-4 w-4 text-slate-500" />
@@ -284,7 +269,7 @@ export default function NeuroCommandCenter({
               type="button"
               onClick={onExportPdf}
               disabled={isExporting}
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-4 py-1.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition shrink-0"
             >
               {isExporting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -306,15 +291,15 @@ export default function NeuroCommandCenter({
       )}
 
       {/* ============================================================= */}
-      {/* 2. STRICT 100vh CSS GRID: h-[calc(100vh-100px)]               */}
+      {/* 2. MAIN GRID: EXACT BLUEPRINT grid-cols-12 h-[calc(100vh-64px)] p-6 */}
       {/* ============================================================= */}
-      <main className="grid grid-cols-12 gap-6 h-[calc(100vh-100px)] p-6 overflow-hidden">
+      <main className="grid grid-cols-12 gap-6 h-[calc(100vh-64px)] p-6 overflow-hidden">
         {/* ========================================================= */}
-        {/* LEFT PANEL (col-span-7): Top 60% MRI, Bottom 40% Graph    */}
+        {/* LEFT COLUMN (col-span-7 flex flex-col gap-6)              */}
         {/* ========================================================= */}
-        <section className="col-span-12 xl:col-span-7 h-full flex flex-col gap-5 overflow-hidden">
-          {/* Top 60%: MRI Visualizer (with Canvas Reveal & FileUpload) */}
-          <div className="flex-[6] min-h-0 overflow-hidden flex flex-col">
+        <section className="col-span-12 xl:col-span-7 flex flex-col gap-6 h-full overflow-hidden">
+          {/* Top Half: MRI Visualizer (Fixed Aspect Ratio & Aceternity) */}
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <ScanVisualizer
               rawImage={currentScan?.originalImageUrl}
               gradCamImage={currentScan?.gradCamUrl}
@@ -328,8 +313,8 @@ export default function NeuroCommandCenter({
             />
           </div>
 
-          {/* Bottom 40%: Longitudinal Progression Chart in GlowingEffect */}
-          <div className="flex-[4] min-h-0 overflow-hidden flex flex-col">
+          {/* Bottom Half: Longitudinal Progression Graph in DottedGlowBackground */}
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <ProgressionChart
               scans={activeScans}
               patientName={activePatient.name}
@@ -339,9 +324,9 @@ export default function NeuroCommandCenter({
         </section>
 
         {/* ========================================================= */}
-        {/* RIGHT PANEL (col-span-5): Geospatial Catchment & Routing   */}
+        {/* RIGHT COLUMN (col-span-5 flex flex-col gap-6)             */}
         {/* ========================================================= */}
-        <section className="col-span-12 xl:col-span-5 h-full overflow-hidden flex flex-col">
+        <section className="col-span-12 xl:col-span-5 flex flex-col gap-6 h-full overflow-hidden">
           <GeospatialTriage
             severity={currentScan ? currentScan.severity : "Critical"}
             confidence={currentScan ? currentScan.confidence : 0.998}
