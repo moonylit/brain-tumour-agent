@@ -618,5 +618,274 @@
         },
         "accession_id": "ACC-20261009-172EE4",
         "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T01:01:56.876002",
+        "filename": "Te-aug-me_1.jpg",
+        "prediction": "meningioma",
+        "confidence": 0.9966064691543579,
+        "processing_time_ms": 2235.75,
+        "heatmap_filename": "c9485172f8c44bf794518b30f206c337.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Meningioma",
+            "confidence": 0.9966,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Meningioma detected with 99.7% confidence. Specialized surgical oncology consultation in Jaipur advised to evaluate anatomical relationship to dural sinuses and optic structures. Treatment options depend on tumor volume and mass effect, ranging from stereotactic radiosurgery to microsurgical resection.",
+            "articles": [
+                {
+                    "title": "EANO Guideline on Diagnosis and Management of Meningiomas",
+                    "snippet": "Standard multimodal recommendations emphasizing Simpson Grade I/II surgical resection, fractionated stereotactic radiotherapy for Grade 2/3 atypical variants, and DNA methylation profiling.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/34370845/",
+                    "source": "European Association of Neuro-Oncology / The Lancet Oncology"
+                },
+                {
+                    "title": "Stereotactic Radiosurgery (SRS) vs Surgical Decompression in Skull-Base Meningiomas",
+                    "snippet": "Prospective cohort analysis indicating >94% 5-year local control rates using Gamma Knife radiosurgery for symptomatic cavernous sinus and sphenoid wing meningiomas without new neurological deficits.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/32890638/",
+                    "source": "Journal of Neurosurgery"
+                },
+                {
+                    "title": "Management of meningioma",
+                    "snippet": "Meningiomas are the most frequent primary brain tumors, accounting for \u223c37% of central nervous systems tumors ... Radiotherapy / standards.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/30449639/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Meningioma",
+                    "snippet": "The majority of meningiomas are benign and are classified as WHO grade 1 tumors. About 1% to 4% of WHO grade 1 meningiomas transform into ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/32809373/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Intracranial meningiomas: an overview of diagnosis and ...",
+                    "snippet": "Ninety percent of meningiomas are benign, 6% are atypical, and 2% are malignant. Most patients in whom a meningioma is diagnosed undergo resection to relieve ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/17961033/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "State-of-Art on Multidisciplinary Approaches to Meningioma",
+                    "snippet": "Methods: This systematic review was conducted in accordance with PRISMA guidelines to evaluate how multidisciplinary approaches are implemented ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/42607157/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "Eternal Multispeciality Hospital",
+                    "rating": 4.7,
+                    "address": "3A, Jagatpura Rd, near Jawahar Circle, Chainpura, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 95491 58888",
+                    "link": "https://www.eternalhospital.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre",
+                    "rating": 4.7,
+                    "address": "Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 84400 49999",
+                    "link": "http://www.bmchrc.org/"
+                },
+                {
+                    "name": "RHL Renova Cancer Centre | Cancer Hospital in Jaipur",
+                    "rating": 4.9,
+                    "address": "RHL Renova Cancer Centre, Hospital Rd, opp. Jaipuria Hospital, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 350 6177",
+                    "link": "http://www.renovahospitals.com/"
+                },
+                {
+                    "name": "Manipal Hospital Jaipur",
+                    "rating": 4.9,
+                    "address": "Sikar Rd, Sector 2, Sector 5, Vidyadhar Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302039, India",
+                    "phone": "+91 91166 56540",
+                    "link": "https://www.manipalhospitals.com/jaipur/?utm_source=Organic&utm_medium=GMB&utm_campaign=website-click"
+                },
+                {
+                    "name": "Dr. N.C Poonia - Neuro Care Hospital & Research Centre Pvt. Ltd. - Best Neurosurgeon in Jaipur, Rajasthan",
+                    "rating": 4.4,
+                    "address": "1/611, Sector 2, Sector-1, Vidyadhar Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302039, India",
+                    "phone": "+91 141 223 6712",
+                    "link": "http://www.neurocarehospital.com/"
+                },
+                {
+                    "name": "Mahatma Gandhi Hospital Jaipur",
+                    "rating": 3.9,
+                    "address": "RIICO Institutional Area, Mahatma Gandhi Rd, Ricco Industrial Area, Sitapura, Jaipur, Rajasthan 302022, India",
+                    "phone": "+91 141 277 1777",
+                    "link": "https://www.mgmch.org/"
+                },
+                {
+                    "name": "UM Cancer Care Centre Chomu Jaipur",
+                    "rating": 5.0,
+                    "address": "Vidhya Gram Road, Jaipur - Jhunjhunu Bypass Rd, Radhaswami Bagh, Chomu, Rajasthan 303702, India",
+                    "phone": "+91 99281 45085",
+                    "link": null
+                },
+                {
+                    "name": "RHL - Rajasthan Hospital | \u0906\u0930 \u090f\u091a \u090f\u0932 - \u0930\u093e\u091c\u0938\u094d\u0925\u093e\u0928 \u0939\u0949\u0938\u094d\u092a\u093f\u091f\u0932",
+                    "rating": 4.5,
+                    "address": "Jawahar Lal Nehru Marg, opp. RAJASTHAN JAIPURIA HOSPITAL, Jai Jawan Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 272 0020",
+                    "link": "http://www.rajasthanhospital.in/"
+                },
+                {
+                    "name": "Priyush Neuro & Super Speciality Hospital",
+                    "rating": 4.5,
+                    "address": "2/154, B2 Bypass Rd, SFS Manasarovar, Hans Vihar, Mansarovar, Jaipur, Rajasthan 302020, India",
+                    "phone": "+91 86900 99711",
+                    "link": "https://priyushhospital.com/"
+                },
+                {
+                    "name": "Advanced Neurology & Super Specialty Hospital",
+                    "rating": 4.3,
+                    "address": "\u092c\u094d\u0930\u0947\u0928 \u091f\u0949\u0935\u0930, D-357, Gaurav Tower Marg, near Gaurav Tower, D-Block, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "UM Cancer Hospital Jaipur",
+                    "rating": 4.8,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 70233 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Dr Umesh Khandelwal",
+                    "rating": 4.9,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 97845 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Dr. Mukesh Choudhary - MD, DM (Medical Oncology), Cancer & Blood Diseases Specialist, Best Cancer Doctor In Jaipur",
+                    "rating": 5.0,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 70233 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Brain Tower",
+                    "rating": 4.3,
+                    "address": "D-357, Sector 10 Rd, D-Block, Sector 4, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "JNU Main Campus (University, Hospital & Medical College)",
+                    "rating": 3.3,
+                    "address": "Agra - Jaipur Rd, near New RTO Office, Jagatpura, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 311 9000",
+                    "link": null
+                },
+                {
+                    "name": "CKS Hospitals",
+                    "rating": 4.0,
+                    "address": "98A, Sikar Rd, Vishwakarma Industrial Area, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302013, India",
+                    "phone": "+91 141 331 3233",
+                    "link": "https://ckshospitals.com/"
+                },
+                {
+                    "name": "Dr. Abhishek Pareek ( Cancer Surgeon Jaipur )",
+                    "rating": 4.9,
+                    "address": "RHL RENOVA, CANCER CENTER, opp. RAJASTHAN JAIPURIA HOSPITAL, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 95608 66506",
+                    "link": "http://www.drabhishekpareek.in/"
+                },
+                {
+                    "name": "Dr. Sunit Shah",
+                    "rating": 4.0,
+                    "address": "Near, Brain Tower, D-358, Malviya Nagar, Gaurav Tower Marg, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 98290 59370",
+                    "link": "http://www.thebraintower.com/"
+                },
+                {
+                    "name": "Dr Anil kothiwala",
+                    "rating": 5.0,
+                    "address": "B-48, Tonk Rd, near Airport, Shyam Colony, Sita Bari, Jaipur, Rajasthan 302029, India",
+                    "phone": "+91 63505 40131",
+                    "link": "http://www.dranilkothiwala.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre Blood Bank",
+                    "rating": 3.6,
+                    "address": "Bhagwan Mahavir Cancer Hospital & Research Centre, Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 270 0107",
+                    "link": "http://www.bmchrc.org/"
+                }
+            ],
+            "queries_executed": [
+                "Meningioma tumor standard of care guidelines PubMed",
+                "Meningioma tumor novel therapeutics clinical trials",
+                "tertiary neuro-oncology center hospital near Jaipur"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-09T19:31:33.339247+00:00"
+        },
+        "probabilities": {
+            "glioma": 0.003388751996681094,
+            "meningioma": 0.9966064691543579,
+            "notumor": 2.3612582822352124e-07,
+            "pituitary": 4.567025371216005e-06
+        },
+        "accession_id": "ACC-20261009-396D2A",
+        "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T01:05:31.077991",
+        "filename": "Te-no_14.jpg",
+        "prediction": "notumor",
+        "confidence": 0.9997164607048035,
+        "processing_time_ms": 1456.17,
+        "heatmap_filename": "6b8f6c8c831c492b9d7be7a7cd8ce0f9.png",
+        "agent_research": {
+            "status": "baseline_normal",
+            "tumor_class": "No Tumor",
+            "confidence": 0.9997,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": false,
+            "clinical_summary": "Reassuring baseline neuro-imaging findings: No intracranial mass lesion, abnormal focal enhancement, or acute space-occupying neoplasm detected on MRI. Standard neurological wellness guidelines apply. Follow-up is recommended only if persistent focal neurological deficits or severe cephalalgia arise.",
+            "articles": [
+                {
+                    "title": "Research malpractice and the issue of incidental findings",
+                    "snippet": "Human subject research involving brain imaging is likely to reveal significant incidental findings of abnormal brain morphology.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/18547205/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Disclosing incidental findings in brain research: the rights ...",
+                    "snippet": "To identify ethical concerns and fill existing gaps, we conducted a comprehensive review of papers that focused explicitly on the discovery of IFs in minors.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/24006134/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Impact of Incidental Findings on Neuroimaging Research ...",
+                    "snippet": "Incidental findings are not uncommon,1\u20134 ranging from 0.2% to 1.6% for incidentally found brain tumors within the study population, or vascular abnormalities,",
+                    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7051757/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Are incidental findings on brain magnetic resonance ...",
+                    "snippet": "We report a higher prevalence of intracranial incidental findings in children with developmental delay as compared with those children with ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/20558674/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [],
+            "queries_executed": [
+                "normal brain MRI incidental findings clinical guidelines PubMed"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-09T19:35:23.835307+00:00"
+        },
+        "probabilities": {
+            "glioma": 6.729787855874747e-07,
+            "meningioma": 0.00028267421294003725,
+            "notumor": 0.9997164607048035,
+            "pituitary": 8.435302589759885e-08
+        },
+        "accession_id": "ACC-20261009-A89FC0",
+        "region": "Jaipur"
     }
 ]

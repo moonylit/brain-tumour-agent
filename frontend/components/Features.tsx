@@ -77,14 +77,14 @@ export default function Features() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto mt-12 px-4">
         {features.map((feature, idx) => {
           const iconColors = [
-            "bg-blue-50 border border-blue-200 text-blue-600",
-            "bg-emerald-50 border border-emerald-200 text-emerald-600",
-            "bg-indigo-50 border border-indigo-200 text-indigo-600",
+            "bg-blue-50/80 border border-blue-200/80 text-blue-600",
+            "bg-emerald-50/80 border border-emerald-200/80 text-emerald-600",
+            "bg-indigo-50/80 border border-indigo-200/80 text-indigo-600",
           ];
           return (
             <div
               key={feature.title}
-              className="bg-white p-8 rounded-2xl shadow-md border border-slate-200 hover:shadow-xl transition-all"
+              className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all"
             >
               <div className={`mb-5 inline-flex p-3.5 rounded-xl ${iconColors[idx] || iconColors[0]}`}>
                 {feature.icon}

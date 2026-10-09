@@ -31,14 +31,14 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="w-full flex flex-col items-center justify-center py-6 border-b border-slate-200 bg-white shadow-sm sticky top-0 z-50">
+    <header className="w-full flex flex-col items-center justify-center py-6 bg-transparent">
       <div className="flex flex-col items-center gap-3 w-full max-w-7xl px-4 sm:px-6">
         <div className="flex items-center gap-4 flex-wrap justify-center">
           <a href="#" className="group flex items-center">
-            <h1 className="text-3xl font-extrabold text-slate-900 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition-all">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition-all">
                 <svg
-                  className="h-7 w-7 text-white"
+                  className="h-6 w-6 text-white"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -60,8 +60,8 @@ export default function Navbar() {
             <span
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold transition shadow-xs ${
                 isBackendOnline
-                  ? "bg-emerald-100 text-emerald-700 text-emerald-400 border border-emerald-300"
-                  : "border border-slate-300 bg-slate-100 text-slate-500 text-slate-400"
+                  ? "bg-emerald-100/80 text-emerald-700 text-emerald-400 border border-emerald-300/80"
+                  : "border border-slate-300/80 bg-slate-100/80 text-slate-500 text-slate-400"
               }`}
               title={
                 isBackendOnline
@@ -88,31 +88,31 @@ export default function Navbar() {
         <nav className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base font-semibold text-slate-600 mt-1">
           <a
             href="#upload"
-            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-white/60 hover:text-blue-700"
           >
             Upload
           </a>
           <a
             href="#evaluation"
-            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-white/60 hover:text-blue-700"
           >
             Evaluation
           </a>
           <a
             href="#stats"
-            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-white/60 hover:text-blue-700"
           >
             Statistics
           </a>
           <a
             href="#history"
-            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-white/60 hover:text-blue-700"
           >
             History
           </a>
           <a
             href="#features"
-            className="rounded-xl px-4 py-1.5 transition hover:bg-blue-50 hover:text-blue-700"
+            className="rounded-xl px-4 py-1.5 transition hover:bg-white/60 hover:text-blue-700"
           >
             Features
           </a>

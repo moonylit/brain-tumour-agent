@@ -10,7 +10,7 @@ import {
 import PredictionCard from "./PredictionCard";
 import HistoryCard from "./HistoryCard";
 import RegionSelector from "./RegionSelector";
-import { Upload, Sparkles, AlertTriangle, X, MapPin } from "lucide-react";
+import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -118,14 +118,14 @@ export default function UploadCard({
     <section id="upload" className="w-full">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mt-8 px-4">
         {/* Left Column (Upload Card) */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col justify-between">
+        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between gap-3 mb-4">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
                 <Upload className="h-7 w-7 text-blue-600" />
                 <span>Upload MRI Scan</span>
               </h2>
-              <span className="rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-xs">
+              <span className="rounded-full border border-blue-200 bg-blue-50/90 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-xs">
                 Track 01: SerpApi Decision Agent
               </span>
             </div>
@@ -165,7 +165,7 @@ export default function UploadCard({
 
           {/* Error Notification Banner */}
           {errorMessage && (
-            <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50 p-4 text-rose-800 shadow-md">
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50/90 p-4 text-rose-800 shadow-md">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
               <div className="flex-1 text-sm sm:text-base">
                 <strong className="block font-bold text-rose-900">
@@ -185,7 +185,7 @@ export default function UploadCard({
 
           {/* Selected Image Preview & Action Button */}
           {preview && (
-            <div className="mt-6 rounded-2xl border border-blue-200 bg-slate-50/70 p-5 shadow-inner">
+            <div className="mt-6 rounded-2xl border border-white/60 bg-white/60 backdrop-blur-md p-5 shadow-inner">
               <div className="flex items-center justify-between mb-3 border-b border-blue-200/60 pb-2">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
                   Selected Scan
@@ -237,7 +237,7 @@ export default function UploadCard({
         </div>
 
         {/* Right Column (SerpApi Geographic Referral Routing) */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col justify-between">
+        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <Sparkles className="h-6 w-6 text-blue-600" />
@@ -256,30 +256,20 @@ export default function UploadCard({
             />
           </div>
 
-          {/* Map Integration Container */}
-          <div className="w-full h-64 mt-6 rounded-xl bg-slate-100 border border-slate-300 overflow-hidden relative flex flex-col items-center justify-center text-slate-400 font-medium">
-            <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-transparent to-transparent" />
-            <div className="relative z-10 flex flex-col items-center text-center p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-2 shadow-xs">
-                <MapPin className="h-6 w-6 animate-bounce" />
-              </div>
-              <span className="text-slate-700 font-bold text-sm">
-                Autonomous Catchment: <span className="text-blue-600">{region} Metro Zone</span>
-              </span>
-              <span className="text-xs text-slate-400 mt-1">
-                [Google Maps / SerpApi Route Visualization Container]
-              </span>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Tertiary Referral Center Active
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
-                  Radius: 45 km
-                </span>
-              </div>
-            </div>
+          {/* Live Interactive Map */}
+          <div className="w-full h-72 mt-6 rounded-2xl overflow-hidden border border-white/60 shadow-inner relative">
+            <iframe
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                region && region.trim().toLowerCase() !== "jaipur"
+                  ? `${region.trim()} Hospital`
+                  : "SMS Medical College, Jaipur"
+              )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+            ></iframe>
           </div>
         </div>
       </div>
