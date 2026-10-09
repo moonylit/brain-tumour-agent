@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 import UploadCard from "@/components/UploadCard";
 import EvaluationCard from "@/components/EvaluationCard";
 import Features from "@/components/Features";
@@ -11,12 +12,30 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
+  const [activePatient, setActivePatient] = useState("Eleanor Vance");
+  const [patients, setPatients] = useState<string[]>([
+    "Eleanor Vance",
+    "Marcus Webb",
+  ]);
+
+  function handleAddNewPatient(name: string) {
+    if (!patients.includes(name)) {
+      setPatients((prev) => [...prev, name]);
+    }
+    setActivePatient(name);
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
-      <Navbar />
+      <Navbar
+        activePatient={activePatient}
+        onSelectPatient={setActivePatient}
+        patients={patients}
+        onAddNewPatient={handleAddNewPatient}
+      />
       <div className="flex-1 flex flex-col space-y-12 pb-16">
         <Hero />
+        <PatientTrajectoryCard activePatient={activePatient} />
         <UploadCard region={region} onRegionChange={setRegion} />
         <EvaluationCard />
         <Features />

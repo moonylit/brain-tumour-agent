@@ -3,8 +3,26 @@
 import { useEffect, useState } from "react";
 import { checkBackendHealth } from "@/lib/api";
 
-export default function Navbar() {
+interface NavbarProps {
+  activePatient?: string;
+  onSelectPatient?: (patient: string) => void;
+  patients?: string[];
+  onAddNewPatient?: (name: string) => void;
+}
+
+export default function Navbar({
+  activePatient = "Eleanor Vance",
+  onSelectPatient,
+  patients = ["Eleanor Vance", "Marcus Webb"],
+  onAddNewPatient,
+}: NavbarProps = {}) {
   const [isBackendOnline, setIsBackendOnline] = useState<boolean | null>(null);
+  const [localPatient, setLocalPatient] = useState(activePatient);
+  const currentPatient = activePatient ?? localPatient;
+
+  useEffect(() => {
+    setLocalPatient(activePatient);
+  }, [activePatient]);
 
   useEffect(() => {
     let isMounted = true;
@@ -82,6 +100,56 @@ export default function Navbar() {
               {isBackendOnline ? "API Online" : "API Offline"}
             </span>
           )}
+
+          {/* Patient Selector Dropdown */}
+          <div className="flex items-center gap-2 rounded-2xl border border-slate-200/90 bg-white/70 backdrop-blur-md px-3.5 py-1.5 shadow-xs">
+            <svg
+              className="h-4 w-4 text-blue-600"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <label
+              htmlFor="header-patient-select"
+              className="text-xs font-bold uppercase tracking-wider text-slate-500"
+            >
+              Patient:
+            </label>
+            <select
+              id="header-patient-select"
+              aria-label="Patient Selector"
+              value={currentPatient}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === "__add_new__") {
+                  const newName = window.prompt("Enter new patient full name:");
+                  if (newName && newName.trim()) {
+                    const trimmed = newName.trim();
+                    onAddNewPatient?.(trimmed);
+                    setLocalPatient(trimmed);
+                    onSelectPatient?.(trimmed);
+                  }
+                } else {
+                  setLocalPatient(val);
+                  onSelectPatient?.(val);
+                }
+              }}
+              className="bg-transparent text-sm font-extrabold text-slate-800 outline-none cursor-pointer focus:ring-0"
+            >
+              {patients.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+              <option value="__add_new__">+ Add New Patient</option>
+            </select>
+          </div>
         </div>
 
         {/* Navigation Links */}
