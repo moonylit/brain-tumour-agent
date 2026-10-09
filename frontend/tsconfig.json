@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@aceternity/*": ["./components/ui/*"]
+      "@/*": ["./*"]
     }
   },
   "include": [

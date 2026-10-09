@@ -58,24 +58,22 @@ export default function EvaluationCard({
 
   const [metrics, setMetrics] = useState<EvaluationMetrics | null>(incomingMetrics);
   const [plots, setPlots] = useState<EvaluationPlots | null>(incomingPlots);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Default is null (closed), user must click a button to view visualization
   const [activeTab, setActiveTab] = useState<EvaluationTab | null>(defaultTab);
+  const [loading, setLoading] = useState(!incomingMetrics || !incomingPlots);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchEvaluationData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const [evalData, plotData] = await Promise.all([
+      const [metricsData, plotsData] = await Promise.all([
         getEvaluation(),
         getEvaluationPlots(),
       ]);
-      setMetrics(evalData);
-      setPlots(plotData);
+      setMetrics(metricsData);
+      setPlots(plotsData);
     } catch (err) {
-      console.error("Failed to load evaluation:", err);
+      console.error("Failed to load evaluation data:", err);
       setError(formatApiError(err));
     } finally {
       setLoading(false);
@@ -83,11 +81,12 @@ export default function EvaluationCard({
   }, []);
 
   useEffect(() => {
-    if (incomingMetrics) setMetrics(incomingMetrics);
-    if (incomingPlots) setPlots(incomingPlots);
-  }, [incomingMetrics, incomingPlots]);
-
-  useEffect(() => {
+    if (incomingMetrics) {
+      setMetrics(incomingMetrics);
+    }
+    if (incomingPlots) {
+      setPlots(incomingPlots);
+    }
     if (!incomingMetrics || !incomingPlots) {
       fetchEvaluationData();
     }
@@ -100,21 +99,18 @@ export default function EvaluationCard({
   }
 
   return (
-    <section id="evaluation" className="w-full">
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-white/95 p-6 sm:p-10 shadow-xl shadow-slate-200/50 backdrop-blur-xl">
-        {/* Subtle top cyan/violet accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 via-sky-500 to-violet-600" />
-
+    <section id="evaluation" className="mx-auto max-w-7xl px-6 sm:px-8 py-16">
+      <div className="glass-card rounded-3xl p-8 sm:p-10 border border-white/[0.08]">
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300 bg-cyan-50 px-3.5 py-1 text-xs font-mono font-bold text-cyan-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-600" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 text-xs font-mono text-sky-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
               <span>Validated Test Performance</span>
             </div>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            <h2 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
               Model Evaluation
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed font-medium">
+            <p className="mt-2 text-sm text-slate-400 max-w-2xl leading-relaxed">
               Performance metrics and diagnostic curves evaluated on the validation dataset using the trained ResNet-50 network.
             </p>
           </div>
@@ -122,7 +118,7 @@ export default function EvaluationCard({
           {error && (
             <button
               onClick={fetchEvaluationData}
-              className="btn-secondary inline-flex items-center gap-2 self-start rounded-xl px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 shadow-sm"
+              className="btn-secondary inline-flex items-center gap-2 self-start rounded-xl px-4 py-2 text-sm font-medium text-slate-300 hover:text-white"
             >
               Retry Load
             </button>
@@ -136,115 +132,79 @@ export default function EvaluationCard({
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-slate-200 bg-slate-100 p-6 text-center"
+                  className="rounded-2xl border border-white/[0.06] bg-slate-950/60 p-6 text-center"
                 >
-                  <div className="mx-auto h-4 w-20 rounded bg-slate-300" />
-                  <div className="mx-auto mt-3 h-8 w-24 rounded bg-slate-300" />
+                  <div className="mx-auto h-4 w-20 rounded bg-slate-800" />
+                  <div className="mx-auto mt-3 h-8 w-24 rounded bg-slate-800/80" />
                 </div>
               ))}
             </div>
-            <div className="h-40 rounded-2xl border border-slate-200 bg-slate-100" />
+            <div className="h-40 rounded-2xl border border-white/[0.06] bg-slate-950/40" />
           </div>
         )}
 
         {/* Error State */}
         {error && !metrics && (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center backdrop-blur-md">
-            <p className="font-bold text-rose-900">
+          <div className="rounded-2xl border border-red-500/30 bg-red-950/40 p-8 text-center backdrop-blur-md">
+            <p className="font-semibold text-red-300">
               Unable to load model evaluation data
             </p>
-            <p className="mt-1 text-sm text-rose-700 font-medium">{error}</p>
+            <p className="mt-1 text-sm text-red-400">{error}</p>
           </div>
         )}
 
         {/* Evaluation Metrics Cards */}
         {metrics && (
           <div className="mb-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
-            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                  Accuracy
-                </span>
-                <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  Verified
-                </span>
-              </div>
-              <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-emerald-600">
+            <div className="glass-card-interactive rounded-2xl p-6 text-center">
+              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
+                Accuracy
+              </span>
+              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-emerald-400">
                 {(metrics.accuracy * 100).toFixed(2)}%
               </p>
-              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div className="h-full rounded-full bg-emerald-500 w-[98%]" />
-              </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-cyan-300 hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-sky-500" />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                  Precision
-                </span>
-                <span className="text-[10px] font-mono font-bold text-cyan-800 bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full">
-                  Verified
-                </span>
-              </div>
-              <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-cyan-600">
+            <div className="glass-card-interactive rounded-2xl p-6 text-center">
+              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
+                Precision
+              </span>
+              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-sky-400">
                 {(metrics.precision * 100).toFixed(2)}%
               </p>
-              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div className="h-full rounded-full bg-cyan-500 w-[98%]" />
-              </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-violet-300 hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-purple-500" />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                  Recall
-                </span>
-                <span className="text-[10px] font-mono font-bold text-violet-800 bg-violet-50 border border-violet-200 px-2 py-0.5 rounded-full">
-                  Verified
-                </span>
-              </div>
-              <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-violet-600">
+            <div className="glass-card-interactive rounded-2xl p-6 text-center">
+              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
+                Recall
+              </span>
+              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-blue-400">
                 {(metrics.recall * 100).toFixed(2)}%
               </p>
-              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div className="h-full rounded-full bg-violet-500 w-[98%]" />
-              </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-2xl bg-white/95 border border-slate-200/90 p-5 sm:p-6 text-left shadow-md shadow-slate-200/40 hover:shadow-xl hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-500" />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                  F1 Score
-                </span>
-                <span className="text-[10px] font-mono font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
-                  Verified
-                </span>
-              </div>
-              <p className="mt-2 text-3xl sm:text-4xl font-black font-mono tracking-tight text-indigo-600">
+            <div className="glass-card-interactive rounded-2xl p-6 text-center">
+              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
+                F1 Score
+              </span>
+              <p className="mt-2 text-3xl sm:text-4xl font-bold font-mono tracking-tight text-purple-400">
                 {(metrics.f1_score * 100).toFixed(2)}%
               </p>
-              <div className="mt-3 h-1 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div className="h-full rounded-full bg-indigo-500 w-[98%]" />
-              </div>
             </div>
           </div>
         )}
 
         {/* Buttons for Curves & Matrix (Click to toggle display) */}
-        <div className="mb-4 border-b border-slate-100 pb-6">
+        <div className="mb-4 border-b border-white/[0.08] pb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-600">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">
               Evaluation Visualizations
             </span>
             {activeTab && (
               <button
                 type="button"
                 onClick={() => setActiveTab(null)}
-                className="text-xs text-slate-500 hover:text-slate-800 transition flex items-center gap-1 self-start sm:self-auto cursor-pointer font-semibold"
+                className="text-xs text-slate-400 hover:text-white transition flex items-center gap-1 self-start sm:self-auto cursor-pointer"
               >
                 <span>Hide Visualization</span>
                 <span>✕</span>
@@ -267,20 +227,20 @@ export default function EvaluationCard({
                   aria-selected={isSelected}
                   aria-controls={`panel-${tab.id}`}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+                  className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? "bg-gradient-to-r from-cyan-600 to-violet-600 text-white shadow-md shadow-cyan-600/30"
-                      : "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 hover:text-slate-900"
+                      ? "bg-blue-600 text-white border border-blue-400/50 shadow-[0_0_20px_rgba(37,99,235,0.35)]"
+                      : "bg-white/[0.04] text-slate-300 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white hover:border-white/[0.15]"
                   }`}
                 >
                   <span
                     className={`h-2 w-2 rounded-full ${
-                      isSelected ? "bg-white" : "bg-slate-400"
+                      isSelected ? "bg-white" : "bg-slate-500"
                     }`}
                   />
                   <span>{tab.label}</span>
                   {isSelected && (
-                    <span className="text-xs text-cyan-200 font-mono ml-0.5">✓</span>
+                    <span className="text-xs text-blue-200 font-mono ml-0.5">✓</span>
                   )}
                 </button>
               );
@@ -289,23 +249,23 @@ export default function EvaluationCard({
 
           {/* Visualization One-Line Explanation (Shown ONLY when a tab is active) */}
           {activeTabConfig && (
-            <div className="mt-4 flex items-center gap-3 rounded-xl border border-cyan-200 bg-cyan-50/70 px-4 py-3 text-sm text-slate-800 backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-cyan-600 shrink-0" />
-              <span className="font-bold text-cyan-900 font-mono text-xs uppercase tracking-wider">
+            <div className="mt-4 flex items-center gap-3 rounded-xl border border-white/[0.06] bg-slate-950/60 px-4 py-3 text-sm text-slate-300 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-sky-400 shrink-0" />
+              <span className="font-semibold text-sky-400 font-mono text-xs uppercase tracking-wider">
                 {activeTabConfig.label}:
               </span>
-              <span className="text-slate-700 font-medium">{activeTabConfig.explanation}</span>
+              <span className="text-slate-300">{activeTabConfig.explanation}</span>
             </div>
           )}
         </div>
 
         {/* If no tab selected, show clean prompt */}
         {!activeTab && (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-            <p className="text-sm font-bold text-slate-700">
+          <div className="rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] p-8 text-center">
+            <p className="text-sm font-medium text-slate-300">
               Diagnostic Visualizations
             </p>
-            <p className="mt-1 text-xs text-slate-500 font-medium">
+            <p className="mt-1 text-xs text-slate-400">
               Click any button above to display the Confusion Matrix, ROC Curve, or Precision-Recall Curve.
             </p>
           </div>
@@ -317,11 +277,11 @@ export default function EvaluationCard({
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 sm:p-8 backdrop-blur-md shadow-sm"
+            className="rounded-2xl border border-white/[0.08] bg-slate-950/50 p-6 sm:p-8 backdrop-blur-md"
           >
             {activeTab === "confusion_matrix" && plots.confusion_matrix && (
               <div className="flex flex-col items-center">
-                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-lg p-2">
+                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl p-2">
                   <img
                     src={getPlotUrl(plots.confusion_matrix)}
                     alt="Confusion Matrix"
@@ -331,33 +291,33 @@ export default function EvaluationCard({
 
                 {metrics?.confusion_matrix && metrics?.class_labels && (
                   <div className="mt-8 w-full max-w-2xl">
-                    <h4 className="mb-3 text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
+                    <h4 className="mb-3 text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">
                       Class Confusion Matrix Summary
                     </h4>
-                    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+                    <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-slate-900/90 shadow-xl">
                       <table className="w-full text-left text-xs">
-                        <thead className="border-b border-slate-200 bg-slate-50 text-slate-600 font-mono">
+                        <thead className="border-b border-white/[0.08] bg-slate-950/80 text-slate-400 font-mono">
                           <tr>
-                            <th className="px-4 py-3 font-bold">True \ Pred</th>
+                            <th className="px-4 py-3 font-medium">True \ Pred</th>
                             {metrics.class_labels.map((label) => (
                               <th
                                 key={label}
-                                className="px-4 py-3 font-bold text-slate-800"
+                                className="px-4 py-3 font-semibold text-slate-300"
                               >
                                 {formatTumorClass(label)}
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 font-mono">
+                        <tbody className="divide-y divide-white/[0.06] font-mono">
                           {metrics.confusion_matrix.map((row, rowIdx) => {
                             const rowLabel = metrics.class_labels![rowIdx];
                             return (
                               <tr
                                 key={rowLabel}
-                                className="hover:bg-slate-50 transition"
+                                className="hover:bg-white/[0.02] transition"
                               >
-                                <td className="px-4 py-3 font-sans font-bold text-slate-800">
+                                <td className="px-4 py-3 font-sans font-medium text-slate-300">
                                   {formatTumorClass(rowLabel)}
                                 </td>
                                 {row.map((val, colIdx) => (
@@ -365,9 +325,9 @@ export default function EvaluationCard({
                                     key={colIdx}
                                     className={`px-4 py-3 ${
                                       rowIdx === colIdx
-                                        ? "font-bold text-emerald-700 bg-emerald-50"
+                                        ? "font-bold text-emerald-400 bg-emerald-950/30"
                                         : val > 0
-                                        ? "text-amber-700 font-semibold"
+                                        ? "text-amber-400"
                                         : "text-slate-400"
                                     }`}
                                   >
@@ -387,7 +347,7 @@ export default function EvaluationCard({
 
             {activeTab === "roc_curve" && plots.roc_curve && (
               <div className="flex flex-col items-center">
-                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-lg p-2">
+                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl p-2">
                   <img
                     src={getPlotUrl(plots.roc_curve)}
                     alt="ROC Curve"
@@ -400,12 +360,12 @@ export default function EvaluationCard({
                     {Object.entries(metrics.roc_curve).map(([cls, curve]) => (
                       <div
                         key={cls}
-                        className="rounded-xl border border-slate-200 bg-white p-3.5 text-center shadow-sm"
+                        className="rounded-xl border border-white/[0.08] bg-slate-900/90 p-3.5 text-center shadow-lg"
                       >
-                        <span className="text-xs text-slate-500 block font-semibold">
+                        <span className="text-xs text-slate-400 block font-medium">
                           {formatTumorClass(cls)}
                         </span>
-                        <p className="mt-1 font-mono text-sm font-bold text-cyan-700">
+                        <p className="mt-1 font-mono text-sm font-bold text-sky-400">
                           AUC {curve.auc.toFixed(3)}
                         </p>
                       </div>
@@ -417,7 +377,7 @@ export default function EvaluationCard({
 
             {activeTab === "precision_recall" && plots.precision_recall_curve && (
               <div className="flex flex-col items-center">
-                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-lg p-2">
+                <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl p-2">
                   <img
                     src={getPlotUrl(plots.precision_recall_curve)}
                     alt="Precision Recall Curve"
@@ -431,12 +391,12 @@ export default function EvaluationCard({
                       ([cls, curve]) => (
                         <div
                           key={cls}
-                          className="rounded-xl border border-slate-200 bg-white p-3.5 text-center shadow-sm"
+                          className="rounded-xl border border-white/[0.08] bg-slate-900/90 p-3.5 text-center shadow-lg"
                         >
-                          <span className="text-xs text-slate-500 block font-semibold">
+                          <span className="text-xs text-slate-400 block font-medium">
                             {formatTumorClass(cls)}
                           </span>
-                          <p className="mt-1 font-mono text-sm font-bold text-violet-700">
+                          <p className="mt-1 font-mono text-sm font-bold text-purple-400">
                             AP {curve.average_precision.toFixed(3)}
                           </p>
                         </div>
