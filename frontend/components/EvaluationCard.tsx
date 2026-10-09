@@ -100,7 +100,7 @@ export default function EvaluationCard({
 
   return (
     <section id="evaluation" className="mx-auto max-w-7xl px-6 sm:px-8 py-16">
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 sm:p-10">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1 text-xs font-mono text-sky-800">

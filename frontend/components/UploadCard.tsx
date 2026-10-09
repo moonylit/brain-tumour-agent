@@ -116,10 +116,10 @@ export default function UploadCard({
 
   return (
     <section id="upload" className="mx-auto max-w-[1680px] w-full px-6 sm:px-8 py-10">
-      <div className="bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
         <div className="mb-8">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
               <Upload className="h-7 w-7 text-sky-600" />
               <span>Upload MRI Scan</span>
             </h2>
@@ -240,7 +240,7 @@ export default function UploadCard({
               <button
                 onClick={handleUpload}
                 disabled={loading}
-                className="btn-primary mt-6 inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 shadow-xl"
+                className="btn-primary mt-6 inline-flex items-center justify-center gap-2.5 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -249,7 +249,7 @@ export default function UploadCard({
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-4 w-4 text-cyan-200" />
+                    <Sparkles className="h-5 w-5 text-cyan-200" />
                     <span>Analyze MRI Scan</span>
                   </>
                 )}

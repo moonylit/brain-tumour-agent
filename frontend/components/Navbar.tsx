@@ -31,7 +31,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <header className="bg-white/70 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 sm:px-8 py-4">
         <div className="flex items-center gap-4">
           <a
@@ -61,10 +61,10 @@ export default function Navbar() {
           {/* Minimal Backend Status Pill */}
           {isBackendOnline !== null && (
             <span
-              className={`hidden items-center gap-2 rounded-full px-3 py-1 text-xs font-mono font-medium sm:inline-flex transition ${
+              className={`hidden items-center gap-2 px-3 py-1 rounded-full text-sm font-medium sm:inline-flex transition ${
                 isBackendOnline
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-400 shadow-sm"
-                  : "border border-slate-200 bg-slate-100 text-slate-400"
+                  ? "bg-emerald-100 text-emerald-700 text-emerald-400 border border-emerald-200"
+                  : "border border-slate-200 bg-slate-100 text-slate-500 text-slate-400"
               }`}
               title={
                 isBackendOnline
@@ -78,7 +78,7 @@ export default function Navbar() {
                 )}
                 <span
                   className={`relative inline-flex rounded-full h-2 w-2 ${
-                    isBackendOnline ? "bg-emerald-400" : "bg-slate-500"
+                    isBackendOnline ? "bg-emerald-500" : "bg-slate-500"
                   }`}
                 />
               </span>

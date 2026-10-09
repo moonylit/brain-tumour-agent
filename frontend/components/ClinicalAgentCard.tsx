@@ -71,7 +71,7 @@ export default function ClinicalAgentCard({
   const effectiveRegion = region || research.region || research.patient_city || "Jaipur";
 
   return (
-    <div className="flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-blue-100 bg-white/90 p-6 sm:p-8 shadow-md">
       {/* Panel Header */}
       <div className="border-b border-slate-100 pb-4 mb-5">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">

@@ -76,7 +76,7 @@ export default function PredictionCard({
     accessionId || `ACC-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-9842`;
 
   return (
-    <div className="mt-10 bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
+    <div className="mt-10 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
       {/* ------------------------------------------------------------- */}
       {/* 1. TOP READOUT HEADER                                         */}
       {/* ------------------------------------------------------------- */}
@@ -86,7 +86,7 @@ export default function PredictionCard({
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span>Inference Completed</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 mt-2">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-800 mt-2">
             Prediction Result
           </h2>
         </div>

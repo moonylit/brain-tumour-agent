@@ -87,11 +87,11 @@ export default function HistoryCard({
   return (
     <div
       id="history"
-      className="mt-12 rounded-xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm"
+      className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10"
     >
       <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center border-b border-slate-200 pb-5">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-800">
             Prediction History
           </h2>
           <p className="mt-1 text-sm text-slate-600">

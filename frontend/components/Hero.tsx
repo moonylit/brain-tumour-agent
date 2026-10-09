@@ -10,12 +10,12 @@ export default function Hero() {
       </div>
 
       {/* Main Heading */}
-      <h1 className="mt-6 max-w-3xl text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-tight">
+      <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-4 leading-tight">
         Brain Tumour Detector
       </h1>
 
       {/* Subtitle */}
-      <p className="mt-4 max-w-xl text-base sm:text-lg text-slate-600 leading-relaxed">
+      <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
         Upload an MRI scan to detect brain tumours and view Grad-CAM explainability heatmaps.
       </p>
 
@@ -23,10 +23,10 @@ export default function Hero() {
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
         <a
           href="#upload"
-          className="btn-primary inline-flex items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-sm font-semibold text-white shadow-sm"
+          className="btn-primary inline-flex items-center justify-center gap-2.5 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-white"
         >
           <svg
-            className="h-4 w-4 text-sky-200"
+            className="h-5 w-5 text-sky-200"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -44,10 +44,10 @@ export default function Hero() {
 
         <a
           href="#evaluation"
-          className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm transition"
+          className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold rounded-xl transition-all hover:scale-105 shadow-md hover:shadow-lg text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
         >
           <svg
-            className="h-4 w-4 text-slate-500"
+            className="h-5 w-5 text-slate-500"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

@@ -13,7 +13,7 @@ export default function Home() {
   const [region, setRegion] = useState("Jaipur");
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/50 text-slate-900">
       {/* Ambient background micro-grid */}
       <div
         className="hidden"

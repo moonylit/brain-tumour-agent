@@ -125,7 +125,7 @@ export default function Stats({ refreshTrigger }: Props) {
             {primaryCards.map((stat) => (
               <div
                 key={stat.label}
-                className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center"
+                className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 text-center"
               >
                 <h3
                   className={`text-4xl sm:text-5xl font-bold font-mono tracking-tight ${stat.color}`}
@@ -141,9 +141,9 @@ export default function Stats({ refreshTrigger }: Props) {
 
           {/* Class Distribution Breakdown */}
           {stats.total_predictions > 0 && (
-            <div className="bg-white mt-12 rounded-xl shadow-sm border border-slate-200 p-8 sm:p-10">
+            <div className="bg-white/80 backdrop-blur-sm mt-12 rounded-2xl border border-blue-100 shadow-xl shadow-blue-900/5 p-8 sm:p-10">
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
-                <h3 className="text-xl font-bold tracking-tight text-slate-800">
+                <h3 className="text-2xl font-bold tracking-tight text-slate-800">
                   Class Distribution &amp; Percentages
                 </h3>
                 <span className="font-mono text-xs text-slate-500">
