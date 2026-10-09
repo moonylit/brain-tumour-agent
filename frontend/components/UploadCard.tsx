@@ -264,9 +264,7 @@ export default function UploadCard({
               style={{ border: 0 }}
               loading="lazy"
               allowFullScreen
-              src={`https://maps.google.com/maps?q=hospitals+near+${encodeURIComponent(
-                region && region.trim() ? region.trim() : "Jaipur"
-              )}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
+              src="https://maps.google.com/maps?q=neurology+and+cancer+hospitals+near+Jaipur&t=&z=11&ie=UTF8&iwloc=&output=embed"
             ></iframe>
           </div>
         </div>
