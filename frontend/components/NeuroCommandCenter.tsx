@@ -13,17 +13,14 @@ import ProgressionChart from "./ProgressionChart";
 import GeospatialTriage from "./GeospatialTriage";
 import ScanVisualizer from "./ScanVisualizer";
 import {
-  ShieldCheck,
-  Calendar,
-  Sparkles,
   Activity,
-  Layers,
-  Clock,
-  ChevronRight,
-  PlusCircle,
+  Calendar,
+  FileDown,
+  FolderArchive,
+  Loader2,
 } from "lucide-react";
 
-interface NeuroCommandCenterProps {
+export interface NeuroCommandCenterProps {
   latestPredictionResult?: {
     prediction: string;
     confidence: number;
@@ -32,11 +29,15 @@ interface NeuroCommandCenterProps {
     region?: string;
   } | null;
   onOpenArchive?: () => void;
+  onExportPdf?: () => void;
+  isExporting?: boolean;
 }
 
 export default function NeuroCommandCenter({
   latestPredictionResult,
   onOpenArchive,
+  onExportPdf,
+  isExporting = false,
 }: NeuroCommandCenterProps) {
   const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
   const [selectedPatientId, setSelectedPatientId] = useState<string>("PT-8821");
@@ -49,7 +50,6 @@ export default function NeuroCommandCenter({
     (s) => s.patientId === selectedPatientId
   );
 
-  // Active scan index within patient's timeline (defaults to latest)
   const [selectedScanIndex, setSelectedScanIndex] = useState<number>(
     Math.max(0, activeScans.length - 1)
   );
@@ -62,7 +62,7 @@ export default function NeuroCommandCenter({
     setSelectedScanIndex(Math.max(0, scansForPatient.length - 1));
   }, [selectedPatientId, allScans]);
 
-  // When user uploads a new scan from the Python backend, append to timeline!
+  // When user uploads a new scan from the Python backend, append to timeline
   useEffect(() => {
     if (!latestPredictionResult) return;
 
@@ -73,7 +73,7 @@ export default function NeuroCommandCenter({
 
     const isCritical =
       latestPredictionResult.prediction.toLowerCase() !== "notumor" &&
-      latestPredictionResult.prediction.toLowerCase() !== "no tumor" &&
+      latestPredictionResult.prediction.toLowerCase() !== "no tumor detected" &&
       latestPredictionResult.confidence > 0.85;
 
     const newScanRecord: ScanRecord = {
@@ -88,7 +88,7 @@ export default function NeuroCommandCenter({
       confidence: latestPredictionResult.confidence,
       severity: isCritical ? "Critical" : "Routine",
       diagnosis: latestPredictionResult.prediction,
-      notes: `Live Inference uploaded at ${new Date().toLocaleTimeString()} via ResNet-50 Backend`,
+      notes: `Live Inference processed at ${new Date().toLocaleTimeString()} via ResNet-50 Backend`,
     };
 
     setAllScans((prev) => [...prev, newScanRecord]);
@@ -97,135 +97,145 @@ export default function NeuroCommandCenter({
   const currentScan =
     activeScans[selectedScanIndex] || activeScans[activeScans.length - 1];
 
+  const getSeverityLabel = (severity?: string, diagnosis?: string) => {
+    if (diagnosis?.toLowerCase().includes("notumor") || diagnosis?.toLowerCase().includes("no tumor")) {
+      return "Severity: Nominal";
+    }
+    if (severity === "Critical") {
+      return "Severity: Significant";
+    }
+    return "Severity: Moderate";
+  };
+
   return (
-    <section id="command-center" className="w-full">
+    <section id="command-center" className="w-full flex flex-col gap-4">
       {/* ============================================================= */}
-      {/* 1. TOP BAR: BRANDING + PATIENT DIRECTORY DROPDOWN             */}
+      {/* 1. UNIFIED CLINICAL HEADER                                    */}
       {/* ============================================================= */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-3xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50/80 to-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-600 via-violet-600 to-sky-600" />
-
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-50 to-violet-50 border border-cyan-200 text-cyan-700 shadow-md shadow-cyan-600/10 shrink-0">
-            <ShieldCheck className="h-6 w-6 text-cyan-600" />
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">
-                Command Console
-              </span>
-              <span className="text-xs text-slate-400 font-mono">
-                Longitudinal Engine v3.2
-              </span>
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 rounded-xl border border-slate-200/90 bg-white px-4 py-3 shadow-xs">
+        {/* Left Side: Brand Title & Subtle Neural Icon + Patient Select */}
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+              <Activity className="h-4 w-4" />
             </div>
-            <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 mt-0.5">
-              NeuroAgent 3-Panel Diagnostic Command Center
-            </h2>
+            <span className="font-bold text-sm text-slate-900 tracking-tight">
+              NeuroAgent
+            </span>
           </div>
-        </div>
 
-        {/* Action Controls & Patient Directory Dropdown */}
-        <div className="flex flex-wrap items-center gap-3">
-          {onOpenArchive && (
-            <button
-              type="button"
-              onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 hover:bg-slate-100 rounded-md px-3 py-2 text-xs font-medium shadow-sm transition"
-              title="Open Scan Archive Drawer"
-            >
-              <span>📂</span>
-              <span>View Scan Archive</span>
-            </button>
-          )}
+          <span className="text-slate-300 hidden sm:inline">|</span>
 
+          {/* Patient Directory Dropdown */}
           <PatientDirectory
             patients={patients}
             selectedPatientId={selectedPatientId}
             onSelectPatient={setSelectedPatientId}
           />
         </div>
-      </div>
+
+        {/* Right Side: Severity Badge + View Scan Archive + Export PDF */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Minimal Badge */}
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-mono font-medium text-slate-700">
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                currentScan?.severity === "Critical"
+                  ? "bg-amber-600"
+                  : "bg-emerald-600"
+              }`}
+            />
+            <span>
+              {getSeverityLabel(currentScan?.severity, currentScan?.diagnosis)}
+            </span>
+          </span>
+
+          {/* Border-outline button: 📁 View Scan Archive */}
+          {onOpenArchive && (
+            <button
+              type="button"
+              onClick={onOpenArchive}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition shadow-xs"
+              title="Open Scan Archive"
+            >
+              <span>📁</span>
+              <span>View Scan Archive</span>
+            </button>
+          )}
+
+          {/* Standard Solid Blue / Clinical Button: Export PDF */}
+          {onExportPdf && (
+            <button
+              type="button"
+              onClick={onExportPdf}
+              disabled={isExporting}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition"
+            >
+              {isExporting ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <FileDown className="h-3.5 w-3.5" />
+              )}
+              <span>Export PDF</span>
+            </button>
+          )}
+        </div>
+      </header>
 
       {/* ============================================================= */}
-      {/* 2 & 3. 3-PANEL GRID: LEFT (DIAGNOSIS + TIMELINE) & RIGHT (TRIAGE) */}
+      {/* 2. DEDICATED 2-PANEL CLINICAL LAYOUT (100vh Viewport Grid)    */}
       {/* ============================================================= */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* ========================================================= */}
-        {/* LEFT PANEL (Diagnosis & Timeline) - 7 cols on XL          */}
+        {/* LEFT PANEL (The Diagnostic MRI & History) - 7 cols on LG  */}
         {/* ========================================================= */}
-        <div className="xl:col-span-7 flex flex-col gap-6">
-          {/* Top Half: ScanVisualizer with X-Ray Flashlight Reveal */}
-          <div className="flex flex-col gap-3">
-            {/* Timeline Stepper Pills */}
-            <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1">
-              <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500">
-                <Calendar className="h-3.5 w-3.5 text-violet-600" />
-                <span>Longitudinal Scan Timeline:</span>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                {activeScans.map((scan, idx) => {
-                  const isActive = idx === selectedScanIndex;
-                  return (
-                    <button
-                      key={scan.id}
-                      type="button"
-                      onClick={() => setSelectedScanIndex(idx)}
-                      className={`px-3 py-1 rounded-xl text-xs font-mono font-bold transition shadow-sm ${
-                        isActive
-                          ? "bg-violet-600 text-white shadow-violet-600/30 scale-105"
-                          : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/90"
-                      }`}
-                    >
-                      {scan.date.slice(5)} ({idx + 1}/{activeScans.length})
-                    </button>
-                  );
-                })}
-              </div>
+        <div className="lg:col-span-7 flex flex-col gap-4">
+          {/* Longitudinal Scan Timeline Stepper */}
+          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+              <Calendar className="h-3.5 w-3.5 text-slate-400" />
+              <span>Historical Scan Timeline:</span>
             </div>
 
-            {/* X-Ray Mouse Reveal Component */}
-            {currentScan ? (
-              <ScanVisualizer
-                rawImage={currentScan.originalImageUrl}
-                gradCamImage={currentScan.gradCamUrl}
-                prediction={currentScan.diagnosis}
-                heatmapFilename={currentScan.id}
-              />
-            ) : null}
-
-            {/* Micro Metadata Strip for Current Scan */}
-            {currentScan && (
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm text-xs font-mono">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-slate-900">
-                    Scan Date: {currentScan.date}
-                  </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-violet-700 font-extrabold">
-                    {currentScan.tumorAreaPixels.toLocaleString()} px Area
-                  </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-cyan-700 font-bold">
-                    {(currentScan.confidence * 100).toFixed(1)}% Confidence
-                  </span>
-                </div>
-
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
-                    currentScan.severity === "Critical"
-                      ? "bg-rose-100 text-rose-800 border border-rose-300"
-                      : "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                  }`}
-                >
-                  {currentScan.severity.toUpperCase()} STATUS
-                </span>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5">
+              {activeScans.map((scan, idx) => {
+                const isActive = idx === selectedScanIndex;
+                const d = new Date(scan.date);
+                const label = `${d.toLocaleDateString("en-US", {
+                  month: "short",
+                })} '${d.getDate()}`;
+                return (
+                  <button
+                    key={scan.id}
+                    type="button"
+                    onClick={() => setSelectedScanIndex(idx)}
+                    className={`px-2.5 py-0.5 rounded-md text-xs font-mono transition ${
+                      isActive
+                        ? "bg-slate-900 text-white font-semibold shadow-xs"
+                        : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Bottom Half: Longitudinal Progression Chart */}
+          {/* Clinical Scan Visualizer */}
+          {currentScan && (
+            <ScanVisualizer
+              rawImage={currentScan.originalImageUrl}
+              gradCamImage={currentScan.gradCamUrl}
+              prediction={currentScan.diagnosis}
+              heatmapFilename={currentScan.id}
+              scanDate={currentScan.date}
+              tumorAreaPixels={currentScan.tumorAreaPixels}
+              confidence={currentScan.confidence}
+            />
+          )}
+
+          {/* Timeline Progression Graph */}
           <ProgressionChart
             scans={activeScans}
             patientName={activePatient.name}
@@ -234,13 +244,13 @@ export default function NeuroCommandCenter({
         </div>
 
         {/* ========================================================= */}
-        {/* RIGHT PANEL (Geospatial Catchment Triage) - 5 cols on XL  */}
+        {/* RIGHT PANEL (Localized Patient Routing & Map) - 5 cols LG */}
         {/* ========================================================= */}
-        <div className="xl:col-span-5 h-full">
+        <div className="lg:col-span-5 h-full">
           <GeospatialTriage
-            severity={currentScan ? currentScan.severity : "Routine"}
-            confidence={currentScan ? currentScan.confidence : 0.95}
-            diagnosis={currentScan ? currentScan.diagnosis : "Nominal"}
+            severity={currentScan ? currentScan.severity : "Critical"}
+            confidence={currentScan ? currentScan.confidence : 0.998}
+            diagnosis={currentScan ? currentScan.diagnosis : "Glioblastoma"}
             patientCity={activePatient.referralCity}
           />
         </div>

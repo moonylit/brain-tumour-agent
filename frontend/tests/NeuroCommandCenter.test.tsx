@@ -7,29 +7,32 @@ describe("NeuroCommandCenter Component", () => {
     render(<NeuroCommandCenter />);
 
     // Top Bar & Patient Directory
-    expect(
-      screen.getByText("NeuroAgent 3-Panel Diagnostic Command Center")
-    ).toBeInTheDocument();
+    expect(screen.getByText("NeuroAgent")).toBeInTheDocument();
     expect(screen.getAllByText("Eleanor Vance").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Severity: Significant")).toBeInTheDocument();
+
+    // 2D Axial MRI Scan Visualizer & Sub-metrics
+    expect(screen.getByText("2D Axial MRI Analysis")).toBeInTheDocument();
+    expect(screen.getByText(/px Area \(estimated\)/i)).toBeInTheDocument();
 
     // Longitudinal Progression & Timeline
-    expect(
-      screen.getByText("Longitudinal Volumetric Tracking")
-    ).toBeInTheDocument();
     expect(
       screen.getByText(/Estimated Lesion Area Progression/i)
     ).toBeInTheDocument();
 
-    // Geospatial Catchment Triage
+    // Regional Referral & Catchment Route
     expect(
-      screen.getByText("Geospatial Catchment Triage")
+      screen.getByText("Regional Referral & Catchment Route")
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Route Patient via Heli-Ambulance/i)
+      screen.getByText(/Referral Rec: High-Priority Routing/i)
     ).toBeInTheDocument();
     expect(
       screen.getAllByText(/SMS Medical College & Hospital/i).length
     ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText(/Request Referral/i)
+    ).toBeInTheDocument();
   });
 
   it("switches patient records and updates clinical status", () => {
@@ -46,7 +49,7 @@ describe("NeuroCommandCenter Component", () => {
     expect(screen.getAllByText("Sarah Chen").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Zero Recurrence (0 px)")).toBeInTheDocument();
     expect(
-      screen.getByText("ROUTINE TRIAGE: STANDARD MONITORING")
+      screen.getByText("Severity: Nominal")
     ).toBeInTheDocument();
   });
 
@@ -69,7 +72,7 @@ describe("NeuroCommandCenter Component", () => {
     );
 
     // 5 total scans now (4 initial + 1 new)
-    expect(screen.getByText("5 Timed Scans")).toBeInTheDocument();
+    expect(screen.getByText(/5 Timed Scans/i)).toBeInTheDocument();
   });
 
   it("triggers onOpenArchive callback when View Scan Archive button is clicked", () => {

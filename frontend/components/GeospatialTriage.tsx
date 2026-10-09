@@ -1,325 +1,329 @@
 "use client";
 
 import React, { useState } from "react";
-import { HospitalFacility, REGIONAL_CATCHMENT_FACILITIES } from "@/lib/mockData";
 import {
-  Compass,
+  REGIONAL_CATCHMENT_FACILITIES,
+  HospitalFacility,
+} from "@/lib/mockData";
+import {
+  MapPin,
   Phone,
-  BedDouble,
-  ShieldCheck,
-  Building2,
+  FileText,
   Navigation,
+  ExternalLink,
   CheckCircle2,
-  AlertTriangle,
-  Plane,
-  Truck,
+  Building2,
 } from "lucide-react";
 
 interface GeospatialTriageProps {
-  severity: "Routine" | "Critical";
-  confidence: number;
-  diagnosis: string;
+  severity?: "Routine" | "Critical";
+  confidence?: number;
+  diagnosis?: string;
   patientCity?: string;
+  onLocationChange?: (city: string) => void;
 }
 
+const AVAILABLE_LOCATIONS = [
+  "Jaipur",
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "London",
+  "New York",
+];
+
 export default function GeospatialTriage({
-  severity,
-  confidence,
-  diagnosis,
+  severity = "Critical",
+  confidence = 0.998,
+  diagnosis = "Glioblastoma Multiforme",
   patientCity = "Jaipur",
+  onLocationChange,
 }: GeospatialTriageProps) {
-  const [selectedHospitalId, setSelectedHospitalId] = useState<string | null>(null);
-  const [heliDispatched, setHeliDispatched] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(patientCity);
+  const [referralRequested, setReferralRequested] = useState(false);
+  const [selectedHospitalId, setSelectedHospitalId] = useState<string>("HOSP-01");
 
-  const isCritical = severity === "Critical";
+  const isHighPriority =
+    severity === "Critical" ||
+    (diagnosis.toLowerCase() !== "notumor" &&
+      diagnosis.toLowerCase() !== "no tumor detected" &&
+      confidence > 0.85);
 
-  // Routing Logic Engine:
-  // If CRITICAL: Filter to only facilities with Neuro-ICU AND bed capacity > 0
-  const eligibleFacilities = REGIONAL_CATCHMENT_FACILITIES.filter((h) => {
-    if (isCritical) {
-      return h.hasNeuroICU && h.currentBedCapacity > 0;
-    }
-    return true;
-  }).sort((a, b) => a.distanceKm - b.distanceKm);
+  const hospitals: HospitalFacility[] = REGIONAL_CATCHMENT_FACILITIES;
+  const primaryHospital =
+    hospitals.find((h) => h.id === selectedHospitalId) || hospitals[0];
 
-  // Optimal recommended hospital
-  const optimalFacility: HospitalFacility = eligibleFacilities[0] || REGIONAL_CATCHMENT_FACILITIES[0];
-  const activeSelected =
-    eligibleFacilities.find((h) => h.id === selectedHospitalId) || optimalFacility;
+  const handleCityChange = (newCity: string) => {
+    setSelectedCity(newCity);
+    onLocationChange?.(newCity);
+  };
 
   return (
-    <div className="flex flex-col rounded-3xl border border-slate-200/90 bg-white/95 p-5 sm:p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl h-full">
-      {/* Triage Panel Header */}
-      <div className="border-b border-slate-100 pb-4 mb-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-0.5 text-xs font-mono font-bold text-cyan-800">
-              <Compass className="h-3.5 w-3.5 text-cyan-600 animate-spin" style={{ animationDuration: "12s" }} />
-              Geospatial Catchment Triage
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-mono text-slate-700">
-              Center: {patientCity}
-            </span>
-          </div>
+    <div className="flex flex-col rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm space-y-4">
+      {/* 1. Header & Location Search Select */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900">
+            Regional Referral &amp; Catchment Route
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Geographic tertiary facilities and acute neurosurgical referral
+          </p>
+        </div>
 
-          {/* Real-time Triage Status Badge */}
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-mono font-bold shadow-sm ${
-              isCritical
-                ? "bg-rose-100 text-rose-800 border border-rose-300"
-                : "bg-emerald-100 text-emerald-800 border border-emerald-300"
-            }`}
+        {/* Location Select Input: 📍 Base Location: Jaipur */}
+        <div className="flex items-center gap-2">
+          <label htmlFor="base-location-select" className="text-xs font-medium text-slate-600 flex items-center gap-1 shrink-0">
+            <MapPin className="h-3.5 w-3.5 text-blue-700" />
+            <span>Base Location:</span>
+          </label>
+          <select
+            id="base-location-select"
+            aria-label="Base Location"
+            value={selectedCity}
+            onChange={(e) => handleCityChange(e.target.value)}
+            className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-800 focus:border-blue-600 focus:outline-none shadow-xs"
           >
-            <span
-              className={`h-2 w-2 rounded-full ${
-                isCritical ? "bg-rose-600 animate-ping" : "bg-emerald-600"
-              }`}
-            />
-            {isCritical ? "CRITICAL TRIAGE: HIGH-PRIORITY ROUTING" : "ROUTINE TRIAGE: STANDARD MONITORING"}
+            {AVAILABLE_LOCATIONS.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* 2. Referral Recommendation Block */}
+      <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3.5 flex flex-col gap-2.5">
+        <div className="flex items-center justify-between gap-2">
+          {/* Blue Badge: Referral Rec: High-Priority Routing */}
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-100/70 px-2.5 py-0.5 text-xs font-semibold text-blue-900">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-700" />
+            <span>
+              {isHighPriority
+                ? "Referral Rec: High-Priority Routing"
+                : "Referral Rec: Standard Clinical Route"}
+            </span>
+          </span>
+
+          <span className="text-[11px] font-mono text-slate-500">
+            Facility ID: {primaryHospital.id}
           </span>
         </div>
 
-        <h3 className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          <Navigation className="h-5 w-5 text-cyan-600" />
-          Autonomous Medical Dispatch &amp; Catchment Router
-        </h3>
-        <p className="text-xs text-slate-500 font-medium mt-0.5">
-          Dynamic facility filtering based on live Neuro-ICU capacity and clinical lesion severity.
-        </p>
+        {/* Primary Hospital Details */}
+        <div>
+          <h4 className="text-sm font-bold text-slate-900">
+            {primaryHospital.name}
+          </h4>
+          <p className="text-xs text-slate-600 mt-0.5 font-medium">
+            Distance: {primaryHospital.distanceKm} km | Neuro-ICU Beds Available ({primaryHospital.currentBedCapacity}) | {primaryHospital.equipmentLevel}
+          </p>
+        </div>
+
+        {/* Normal Text Buttons */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => setReferralRequested(true)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 shadow-xs transition"
+          >
+            <FileText className="h-3.5 w-3.5 text-slate-500" />
+            <span>📄 Request Referral</span>
+          </button>
+
+          <a
+            href={`tel:${primaryHospital.contactPhone}`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 shadow-xs transition"
+          >
+            <Phone className="h-3.5 w-3.5 text-slate-500" />
+            <span>📞 Call Center</span>
+          </a>
+
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&origin=26.9124,75.7873&destination=${encodeURIComponent(
+              primaryHospital.name + " " + selectedCity
+            )}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700 hover:text-blue-900 hover:underline ml-auto"
+          >
+            <span>Open Maps Route</span>
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+
+        {/* Confirmation note */}
+        {referralRequested && (
+          <div className="mt-1 flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs text-emerald-800 font-medium animate-in fade-in">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+            <span>
+              Referral requisition confirmed for {primaryHospital.name}. Medical transfer dossier packaged.
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Recommended Dispatch Command Banner */}
-      <div
-        className={`mb-5 rounded-2xl border p-4 shadow-md transition-all ${
-          isCritical
-            ? "border-rose-300 bg-gradient-to-br from-rose-50/80 via-white to-amber-50/50"
-            : "border-cyan-200 bg-gradient-to-br from-cyan-50/70 via-white to-violet-50/50"
-        }`}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 border-b border-slate-200/60 pb-3">
-          <div className="flex items-center gap-2.5">
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm ${
-                isCritical
-                  ? "bg-rose-500 text-white border-rose-600"
-                  : "bg-cyan-600 text-white border-cyan-700"
-              }`}
-            >
-              {isCritical ? (
-                <Plane className="h-5 w-5 animate-pulse" />
-              ) : (
-                <Truck className="h-5 w-5" />
-              )}
-            </div>
+      {/* 3. Reference Street Map of Jaipur with deep blue route indicator path */}
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+          <span>Clinical Route Map ({selectedCity})</span>
+          <span className="font-mono text-[11px] text-blue-700 font-semibold">
+            {primaryHospital.distanceKm} km • ~{primaryHospital.driveTimeMin} min transit
+          </span>
+        </div>
 
-            <div>
-              <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-slate-400 block">
-                Primary Recommended Routing Protocol
-              </span>
-              <span
-                className={`text-sm font-black tracking-tight ${
-                  isCritical ? "text-rose-900" : "text-cyan-900"
+        {/* Standard flat medical street map */}
+        <div className="relative w-full h-52 rounded-lg border border-slate-200 bg-slate-50 overflow-hidden shadow-xs">
+          <svg
+            viewBox="0 0 460 220"
+            className="w-full h-full"
+            aria-label="Street map of patient catchment area"
+          >
+            {/* Background Map Canvas Grid */}
+            <rect width="460" height="220" fill="#f8fafc" />
+
+            {/* Minor Street Grid Lines */}
+            <g stroke="#e2e8f0" strokeWidth="1" strokeDasharray="none">
+              <line x1="40" y1="0" x2="40" y2="220" />
+              <line x1="90" y1="0" x2="90" y2="220" />
+              <line x1="140" y1="0" x2="140" y2="220" />
+              <line x1="190" y1="0" x2="190" y2="220" />
+              <line x1="240" y1="0" x2="240" y2="220" />
+              <line x1="290" y1="0" x2="290" y2="220" />
+              <line x1="340" y1="0" x2="340" y2="220" />
+              <line x1="390" y1="0" x2="390" y2="220" />
+              <line x1="440" y1="0" x2="440" y2="220" />
+
+              <line x1="0" y1="35" x2="460" y2="35" />
+              <line x1="0" y1="75" x2="460" y2="75" />
+              <line x1="0" y1="115" x2="460" y2="115" />
+              <line x1="0" y1="155" x2="460" y2="155" />
+              <line x1="0" y1="195" x2="460" y2="195" />
+            </g>
+
+            {/* Major Arterial Roads */}
+            <g stroke="#cbd5e1" strokeWidth="3" strokeLinecap="round">
+              {/* MI Road */}
+              <line x1="30" y1="60" x2="430" y2="60" />
+              {/* Tonk Road */}
+              <line x1="150" y1="20" x2="260" y2="210" />
+              {/* JLN Marg */}
+              <line x1="240" y1="20" x2="370" y2="210" />
+              {/* Ajmer Road */}
+              <line x1="30" y1="140" x2="280" y2="140" />
+            </g>
+
+            {/* Street Names (Subtle clinical labels) */}
+            <text x="50" y="52" fill="#94a3b8" fontSize="9" fontFamily="monospace">
+              MI ROAD
+            </text>
+            <text x="250" y="45" fill="#94a3b8" fontSize="9" fontFamily="monospace">
+              JLN MARG
+            </text>
+            <text x="145" y="105" fill="#94a3b8" fontSize="9" fontFamily="monospace">
+              TONK RD
+            </text>
+            <text x="50" y="132" fill="#94a3b8" fontSize="9" fontFamily="monospace">
+              AJMER RD
+            </text>
+
+            {/* Standard Deep Blue Indicator Path from Patient Origin to Hospital */}
+            {/* Route path from (110, 140) to (320, 95) */}
+            <path
+              d="M 110 140 L 195 140 L 255 105 L 320 95"
+              fill="none"
+              stroke="#1d4ed8"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Subtle path outline for clarity */}
+            <path
+              d="M 110 140 L 195 140 L 255 105 L 320 95"
+              fill="none"
+              stroke="#93c5fd"
+              strokeWidth="7"
+              strokeOpacity="0.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+
+            {/* Patient Origin Pin */}
+            <g transform="translate(110, 140)">
+              <circle r="6" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
+              <rect x="-45" y="-24" width="90" height="16" rx="4" fill="#1e293b" />
+              <text x="0" y="-13" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+                PATIENT ORIGIN
+              </text>
+            </g>
+
+            {/* Hospital Center Destination Pin */}
+            <g transform="translate(320, 95)">
+              <circle r="7" fill="#dc2626" stroke="#ffffff" strokeWidth="2" />
+              <rect x="-55" y="-26" width="110" height="18" rx="4" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1" />
+              <text x="0" y="-14" fill="#0f172a" fontSize="8" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+                SMS HOSPITAL
+              </text>
+            </g>
+
+            {/* Route Callout Tag */}
+            <g transform="translate(220, 175)">
+              <rect x="0" y="0" width="170" height="24" rx="6" fill="#ffffff" stroke="#94a3b8" strokeWidth="1" filter="drop-shadow(0px 1px 2px rgba(0,0,0,0.05))" />
+              <circle cx="12" cy="12" r="3" fill="#1d4ed8" />
+              <text x="22" y="15" fill="#334155" fontSize="9" fontWeight="600" fontFamily="sans-serif">
+                Primary Route: 4.8 km via JLN Marg
+              </text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      {/* 4. Catchment Facilities List (Flat, clean, professional) */}
+      <div className="space-y-2">
+        <span className="text-xs font-semibold text-slate-700 block">
+          Regional Catchment Facilities ({selectedCity})
+        </span>
+
+        <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 overflow-hidden text-xs">
+          {hospitals.slice(0, 3).map((facility) => {
+            const isSelected = facility.id === selectedHospitalId;
+            return (
+              <div
+                key={facility.id}
+                onClick={() => setSelectedHospitalId(facility.id)}
+                className={`p-2.5 flex items-center justify-between cursor-pointer transition ${
+                  isSelected
+                    ? "bg-blue-50/60 font-medium text-slate-900"
+                    : "hover:bg-slate-50 text-slate-600"
                 }`}
               >
-                {isCritical
-                  ? "Route Patient via Heli-Ambulance"
-                  : "Standard Ground Medical Transfer"}
-              </span>
-            </div>
-          </div>
+                <div className="flex items-center gap-2 min-w-0">
+                  <Building2 className={`h-4 w-4 shrink-0 ${isSelected ? "text-blue-700" : "text-slate-400"}`} />
+                  <div className="min-w-0">
+                    <span className="font-semibold text-slate-900 block truncate">
+                      {facility.name}
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      {facility.distanceKm} km • {facility.equipmentLevel}
+                    </span>
+                  </div>
+                </div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 shadow-sm">
-              Transit: {isCritical ? `${optimalFacility.flightTimeMin} min flight` : `${optimalFacility.driveTimeMin} min drive`}
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setHeliDispatched(true)}
-              disabled={heliDispatched}
-              className={`tactile-button inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white shadow-sm transition ${
-                heliDispatched
-                  ? "bg-emerald-600 cursor-default"
-                  : isCritical
-                  ? "bg-rose-600 hover:bg-rose-500 shadow-rose-600/30"
-                  : "bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/30"
-              }`}
-            >
-              {heliDispatched ? (
-                <>
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>Protocol Dispatched</span>
-                </>
-              ) : (
-                <>
-                  <Navigation className="h-3.5 w-3.5" />
-                  <span>Authorize Route</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Selected Facility Overview */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h4 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-              <Building2 className="h-4 w-4 text-cyan-600" />
-              <span>{activeSelected.name}</span>
-            </h4>
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-              <span className="font-mono text-[11px] font-bold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded">
-                Distance: {activeSelected.distanceKm} km
-              </span>
-              <span className="font-mono text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded flex items-center gap-1">
-                <BedDouble className="h-3 w-3" />
-                {activeSelected.currentBedCapacity} Neuro-ICU Beds Open
-              </span>
-              <span className="font-mono text-[11px] font-bold text-violet-700 bg-violet-50 border border-violet-200 px-2 py-0.5 rounded">
-                {activeSelected.equipmentLevel}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <a
-              href={`tel:${activeSelected.contactPhone.replace(/[^0-9+]/g, "")}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:text-cyan-700 hover:border-cyan-300 shadow-sm transition"
-            >
-              <Phone className="h-3.5 w-3.5 text-cyan-600" />
-              <span>Direct ICU Line</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Tactical Radar Route Visualizer Box */}
-      <div className="mb-5 rounded-2xl border border-slate-200 bg-slate-900 p-4 text-white shadow-inner relative overflow-hidden">
-        {/* Radar Rings Grid */}
-        <div className="flex items-center justify-between text-[11px] font-mono text-cyan-400 mb-2">
-          <span className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
-            LIVE RADAR RANGE: 25 KM CATCHMENT
-          </span>
-          <span className="text-slate-400">COORDINATES: 26.912° N, 75.787° E</span>
-        </div>
-
-        {/* Radar Map Canvas Representation */}
-        <div className="relative h-36 w-full flex items-center justify-center border border-cyan-500/20 rounded-xl bg-slate-950/80 overflow-hidden">
-          {/* Concentric distance rings */}
-          <div className="absolute h-16 w-16 rounded-full border border-cyan-500/30" />
-          <div className="absolute h-28 w-28 rounded-full border border-cyan-500/20" />
-          <div className="absolute h-full w-full rounded-full border border-cyan-500/10" />
-
-          {/* Crosshairs */}
-          <div className="absolute h-full w-px bg-cyan-500/20" />
-          <div className="absolute w-full h-px bg-cyan-500/20" />
-
-          {/* Patient Center Locus */}
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="h-3.5 w-3.5 rounded-full bg-cyan-400 border-2 border-white shadow-lg shadow-cyan-400/80 animate-pulse" />
-            <span className="text-[9px] font-mono text-cyan-300 font-bold mt-1 bg-slate-900/90 px-1 rounded">
-              PATIENT LOCUS
-            </span>
-          </div>
-
-          {/* Blips for Hospitals */}
-          {eligibleFacilities.map((fac, idx) => {
-            // Distribute blips based on mock angle/distance
-            const angles = [45, 135, 220, 310, 80];
-            const angle = angles[idx % angles.length];
-            const rad = (angle * Math.PI) / 180;
-            const distRadius = 20 + (fac.distanceKm / 25) * 45; // scale to 45px
-            const x = Math.cos(rad) * distRadius;
-            const y = Math.sin(rad) * distRadius;
-
-            const isLead = fac.id === activeSelected.id;
-
-            return (
-              <button
-                key={fac.id}
-                type="button"
-                onClick={() => setSelectedHospitalId(fac.id)}
-                style={{
-                  transform: `translate(${x}px, ${y}px)`,
-                }}
-                className={`absolute group cursor-pointer p-1 transition-transform hover:scale-125 focus:outline-none`}
-                title={`${fac.name} (${fac.distanceKm} km)`}
-              >
-                <div
-                  className={`h-2.5 w-2.5 rounded-full border shadow-md transition ${
-                    isLead
-                      ? "bg-rose-400 border-white ring-4 ring-rose-500/50 animate-bounce"
-                      : "bg-emerald-400 border-white"
-                  }`}
-                />
-              </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-mono text-slate-600">
+                    {facility.currentBedCapacity} ICU Beds
+                  </span>
+                  {isSelected && (
+                    <span className="text-[10px] font-bold text-blue-700 uppercase">
+                      Selected
+                    </span>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
-
-        <div className="mt-2 flex items-center justify-between text-[10px] font-mono text-slate-400">
-          <span>● Patient Locus (Origin)</span>
-          <span className="text-emerald-400">● Qualified Receiving Facilities</span>
-          <span className="text-rose-400">● Primary Recommended Vector</span>
-        </div>
-      </div>
-
-      {/* Eligible Facility Roster (Filtered by Severity) */}
-      <div className="flex-1 overflow-y-auto max-h-72 space-y-2.5 pr-1">
-        <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-500 pb-1">
-          <span>Available Catchment Facilities ({eligibleFacilities.length})</span>
-          {isCritical && (
-            <span className="text-rose-700 text-[11px]">
-              Filters: Neuro-ICU Required &bull; Beds &gt; 0
-            </span>
-          )}
-        </div>
-
-        {eligibleFacilities.map((facility) => {
-          const isCurrentActive = facility.id === activeSelected.id;
-
-          return (
-            <div
-              key={facility.id}
-              onClick={() => setSelectedHospitalId(facility.id)}
-              className={`cursor-pointer rounded-2xl border p-3.5 transition-all shadow-sm ${
-                isCurrentActive
-                  ? "border-cyan-500 bg-cyan-50/50 shadow-md ring-1 ring-cyan-500/20"
-                  : "border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/80"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <h5 className="text-xs font-bold text-slate-900 leading-snug flex items-center gap-1.5">
-                  <Building2 className="h-3.5 w-3.5 text-cyan-600 shrink-0" />
-                  <span>{facility.name}</span>
-                </h5>
-                <span className="shrink-0 font-mono text-[10px] font-extrabold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-                  {facility.distanceKm} km
-                </span>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-slate-500">
-                <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 font-semibold">
-                  <BedDouble className="h-3 w-3" />
-                  {facility.currentBedCapacity} Beds
-                </span>
-                <span className="text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
-                  {facility.equipmentLevel}
-                </span>
-                {facility.helipadAvailable && (
-                  <span className="text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded border border-violet-200 font-semibold flex items-center gap-0.5">
-                    <Plane className="h-2.5 w-2.5" />
-                    Helipad Active
-                  </span>
-                )}
-                <span className="ml-auto text-cyan-700 font-bold font-sans">
-                  {facility.driveTimeMin} min drive
-                </span>
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

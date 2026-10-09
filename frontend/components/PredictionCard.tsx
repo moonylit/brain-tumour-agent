@@ -21,6 +21,7 @@ import {
   Sliders,
   Cpu,
   Sparkles,
+  Layers,
 } from "lucide-react";
 
 type Props = {
@@ -189,12 +190,25 @@ export default function PredictionCard({
         <div className="xl:col-span-6 flex flex-col gap-6">
           {/* Dynamic X-Ray ScanVisualizer */}
           {heatmapFilename ? (
-            <ScanVisualizer
-              rawImage={rawUrl}
-              gradCamImage={heatmapUrl}
-              prediction={prediction}
-              heatmapFilename={heatmapFilename}
-            />
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+                    <Layers className="h-4 w-4 text-cyan-600" />
+                    <span>Grad-CAM Heatmap Localization</span>
+                  </h3>
+                  <span className="font-mono text-[11px] text-slate-500 block mt-0.5">
+                    Generated file: {heatmapFilename}
+                  </span>
+                </div>
+              </div>
+              <ScanVisualizer
+                rawImage={rawUrl}
+                gradCamImage={heatmapUrl}
+                prediction={prediction}
+                heatmapFilename={heatmapFilename}
+              />
+            </div>
           ) : null}
 
           {/* Bold, Visually Striking Prediction Badge */}

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Patient } from "@/lib/mockData";
-import { Users, ChevronDown, ShieldAlert, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 
 interface PatientDirectoryProps {
   patients: Patient[];
@@ -20,34 +20,6 @@ export default function PatientDirectory({
   const activePatient =
     patients.find((p) => p.id === selectedPatientId) || patients[0];
 
-  function getRiskBadge(risk: Patient["riskLevel"]) {
-    switch (risk) {
-      case "Critical":
-        return "bg-rose-100 text-rose-800 border-rose-300";
-      case "Moderate":
-      case "High":
-        return "bg-amber-100 text-amber-800 border-amber-300";
-      case "Low":
-        return "bg-emerald-100 text-emerald-800 border-emerald-300";
-      default:
-        return "bg-slate-100 text-slate-800 border-slate-300";
-    }
-  }
-
-  function getRiskIcon(risk: Patient["riskLevel"]) {
-    switch (risk) {
-      case "Critical":
-        return <ShieldAlert className="h-3.5 w-3.5 text-rose-600" />;
-      case "Moderate":
-      case "High":
-        return <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />;
-      case "Low":
-        return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />;
-      default:
-        return null;
-    }
-  }
-
   return (
     <div className="relative inline-block text-left">
       <div className="flex items-center gap-2">
@@ -55,63 +27,43 @@ export default function PatientDirectory({
           Select Patient
         </label>
 
-        {/* Sleek Custom Trigger Button */}
+        {/* Straightforward Clinical Trigger Button */}
         <button
           id="patient-directory-select"
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="group flex items-center gap-3 rounded-2xl border border-slate-200/90 bg-white px-3.5 py-2 shadow-sm hover:border-cyan-400 hover:shadow-md transition-all text-left"
+          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-50 transition shadow-xs"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-50 to-violet-50 border border-cyan-200 text-cyan-700 shadow-sm shrink-0">
-            <Users className="h-4 w-4" />
-          </div>
-
-          <div className="flex flex-col">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-              Patient Directory
+          <span>
+            Select Patient:{" "}
+            <span className="font-semibold text-slate-900">
+              {activePatient.name} ({activePatient.age}y)
             </span>
-            <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-cyan-700 transition">
-                {activePatient.name}
-              </span>
-              <span className="text-[11px] font-mono text-slate-400">
-                ({activePatient.age}y &bull; {activePatient.id})
-              </span>
-            </div>
-          </div>
-
-          <span
-            className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-bold border ${getRiskBadge(
-              activePatient.riskLevel
-            )}`}
-          >
-            {getRiskIcon(activePatient.riskLevel)}
-            <span>{activePatient.riskLevel.toUpperCase()}</span>
           </span>
 
           <ChevronDown
-            className={`h-4 w-4 text-slate-400 ml-1 transition-transform duration-200 ${
+            className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${
               isOpen ? "rotate-180" : ""
             }`}
           />
         </button>
       </div>
 
-      {/* Dropdown Menu */}
+      {/* Flat Clinical Dropdown Menu */}
       {isOpen && (
         <>
           <div
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 sm:left-0 z-50 mt-2 w-80 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/60 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-3 py-2 border-b border-slate-100">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                Registered Cohort Records
+          <div className="absolute left-0 z-50 mt-1.5 w-72 rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg">
+            <div className="px-2.5 py-1.5 border-b border-slate-100 mb-1">
+              <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-slate-400">
+                Registered Patients
               </span>
             </div>
 
-            <div className="mt-1 space-y-1">
+            <div className="space-y-0.5">
               {patients.map((patient) => {
                 const isSelected = patient.id === selectedPatientId;
                 return (
@@ -122,34 +74,29 @@ export default function PatientDirectory({
                       onSelectPatient(patient.id);
                       setIsOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition ${
+                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md text-left text-xs transition ${
                       isSelected
-                        ? "bg-cyan-50/70 border border-cyan-200 text-cyan-900 shadow-sm"
+                        ? "bg-blue-50 text-blue-900 font-semibold"
                         : "hover:bg-slate-50 text-slate-700"
                     }`}
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-slate-900">
+                        <span className="text-slate-900 font-medium">
                           {patient.name}
                         </span>
                         <span className="font-mono text-[10px] text-slate-400">
-                          {patient.id}
+                          ({patient.age}y)
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 font-medium truncate max-w-[190px]">
+                      <p className="text-[11px] text-slate-500 font-normal truncate max-w-[190px]">
                         {patient.primaryDiagnosis}
                       </p>
                     </div>
 
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-bold border ${getRiskBadge(
-                        patient.riskLevel
-                      )}`}
-                    >
-                      {getRiskIcon(patient.riskLevel)}
-                      <span>{patient.riskLevel}</span>
-                    </span>
+                    {isSelected && (
+                      <Check className="h-4 w-4 text-blue-700 shrink-0" />
+                    )}
                   </button>
                 );
               })}
