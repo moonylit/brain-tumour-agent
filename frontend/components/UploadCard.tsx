@@ -18,11 +18,13 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 interface UploadCardProps {
   region?: string;
   onRegionChange?: (region: string) => void;
+  onPredictionSuccess?: (data: PredictionResponse) => void;
 }
 
 export default function UploadCard({
   region: propRegion,
   onRegionChange,
+  onPredictionSuccess,
 }: UploadCardProps = {}) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [localRegion, setLocalRegion] = useState("Jaipur");
@@ -100,11 +102,14 @@ export default function UploadCard({
           : await predictMRI(selectedImage, targetRegion);
 
       setResult(predictionData);
+      onPredictionSuccess?.(predictionData);
 
       // Trigger history & stats refresh
       setRefreshTrigger((prev) => prev + 1);
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("new-prediction"));
+        window.dispatchEvent(
+          new CustomEvent("new-prediction", { detail: predictionData })
+        );
       }
     } catch (error: unknown) {
       console.error("Prediction failed:", error);

@@ -12,4 +12,10 @@ afterEach(() => {
 if (typeof window !== "undefined") {
   window.URL.createObjectURL = vi.fn(() => "blob:mock-preview-url");
   window.URL.revokeObjectURL = vi.fn();
+
+  global.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
 }

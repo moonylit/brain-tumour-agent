@@ -8,7 +8,8 @@ import EvaluationCard from "@/components/EvaluationCard";
 import Features from "@/components/Features";
 import Stats from "@/components/Stats";
 import Footer from "@/components/Footer";
-import { downloadReport, formatApiError } from "@/lib/api";
+import NeuroCommandCenter from "@/components/NeuroCommandCenter";
+import { downloadReport, formatApiError, PredictionResponse } from "@/lib/api";
 import {
   MapPin,
   Crosshair,
@@ -34,6 +35,7 @@ export default function Home() {
   const [detectError, setDetectError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [latestPrediction, setLatestPrediction] = useState<PredictionResponse | null>(null);
 
   const handleAutoDetect = () => {
     if (!navigator.geolocation) {
@@ -248,8 +250,29 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ============================================================= */}
+        {/* ADVANCED HACKATHON 3-PANEL NEUROAGENT COMMAND CENTER          */}
+        {/* ============================================================= */}
+        <NeuroCommandCenter
+          latestPredictionResult={
+            latestPrediction
+              ? {
+                  prediction: latestPrediction.prediction,
+                  confidence: latestPrediction.confidence,
+                  heatmapFilename: latestPrediction.heatmap_filename,
+                  rawHeatmapFilename: latestPrediction.raw_heatmap_filename,
+                  region: latestPrediction.region || region,
+                }
+              : null
+          }
+        />
+
         <Hero />
-        <UploadCard region={region} onRegionChange={setRegion} />
+        <UploadCard
+          region={region}
+          onRegionChange={setRegion}
+          onPredictionSuccess={setLatestPrediction}
+        />
         <EvaluationCard />
         <Features />
         <Stats />
