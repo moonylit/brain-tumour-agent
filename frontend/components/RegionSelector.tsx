@@ -99,12 +99,12 @@ export default function RegionSelector({
           {isDetecting ? (
             <>
               <Loader2 className="h-3 w-3 animate-spin text-cyan-400" />
-              <span>Detecting...</span>
+              <span>Detecting Location...</span>
             </>
           ) : (
             <>
               <Crosshair className="h-3 w-3" />
-              <span>Auto-detect</span>
+              <span>Detect My Location</span>
             </>
           )}
         </button>
@@ -120,7 +120,7 @@ export default function RegionSelector({
             onChange(e.target.value);
           }}
           disabled={disabled}
-          placeholder="e.g., Jaipur, New Delhi, London, Boston"
+          placeholder="Enter patient referral region (e.g. Mumbai, London)..."
           className="w-full bg-slate-950/80 border border-slate-800 focus:border-cyan-500/80 focus:ring-1 focus:ring-cyan-500/50 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none transition disabled:opacity-50"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">

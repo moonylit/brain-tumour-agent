@@ -18,6 +18,9 @@ import {
   ChevronUp,
   Star,
   Zap,
+  FileText,
+  Dna,
+  Compass,
 } from "lucide-react";
 
 interface Props {
@@ -33,7 +36,7 @@ export default function ClinicalAgentCard({
   loading = false,
   region,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<"literature" | "facilities">("literature");
+  const [activeTab, setActiveTab] = useState<"facilities" | "literature" | "protocol">("literature");
   const [showQueries, setShowQueries] = useState(false);
 
   const formattedPrediction = formatTumorClass(prediction);
@@ -173,35 +176,115 @@ export default function ClinicalAgentCard({
         </div>
       )}
 
-      {/* Tab Selectors (Literature vs Facilities) */}
-      <div className="flex border-b border-white/[0.08] mb-4 gap-2">
-        <button
-          type="button"
-          onClick={() => setActiveTab("literature")}
-          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold transition border-b-2 ${
-            activeTab === "literature"
-              ? "border-cyan-400 text-cyan-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <BookOpen className="h-3.5 w-3.5" />
-          <span>Evidence &amp; Clinical Trials ({research.articles?.length || 0})</span>
-        </button>
+      {/* Tab Selectors (3 Sleek Tabs from Stitch Clinical Suite) */}
+      <div className="flex border-b border-white/[0.08] mb-4 gap-2 overflow-x-auto pb-1">
         <button
           type="button"
           onClick={() => setActiveTab("facilities")}
-          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold transition border-b-2 ${
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
             activeTab === "facilities"
-              ? "border-cyan-400 text-cyan-300"
+              ? "border-emerald-400 text-emerald-300"
               : "border-transparent text-slate-400 hover:text-slate-200"
           }`}
         >
           <Building2 className="h-3.5 w-3.5" />
           <span>Regional Care Centers ({research.facilities?.length || 0})</span>
         </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("literature")}
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
+            activeTab === "literature"
+              ? "border-cyan-400 text-cyan-300"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+          }`}
+        >
+          <BookOpen className="h-3.5 w-3.5" />
+          <span>Peer-Reviewed Literature &amp; Trials ({research.articles?.length || 0})</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("protocol")}
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
+            activeTab === "protocol"
+              ? "border-purple-400 text-purple-300"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+          }`}
+        >
+          <FileText className="h-3.5 w-3.5" />
+          <span>Clinical Protocol (3 Orders)</span>
+        </button>
       </div>
 
-      {/* Tab 1: Evidence-Based Literature & Ongoing Clinical Trials */}
+      {/* Tab 1: Regional Care Centers (Top 3 Localized Facilities from SerpApi) */}
+      {activeTab === "facilities" && (
+        <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
+          {!research.facilities || research.facilities.length === 0 ? (
+            <div className="rounded-xl border border-white/[0.04] bg-slate-900/40 p-4 text-center">
+              <p className="text-xs text-slate-400">
+                {isNoTumor
+                  ? "Scan is nominal. Specialized tertiary oncology hospital referral is not required."
+                  : `No localized hospital facilities found in ${effectiveRegion}.`}
+              </p>
+            </div>
+          ) : (
+            research.facilities.slice(0, 3).map((facility, idx) => (
+              <div
+                key={idx}
+                className="group rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-emerald-500/40 hover:bg-slate-900/90"
+              >
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-emerald-200 flex items-center gap-1.5">
+                    <Building2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    <span>{facility.name}</span>
+                  </h4>
+                  {facility.rating !== null && facility.rating !== undefined && (
+                    <span className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-amber-300 border border-amber-500/20">
+                      ★ {facility.rating}
+                    </span>
+                  )}
+                </div>
+
+                {facility.address && (
+                  <p className="text-[11px] text-slate-400 flex items-start gap-1.5 mb-2 leading-relaxed">
+                    <MapPin className="h-3 w-3 text-slate-500 shrink-0 mt-0.5" />
+                    <span>{facility.address}</span>
+                  </p>
+                )}
+
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-400 pt-2 border-t border-white/[0.04]">
+                  {facility.phone ? (
+                    <a
+                      href={`tel:${facility.phone.replace(/[^0-9+]/g, "")}`}
+                      className="inline-flex items-center gap-1 text-slate-300 hover:text-cyan-300 transition"
+                      title="Direct phone dialer"
+                    >
+                      <Phone className="h-3 w-3 text-cyan-400" />
+                      <span>{facility.phone}</span>
+                    </a>
+                  ) : (
+                    <span className="text-slate-500">Regional care navigator</span>
+                  )}
+
+                  {facility.link && (
+                    <a
+                      href={facility.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-400 hover:underline inline-flex items-center gap-1 ml-auto text-[11px] font-sans"
+                    >
+                      <span>Navigate to Center</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Tab 2: Peer-Reviewed Literature & Clinical Trials (Top 3 from SerpApi) */}
       {activeTab === "literature" && (
         <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
           {!research.articles || research.articles.length === 0 ? (
@@ -209,7 +292,7 @@ export default function ClinicalAgentCard({
               No literature entries returned for this scan.
             </p>
           ) : (
-            research.articles.map((article, idx) => (
+            research.articles.slice(0, 3).map((article, idx) => (
               <div
                 key={idx}
                 className="group rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-cyan-500/40 hover:bg-slate-900/90"
@@ -246,7 +329,7 @@ export default function ClinicalAgentCard({
                       rel="noopener noreferrer"
                       className="text-cyan-400 hover:underline inline-flex items-center gap-1 font-sans text-[11px]"
                     >
-                      <span>Read full study</span>
+                      <span>Read study</span>
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
@@ -257,71 +340,62 @@ export default function ClinicalAgentCard({
         </div>
       )}
 
-      {/* Tab 2: Regional Tertiary Neuro-Oncology & Specialized Referral Centers */}
-      {activeTab === "facilities" && (
+      {/* Tab 3: Clinical Protocol (3 Concise Bullet Cards) */}
+      {activeTab === "protocol" && (
         <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
-          {!research.facilities || research.facilities.length === 0 ? (
-            <div className="rounded-xl border border-white/[0.04] bg-slate-900/40 p-4 text-center">
-              <p className="text-xs text-slate-400">
-                {isNoTumor
-                  ? "Scan is nominal. Specialized tertiary oncology hospital referral is not required."
-                  : `No localized hospital facilities found in ${effectiveRegion}.`}
-              </p>
+          {/* Card 1: Imaging Sequence */}
+          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-cyan-500/40">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <span className="flex items-center gap-2 text-xs font-semibold text-cyan-300">
+                <FileText className="h-3.5 w-3.5 text-cyan-400" />
+                <span>Multiparametric MRI Imaging Sequence</span>
+              </span>
+              <span className="rounded bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 text-[10px] font-mono text-cyan-300">
+                ACR / EANO Protocol
+              </span>
             </div>
-          ) : (
-            research.facilities.map((facility, idx) => (
-              <div
-                key={idx}
-                className="group rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-emerald-500/40 hover:bg-slate-900/90"
-              >
-                <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-emerald-200 flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                    <span>{facility.name}</span>
-                  </h4>
-                  {facility.rating !== null && facility.rating !== undefined && (
-                    <span className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-amber-300 border border-amber-500/20">
-                      ★ {facility.rating}
-                    </span>
-                  )}
-                </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              {isNoTumor
+                ? "Reassuring baseline neuroimaging. Maintain regular clinical follow-up; repeat high-resolution axial T1/T2 imaging only if focal neurological deficits manifest."
+                : "Acquire volumetric 3D T1-weighted pre- & post-gadolinium contrast, axial T2-FLAIR, and DWI/ADC mapping to quantify peritumoral vasogenic edema, necrotic core boundaries, and midline shift."}
+            </p>
+          </div>
 
-                {facility.address && (
-                  <p className="text-[11px] text-slate-400 flex items-start gap-1.5 mb-2 leading-relaxed">
-                    <MapPin className="h-3 w-3 text-slate-500 shrink-0 mt-0.5" />
-                    <span>{facility.address}</span>
-                  </p>
-                )}
+          {/* Card 2: Surgical Pathway */}
+          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-purple-500/40">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <span className="flex items-center gap-2 text-xs font-semibold text-purple-300">
+                <Compass className="h-3.5 w-3.5 text-purple-400" />
+                <span>Surgical Pathway &amp; Resection Strategy</span>
+              </span>
+              <span className="rounded bg-purple-950/60 border border-purple-800/50 px-2 py-0.5 text-[10px] font-mono text-purple-300">
+                Neurosurgery Directive
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              {isNoTumor
+                ? "No surgical intervention indicated. Routine neurological outpatient evaluation if secondary headache symptoms persist."
+                : "Multidisciplinary neurosurgical review for 5-ALA fluorescence-guided maximal safe gross total resection (GTR) or stereotactic frameless biopsy under intraoperative functional neuromonitoring."}
+            </p>
+          </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-400 pt-2 border-t border-white/[0.04]">
-                  {facility.phone ? (
-                    <a
-                      href={`tel:${facility.phone.replace(/[^0-9+]/g, "")}`}
-                      className="inline-flex items-center gap-1 text-slate-300 hover:text-cyan-300 transition"
-                      title="Direct phone dialer"
-                    >
-                      <Phone className="h-3 w-3 text-cyan-400" />
-                      <span>{facility.phone}</span>
-                    </a>
-                  ) : (
-                    <span className="text-slate-500">Helpline via portal</span>
-                  )}
-
-                  {facility.link && (
-                    <a
-                      href={facility.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-emerald-400 hover:underline inline-flex items-center gap-1 ml-auto text-[11px] font-sans"
-                    >
-                      <span>Visit Center Portal</span>
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
+          {/* Card 3: Molecular Biomarker Orders */}
+          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-emerald-500/40">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <span className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
+                <Dna className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Molecular Biomarker Panel Orders</span>
+              </span>
+              <span className="rounded bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 text-[10px] font-mono text-emerald-300">
+                WHO CNS5 Classification
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              {isNoTumor
+                ? "No oncologic molecular biomarkers indicated for negative imaging findings."
+                : "Order reflex molecular NGS testing: IDH1/IDH2 mutational profiling, 1p/19q codeletion via FISH, MGMT promoter methylation assay, and TERT promoter alterations to guide targeted systemic therapy."}
+            </p>
+          </div>
         </div>
       )}
     </div>

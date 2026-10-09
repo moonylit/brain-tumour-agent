@@ -56,6 +56,9 @@ export default function Navbar() {
             <span className="font-semibold tracking-tight text-slate-100">
               BrainTumourAI
             </span>
+            <span className="hidden xl:inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 px-2.5 py-0.5 text-[11px] font-mono text-cyan-300">
+              NeuroAgent Suite
+            </span>
           </a>
 
           {/* Minimal Backend Status Pill */}

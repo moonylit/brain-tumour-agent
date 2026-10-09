@@ -152,25 +152,26 @@ export default function PredictionCard({
           </p>
         </div>
 
-        {/* Micro-Stat 5: Clinical Risk Triage Status */}
+        {/* Micro-Stat 5: Clinical Risk Triage Urgency Badge */}
         <div className="col-span-2 sm:col-span-1 rounded-xl bg-slate-950/70 border border-slate-800/80 p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span className="font-mono uppercase tracking-wider text-[11px]">Triage Risk Stratum</span>
+            <span className="font-mono uppercase tracking-wider text-[11px]">Triage Urgency</span>
             {isNoTumor ? (
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
             ) : (
               <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />
             )}
           </div>
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-1.5">
             <span
-              className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-mono font-bold tracking-wider ${
                 isNoTumor
-                  ? "bg-emerald-950/60 text-emerald-300 border border-emerald-500/30"
-                  : "bg-rose-950/60 text-rose-300 border border-rose-500/30"
+                  ? "bg-emerald-950/80 text-emerald-300 border border-emerald-500/40"
+                  : "bg-rose-950/80 text-rose-300 border border-rose-500/40 shadow-[0_0_12px_rgba(244,63,94,0.3)]"
               }`}
             >
-              {isNoTumor ? "Nominal Surveillance" : "Escalation Recommended"}
+              <span className={`h-1.5 w-1.5 rounded-full ${isNoTumor ? "bg-emerald-400" : "bg-rose-400 animate-pulse"}`} />
+              <span>{isNoTumor ? "ROUTINE" : "CRITICAL"}</span>
             </span>
           </div>
         </div>
@@ -250,7 +251,7 @@ export default function PredictionCard({
                   {/* Left: Raw MRI */}
                   <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
                     <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-slate-300">
-                      Raw Scan
+                      Original MRI (T1-Gd)
                     </span>
                     <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
                       <img
@@ -269,14 +270,14 @@ export default function PredictionCard({
                       )}
                     </div>
                     <span className="text-[10px] font-mono text-slate-400 mt-2">
-                      Input Morphology
+                      Input Morphology (T1-Gd)
                     </span>
                   </div>
 
                   {/* Right: Grad-CAM Overlay */}
                   <div className="relative rounded-xl border border-slate-800 bg-black/80 p-2 flex flex-col items-center">
                     <span className="absolute top-3 left-3 z-10 px-2 py-0.5 rounded bg-black/70 border border-slate-700 text-[10px] font-mono text-cyan-300">
-                      Activation Map
+                      Grad-CAM Overlay (Lesion Localization)
                     </span>
                     <div className="relative overflow-hidden rounded-lg aspect-square w-full max-w-[260px] flex items-center justify-center">
                       <img
