@@ -59,14 +59,14 @@ export default function GeospatialTriage({
   };
 
   return (
-    <div className="flex flex-col rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm space-y-4">
+    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full overflow-y-auto space-y-4 sm:space-y-5">
       {/* 1. Header & Location Search Select */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900">
             Regional Referral &amp; Catchment Route
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Geographic tertiary facilities and acute neurosurgical referral
           </p>
         </div>

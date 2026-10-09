@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   ResponsiveContainer,
-  AreaChart,
+  ComposedChart,
   Area,
   Line,
   XAxis,
@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from "recharts";
 import { ScanRecord } from "@/lib/mockData";
+import { Sparkles, TrendingUp, Calendar, AlertCircle } from "lucide-react";
 
 export interface ProgressionChartProps {
   scans: ScanRecord[];
@@ -24,22 +25,7 @@ export default function ProgressionChart({
   patientName,
   onOpenArchive,
 }: ProgressionChartProps) {
-  // Format scans for recharts with simple formatted dates
-  const chartData = scans.map((s) => {
-    const d = new Date(s.date);
-    const month = d.toLocaleDateString("en-US", { month: "short" });
-    const day = d.toLocaleDateString("en-US", { day: "2-digit" });
-    const year = d.getFullYear().toString().slice(-2);
-    return {
-      date: s.date,
-      displayDate: `${month} '${day}`,
-      shortDate: `${month} '${year}`,
-      tumorArea: s.tumorAreaPixels,
-      confidence: (s.confidence * 100).toFixed(1),
-      diagnosis: s.diagnosis,
-      severity: s.severity,
-    };
-  });
+  const [isSimulatingFuture, setIsSimulatingFuture] = useState(false);
 
   const firstScanArea = scans[0]?.tumorAreaPixels || 0;
   const latestScanArea = scans[scans.length - 1]?.tumorAreaPixels || 0;
@@ -53,33 +39,125 @@ export default function ProgressionChart({
 
   const isRemission = latestScanArea === 0 && firstScanArea === 0;
 
+  // Format historical scans for recharts
+  const historicalData = scans.map((s, idx) => {
+    const d = new Date(s.date);
+    const month = d.toLocaleDateString("en-US", { month: "short" });
+    const day = d.toLocaleDateString("en-US", { day: "2-digit" });
+    const isLast = idx === scans.length - 1;
+
+    return {
+      date: s.date,
+      displayDate: `${month} '${day}`,
+      historicalArea: s.tumorAreaPixels,
+      // If simulating future, connect the dashed forecast line starting from the last historical scan
+      forecastArea: isSimulatingFuture && isLast ? s.tumorAreaPixels : null,
+      tumorArea: s.tumorAreaPixels,
+      confidence: (s.confidence * 100).toFixed(1),
+      diagnosis: s.diagnosis,
+      severity: s.severity,
+      isForecast: false,
+    };
+  });
+
+  // Dynamically append 2 mock future data points if simulation is active
+  let chartData = [...historicalData];
+  if (isSimulatingFuture && scans.length > 0) {
+    const lastDate = new Date(scans[scans.length - 1].date);
+
+    // Future Point 1 (+2.5 months)
+    const futureDate1 = new Date(lastDate);
+    futureDate1.setMonth(futureDate1.getMonth() + 2);
+    futureDate1.setDate(15);
+    const m1 = futureDate1.toLocaleDateString("en-US", { month: "short" });
+    const y1 = futureDate1.getFullYear().toString().slice(-2);
+    const p1Area = isRemission ? 0 : Math.round(latestScanArea * 1.15 + 400);
+
+    // Future Point 2 (+5 months)
+    const futureDate2 = new Date(lastDate);
+    futureDate2.setMonth(futureDate2.getMonth() + 5);
+    futureDate2.setDate(1);
+    const m2 = futureDate2.toLocaleDateString("en-US", { month: "short" });
+    const y2 = futureDate2.getFullYear().toString().slice(-2);
+    const p2Area = isRemission ? 0 : Math.round(latestScanArea * 1.32 + 850);
+
+    chartData.push({
+      date: futureDate1.toISOString().slice(0, 10),
+      displayDate: `${m1} '${y1} (Est)`,
+      historicalArea: null as any,
+      forecastArea: p1Area,
+      tumorArea: p1Area,
+      confidence: "89.2",
+      diagnosis: isRemission ? "Stable Remission (Est)" : "Projected Lesion Expansion",
+      severity: isRemission ? "Routine" : "Critical",
+      isForecast: true,
+    });
+
+    chartData.push({
+      date: futureDate2.toISOString().slice(0, 10),
+      displayDate: `${m2} '${y2} (Est)`,
+      historicalArea: null as any,
+      forecastArea: p2Area,
+      tumorArea: p2Area,
+      confidence: "84.5",
+      diagnosis: isRemission ? "Stable Remission (Est)" : "High-Risk Growth Forecast",
+      severity: isRemission ? "Routine" : "Critical",
+      isForecast: true,
+    });
+  }
+
+  const projectedDelta = isSimulatingFuture && !isRemission && latestScanArea > 0
+    ? Math.round((((chartData[chartData.length - 1].forecastArea || 0) - latestScanArea) / latestScanArea) * 100)
+    : 0;
+
   return (
-    <div className="flex flex-col rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between">
+      {/* Header with Title & Action Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-slate-900">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
               Estimated Lesion Area Progression (px)
             </h3>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-mono font-semibold text-slate-600">
               ({scans.length} Timed Scans)
             </span>
           </div>
           {patientName && (
-            <p className="text-xs text-slate-500 mt-0.5">
-              Longitudinal tracking for{" "}
-              <span className="font-medium text-slate-700">{patientName}</span>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+              <span>Longitudinal trajectory for</span>
+              <span className="font-semibold text-slate-800">{patientName}</span>
             </p>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Action Controls Array */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* THE PREDICT TRAJECTORY BUTTON */}
+          <button
+            type="button"
+            onClick={() => setIsSimulatingFuture(!isSimulatingFuture)}
+            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md ${
+              isSimulatingFuture
+                ? "bg-violet-700 text-white ring-2 ring-violet-400 shadow-violet-500/30"
+                : "bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-violet-500/25 hover:shadow-violet-500/40"
+            }`}
+            title="Toggle AI Forecasted Tumor Trajectory"
+          >
+            <Sparkles className="h-4 w-4 text-violet-200 animate-pulse" />
+            <span>🔮 Simulate Future Growth</span>
+            {isSimulatingFuture && (
+              <span className="ml-0.5 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
+                Active
+              </span>
+            )}
+          </button>
+
           {onOpenArchive && (
             <button
               type="button"
               onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 rounded-md px-2.5 py-1 text-xs font-medium shadow-xs transition"
+              className="inline-flex items-center gap-1.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold shadow-xs transition"
               title="View Scan Archive"
             >
               <span>📂</span>
@@ -88,12 +166,12 @@ export default function ProgressionChart({
           )}
 
           {isRemission ? (
-            <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-800">
+            <span className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800">
               Zero Recurrence (0 px)
             </span>
           ) : (
             <span
-              className={`rounded-md border px-2 py-0.5 text-xs font-medium ${
+              className={`rounded-xl border px-3 py-1.5 text-xs font-bold ${
                 percentDelta > 40
                   ? "border-amber-200 bg-amber-50 text-amber-800"
                   : "border-slate-200 bg-slate-50 text-slate-700"
@@ -105,22 +183,26 @@ export default function ProgressionChart({
         </div>
       </div>
 
-      {/* Recharts Area / Line Chart with deep blue line */}
-      <div className="h-48 w-full">
+      {/* Interactive Recharts Composed Chart with Dual Solid + Dashed Forecast Line */}
+      <div className="h-48 sm:h-52 w-full my-auto">
         {chartData.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-xs text-slate-400">
-            No historical records.
+          <div className="flex h-full items-center justify-center text-sm text-slate-400">
+            No historical records found.
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
+            <ComposedChart
               data={chartData}
-              margin={{ top: 8, right: 12, left: -10, bottom: 0 }}
+              margin={{ top: 12, right: 16, left: -6, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="blueAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.12} />
+                  <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.16} />
                   <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.0} />
+                </linearGradient>
+                <linearGradient id="violetAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.18} />
+                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
 
@@ -132,13 +214,13 @@ export default function ProgressionChart({
 
               <XAxis
                 dataKey="displayDate"
-                tick={{ fill: "#64748b", fontSize: 11 }}
+                tick={{ fill: "#64748b", fontSize: 12 }}
                 axisLine={{ stroke: "#e2e8f0" }}
                 tickLine={false}
               />
 
               <YAxis
-                tick={{ fill: "#64748b", fontSize: 11 }}
+                tick={{ fill: "#64748b", fontSize: 12 }}
                 axisLine={{ stroke: "#e2e8f0" }}
                 tickLine={false}
                 tickFormatter={(val) =>
@@ -151,16 +233,38 @@ export default function ProgressionChart({
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-md text-xs">
-                        <p className="font-mono text-slate-500 font-semibold">
-                          Date: {data.date}
-                        </p>
-                        <p className="font-bold text-blue-700 mt-1">
-                          Lesion Area: {data.tumorArea.toLocaleString()} px
-                        </p>
-                        <p className="text-slate-600 font-medium">
-                          {data.diagnosis} ({data.confidence}% conf)
-                        </p>
+                      <div className="rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-xs max-w-xs">
+                        {data.isForecast ? (
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-800 px-2 py-0.5 text-[10px] font-bold">
+                              🔮 AI Projected Trajectory
+                            </span>
+                            <p className="font-mono text-slate-500 font-semibold mt-1">
+                              Target Date: {data.date}
+                            </p>
+                            <p className="font-extrabold text-violet-700 text-sm">
+                              Estimated Lesion Area: {data.tumorArea.toLocaleString()} px
+                            </p>
+                            <p className="text-slate-600 font-medium">
+                              {data.diagnosis} ({data.confidence}% Bayesian Certainty)
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-800 px-2 py-0.5 text-[10px] font-bold">
+                              ✓ Verified MRI Scan
+                            </span>
+                            <p className="font-mono text-slate-500 font-semibold mt-1">
+                              Acquisition Date: {data.date}
+                            </p>
+                            <p className="font-extrabold text-blue-700 text-sm">
+                              Measured Lesion Area: {data.tumorArea.toLocaleString()} px
+                            </p>
+                            <p className="text-slate-600 font-medium">
+                              {data.diagnosis} ({data.confidence}% conf)
+                            </p>
+                          </div>
+                        )}
                       </div>
                     );
                   }
@@ -168,33 +272,68 @@ export default function ProgressionChart({
                 }}
               />
 
+              {/* Verified Scans: Solid Deep Blue Line + Subtle Gradient Area */}
               <Area
                 type="monotone"
-                dataKey="tumorArea"
+                dataKey="historicalArea"
                 stroke="#1d4ed8"
-                strokeWidth={2.5}
+                strokeWidth={3}
                 fill="url(#blueAreaGrad)"
+                name="Verified MRI Scan"
                 activeDot={{
-                  r: 5,
+                  r: 6,
                   fill: "#1d4ed8",
                   stroke: "#ffffff",
                   strokeWidth: 2,
                 }}
               />
-            </AreaChart>
+
+              {/* AI Forecasted Growth: Dashed Violet Line */}
+              {isSimulatingFuture && (
+                <Line
+                  type="monotone"
+                  dataKey="forecastArea"
+                  stroke="#8b5cf6"
+                  strokeWidth={3}
+                  strokeDasharray="5 5"
+                  name="AI Projected Growth"
+                  dot={{
+                    r: 5,
+                    fill: "#8b5cf6",
+                    stroke: "#ffffff",
+                    strokeWidth: 2,
+                  }}
+                  activeDot={{
+                    r: 7,
+                    fill: "#8b5cf6",
+                    stroke: "#ffffff",
+                    strokeWidth: 2,
+                  }}
+                />
+              )}
+            </ComposedChart>
           </ResponsiveContainer>
         )}
       </div>
 
-      {/* Clean Single Line Tracking Strip */}
-      <div className="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-500">
-        <span>Baseline: {firstScanArea.toLocaleString()} px</span>
-        <span className="text-slate-300">•</span>
-        <span>Latest: {latestScanArea.toLocaleString()} px</span>
-        <span className="text-slate-300">•</span>
-        <span className="font-medium text-slate-700">
-          Net: {areaDelta >= 0 ? `+${areaDelta.toLocaleString()}` : areaDelta.toLocaleString()} px
-        </span>
+      {/* Sub-Metrics Telemetry Strip */}
+      <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs font-mono text-slate-600">
+        <div className="flex items-center gap-3">
+          <span>Baseline: <strong className="text-slate-800">{firstScanArea.toLocaleString()} px</strong></span>
+          <span className="text-slate-300">•</span>
+          <span>Latest: <strong className="text-slate-800">{latestScanArea.toLocaleString()} px</strong></span>
+          <span className="text-slate-300">•</span>
+          <span className="font-semibold text-slate-900">
+            Historical Delta: {areaDelta >= 0 ? `+${areaDelta.toLocaleString()}` : areaDelta.toLocaleString()} px
+          </span>
+        </div>
+
+        {isSimulatingFuture && (
+          <div className="inline-flex items-center gap-1.5 text-violet-700 font-bold bg-violet-50 px-2.5 py-1 rounded-lg border border-violet-200 text-xs">
+            <span>🔮 Forecasted Growth:</span>
+            <span>+{projectedDelta}% over 5 mos</span>
+          </div>
+        )}
       </div>
     </div>
   );

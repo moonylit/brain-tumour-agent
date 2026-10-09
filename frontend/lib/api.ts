@@ -157,6 +157,8 @@ export async function predictMRI(
   return response.data;
 }
 
+export const predictTumor = predictMRI;
+
 /**
  * On-demand autonomous clinical agent research without MRI re-upload
  */

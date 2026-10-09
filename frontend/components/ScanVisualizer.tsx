@@ -61,26 +61,26 @@ export default function ScanVisualizer({
     : "99.8% Confidence";
 
   return (
-    <div className="flex flex-col rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm">
-      {/* Minimalist Sub-Header Mode Switcher Array */}
+    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-xl shadow-slate-200/50 h-full justify-between">
+      {/* Sub-Header Mode Switcher Array */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-800">
+          <span className="text-sm sm:text-base font-bold text-slate-900">
             2D Axial MRI Analysis
           </span>
-          <span className="text-[10px] font-mono text-slate-400">
+          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-mono font-medium text-slate-600">
             {prediction}
           </span>
         </div>
 
         {/* Minimalist button array */}
-        <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs">
+        <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 text-xs sm:text-sm">
           <button
             type="button"
             onClick={() => setMode("overlay")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
               mode === "overlay"
-                ? "bg-white text-blue-700 shadow-xs font-semibold"
+                ? "bg-white text-blue-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -91,9 +91,9 @@ export default function ScanVisualizer({
           <button
             type="button"
             onClick={() => setMode("xray")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
               mode === "xray"
-                ? "bg-white text-blue-700 shadow-xs font-semibold"
+                ? "bg-white text-blue-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -104,9 +104,9 @@ export default function ScanVisualizer({
           <button
             type="button"
             onClick={() => setMode("side-by-side")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
               mode === "side-by-side"
-                ? "bg-white text-blue-700 shadow-xs font-semibold"
+                ? "bg-white text-blue-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -116,15 +116,15 @@ export default function ScanVisualizer({
         </div>
       </div>
 
-      {/* Main Square Clinical Scan Visualizer Stage */}
+      {/* Main Massive Square Clinical Scan Visualizer Stage */}
       {mode === "side-by-side" ? (
-        <div className="grid grid-cols-2 gap-3 w-full">
+        <div className="grid grid-cols-2 gap-4 w-full my-auto">
           {/* Left: Raw 2D Axial MRI in Grayscale */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-mono font-medium text-slate-500 uppercase tracking-wider text-center">
+            <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
               Original Axial MRI (T1-Gd)
             </span>
-            <div className="aspect-square w-full rounded-lg bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center">
+            <div className="aspect-square w-full rounded-xl bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center shadow-inner">
               <img
                 src={rawImage}
                 alt="Raw MRI Input Scan"
@@ -138,10 +138,10 @@ export default function ScanVisualizer({
 
           {/* Right: Grad-CAM Heatmap */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-mono font-medium text-slate-500 uppercase tracking-wider text-center">
+            <span className="text-[11px] font-mono font-semibold text-slate-500 uppercase tracking-wider text-center">
               Grad-CAM Localization
             </span>
-            <div className="aspect-square w-full rounded-lg bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center">
+            <div className="aspect-square w-full rounded-xl bg-black overflow-hidden border border-slate-200 relative flex items-center justify-center shadow-inner">
               <img
                 src={effectiveGradCam}
                 alt={`Grad-CAM Heatmap for ${prediction}`}
@@ -154,12 +154,12 @@ export default function ScanVisualizer({
           </div>
         </div>
       ) : (
-        /* Single Perfect Square Stage: Overlay or 120px X-Ray Flashlight */
+        /* Single Massive Perfect Square Stage: Overlay or 120px X-Ray Flashlight */
         <div
           ref={containerRef}
           onMouseMove={mode === "xray" ? handleMouseMove : undefined}
           onMouseLeave={mode === "xray" ? handleMouseLeave : undefined}
-          className="relative aspect-square w-full max-w-[460px] mx-auto rounded-lg bg-black overflow-hidden border border-slate-200 cursor-crosshair select-none flex items-center justify-center"
+          className="relative aspect-square w-full max-h-[360px] sm:max-h-[380px] mx-auto rounded-xl bg-black overflow-hidden border border-slate-200 cursor-crosshair select-none flex items-center justify-center shadow-inner my-auto"
         >
           {/* Base Real 2D Axial MRI in Grayscale */}
           <img
@@ -197,7 +197,7 @@ export default function ScanVisualizer({
           {/* Subtle cursor guide ring for flashlight */}
           {mode === "xray" && isHovering && cursorPos && (
             <div
-              className="pointer-events-none absolute h-[240px] w-[240px] rounded-full border border-blue-400/60 shadow-[0_0_12px_rgba(59,130,246,0.3)] transition-transform duration-75"
+              className="pointer-events-none absolute h-[240px] w-[240px] rounded-full border border-blue-400/70 shadow-[0_0_16px_rgba(59,130,246,0.4)] transition-transform duration-75"
               style={{
                 left: `${cursorPos.x - 120}px`,
                 top: `${cursorPos.y - 120}px`,
@@ -208,16 +208,16 @@ export default function ScanVisualizer({
       )}
 
       {/* Sub-metrics: Single Line of Small Monospace Text with Subtle Borders */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-3 py-2 border border-slate-200/90 rounded-md bg-slate-50 text-[11px] font-mono text-slate-600">
-        <span className="font-medium text-slate-800">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border border-slate-200/90 rounded-xl bg-slate-50 text-xs font-mono text-slate-600">
+        <span className="font-semibold text-slate-800">
           Scan Date: {scanDate}
         </span>
         <span className="text-slate-300 hidden sm:inline">•</span>
-        <span className="font-medium text-slate-700">
+        <span className="font-semibold text-slate-700">
           {formattedArea}
         </span>
         <span className="text-slate-300 hidden sm:inline">•</span>
-        <span className="font-semibold text-blue-700">
+        <span className="font-bold text-blue-700">
           {formattedConfidence}
         </span>
       </div>

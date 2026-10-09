@@ -8,16 +8,20 @@ import {
   INITIAL_SCANS,
   estimateTumorAreaFromPrediction,
 } from "@/lib/mockData";
-import PatientDirectory from "./PatientDirectory";
+import PatientCommandModule from "./PatientCommandModule";
 import ProgressionChart from "./ProgressionChart";
 import GeospatialTriage from "./GeospatialTriage";
 import ScanVisualizer from "./ScanVisualizer";
+import UploadScanModal from "./UploadScanModal";
+import AddPatientModal from "./AddPatientModal";
+import SystemMetricsBanner from "./SystemMetricsBanner";
 import {
   Activity,
   Calendar,
   FileDown,
   FolderArchive,
   Loader2,
+  CheckCircle2,
 } from "lucide-react";
 
 export interface NeuroCommandCenterProps {
@@ -43,6 +47,10 @@ export default function NeuroCommandCenter({
   const [selectedPatientId, setSelectedPatientId] = useState<string>("PT-8821");
   const [allScans, setAllScans] = useState<ScanRecord[]>(INITIAL_SCANS);
 
+  const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
+  const [isUploadScanOpen, setIsUploadScanOpen] = useState(false);
+  const [showToast, setShowToast] = useState<string | null>(null);
+
   const activePatient =
     patients.find((p) => p.id === selectedPatientId) || patients[0];
 
@@ -62,7 +70,7 @@ export default function NeuroCommandCenter({
     setSelectedScanIndex(Math.max(0, scansForPatient.length - 1));
   }, [selectedPatientId, allScans]);
 
-  // When user uploads a new scan from the Python backend, append to timeline
+  // When external prediction arrives from props, append to timeline
   useEffect(() => {
     if (!latestPredictionResult) return;
 
@@ -88,11 +96,32 @@ export default function NeuroCommandCenter({
       confidence: latestPredictionResult.confidence,
       severity: isCritical ? "Critical" : "Routine",
       diagnosis: latestPredictionResult.prediction,
-      notes: `Live Inference processed at ${new Date().toLocaleTimeString()} via ResNet-50 Backend`,
+      notes: `Live Inference processed via ResNet-50 Backend`,
     };
 
     setAllScans((prev) => [...prev, newScanRecord]);
   }, [latestPredictionResult, selectedPatientId]);
+
+  const handleAddPatient = (newPatient: Patient, initialScan: ScanRecord) => {
+    setPatients((prev) => [newPatient, ...prev]);
+    setAllScans((prev) => [...prev, initialScan]);
+    setSelectedPatientId(newPatient.id);
+    setShowToast(`Patient profile created for ${newPatient.name}`);
+    setTimeout(() => setShowToast(null), 4000);
+  };
+
+  const handleScanProcessed = (newScan: ScanRecord) => {
+    setAllScans((prev) => [...prev, newScan]);
+    // Point to the newly appended scan
+    setTimeout(() => {
+      const updatedScans = [...allScans, newScan].filter(
+        (s) => s.patientId === selectedPatientId
+      );
+      setSelectedScanIndex(Math.max(0, updatedScans.length - 1));
+    }, 50);
+    setShowToast(`New scan analyzed & appended to ${activePatient.name}'s trajectory`);
+    setTimeout(() => setShowToast(null), 4000);
+  };
 
   const currentScan =
     activeScans[selectedScanIndex] || activeScans[activeScans.length - 1];
@@ -108,73 +137,94 @@ export default function NeuroCommandCenter({
   };
 
   return (
-    <section id="command-center" className="w-full flex flex-col gap-4">
+    <div className="w-full h-full flex flex-col overflow-hidden">
       {/* ============================================================= */}
-      {/* 1. UNIFIED CLINICAL HEADER                                    */}
+      {/* 1. TOP HEADER BAR: BRANDING + PATIENT COMMAND MODULE (80px)   */}
       {/* ============================================================= */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 rounded-xl border border-slate-200/90 bg-white px-4 py-3 shadow-xs">
-        {/* Left Side: Brand Title & Subtle Neural Icon + Patient Select */}
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
-              <Activity className="h-4 w-4" />
+      <header className="h-20 shrink-0 border-b border-slate-200/90 bg-white px-6 flex items-center justify-between shadow-xs z-30">
+        {/* Left Side: Brand Title & Subtle Neural Icon */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-200 shrink-0 shadow-xs">
+              <Activity className="h-5 w-5" />
             </div>
-            <span className="font-bold text-sm text-slate-900 tracking-tight">
-              NeuroAgent
-            </span>
+            <div>
+              <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight block">
+                NeuroAgent
+              </span>
+              <span className="text-[10px] font-mono font-medium text-slate-400 block -mt-0.5">
+                Clinical Oncology Suite
+              </span>
+            </div>
           </div>
 
-          <span className="text-slate-300 hidden sm:inline">|</span>
+          <span className="text-slate-300 hidden lg:inline">|</span>
 
-          {/* Patient Directory Dropdown */}
-          <PatientDirectory
-            patients={patients}
-            selectedPatientId={selectedPatientId}
-            onSelectPatient={setSelectedPatientId}
-          />
+          {/* Interactive Patient Command Module */}
+          <div className="hidden sm:block">
+            <PatientCommandModule
+              patients={patients}
+              selectedPatientId={selectedPatientId}
+              onSelectPatient={setSelectedPatientId}
+              onOpenAddPatient={() => setIsAddPatientOpen(true)}
+              onOpenUploadScan={() => setIsUploadScanOpen(true)}
+            />
+          </div>
         </div>
 
-        {/* Right Side: Severity Badge + View Scan Archive + Export PDF */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Minimal Badge */}
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-mono font-medium text-slate-700">
+        {/* Right Side: Severity Badge + System Metrics + View Scan Archive + Export PDF */}
+        <div className="flex items-center gap-3">
+          {/* Mobile Patient Command Trigger fallback */}
+          <div className="sm:hidden">
+            <button
+              type="button"
+              onClick={() => setIsUploadScanOpen(true)}
+              className="p-2 rounded-xl bg-blue-700 text-white"
+            >
+              📤
+            </button>
+          </div>
+
+          {/* Minimal Status Badge */}
+          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs sm:text-sm font-mono font-semibold text-slate-700">
             <span
-              className={`h-1.5 w-1.5 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 currentScan?.severity === "Critical"
-                  ? "bg-amber-600"
+                  ? "bg-amber-600 animate-pulse"
                   : "bg-emerald-600"
               }`}
             />
-            <span>
-              {getSeverityLabel(currentScan?.severity, currentScan?.diagnosis)}
-            </span>
+            <span>{getSeverityLabel(currentScan?.severity, currentScan?.diagnosis)}</span>
           </span>
 
-          {/* Border-outline button: 📁 View Scan Archive */}
+          {/* Collapsible System Metrics */}
+          <SystemMetricsBanner />
+
+          {/* View Scan Archive Secondary Button */}
           {onOpenArchive && (
             <button
               type="button"
               onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition shadow-xs"
-              title="Open Scan Archive"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 shadow-xs transition"
+              title="Open Historical Scan Archive"
             >
-              <span>📁</span>
-              <span>View Scan Archive</span>
+              <FolderArchive className="h-4 w-4 text-slate-500" />
+              <span>📁 View Scan Archive</span>
             </button>
           )}
 
-          {/* Standard Solid Blue / Clinical Button: Export PDF */}
+          {/* Standard Solid Blue Clinical Action Button */}
           {onExportPdf && (
             <button
               type="button"
               onClick={onExportPdf}
               disabled={isExporting}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition"
             >
               {isExporting ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <FileDown className="h-3.5 w-3.5" />
+                <FileDown className="h-4 w-4" />
               )}
               <span>Export PDF</span>
             </button>
@@ -182,22 +232,30 @@ export default function NeuroCommandCenter({
         </div>
       </header>
 
+      {/* Confirmation Toast */}
+      {showToast && (
+        <div className="fixed top-24 right-8 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl animate-in fade-in slide-in-from-top-3 text-xs sm:text-sm font-medium">
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+          <span>{showToast}</span>
+        </div>
+      )}
+
       {/* ============================================================= */}
-      {/* 2. DEDICATED 2-PANEL CLINICAL LAYOUT (100vh Viewport Grid)    */}
+      {/* 2. STRICT 100vh CSS GRID: COL 7 (LEFT) & COL 5 (RIGHT)        */}
       {/* ============================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <main className="grid grid-cols-12 h-[calc(100vh-80px)] gap-6 p-6 overflow-hidden">
         {/* ========================================================= */}
-        {/* LEFT PANEL (The Diagnostic MRI & History) - 7 cols on LG  */}
+        {/* LEFT COLUMN (Col Span 7): MRI SCAN VISUALIZER + GRAPH     */}
         {/* ========================================================= */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
-          {/* Longitudinal Scan Timeline Stepper */}
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-              <Calendar className="h-3.5 w-3.5 text-slate-400" />
-              <span>Historical Scan Timeline:</span>
+        <section className="col-span-12 xl:col-span-7 h-full flex flex-col gap-4 overflow-hidden">
+          {/* Longitudinal Scan Timeline Stepper Strip */}
+          <div className="shrink-0 flex items-center justify-between gap-2 px-1">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-semibold">
+              <Calendar className="h-4 w-4 text-slate-400" />
+              <span>Acquisition Timeline:</span>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
               {activeScans.map((scan, idx) => {
                 const isActive = idx === selectedScanIndex;
                 const d = new Date(scan.date);
@@ -209,9 +267,9 @@ export default function NeuroCommandCenter({
                     key={scan.id}
                     type="button"
                     onClick={() => setSelectedScanIndex(idx)}
-                    className={`px-2.5 py-0.5 rounded-md text-xs font-mono transition ${
+                    className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition ${
                       isActive
-                        ? "bg-slate-900 text-white font-semibold shadow-xs"
+                        ? "bg-slate-900 text-white font-bold shadow-xs"
                         : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
                     }`}
                   >
@@ -222,39 +280,59 @@ export default function NeuroCommandCenter({
             </div>
           </div>
 
-          {/* Clinical Scan Visualizer */}
-          {currentScan && (
-            <ScanVisualizer
-              rawImage={currentScan.originalImageUrl}
-              gradCamImage={currentScan.gradCamUrl}
-              prediction={currentScan.diagnosis}
-              heatmapFilename={currentScan.id}
-              scanDate={currentScan.date}
-              tumorAreaPixels={currentScan.tumorAreaPixels}
-              confidence={currentScan.confidence}
+          {/* Top Half: Massive Square Clinical Scan Visualizer */}
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+            {currentScan && (
+              <ScanVisualizer
+                rawImage={currentScan.originalImageUrl}
+                gradCamImage={currentScan.gradCamUrl}
+                prediction={currentScan.diagnosis}
+                heatmapFilename={currentScan.id}
+                scanDate={currentScan.date}
+                tumorAreaPixels={currentScan.tumorAreaPixels}
+                confidence={currentScan.confidence}
+              />
+            )}
+          </div>
+
+          {/* Bottom Half: Interactive Predictive Longitudinal Progression Graph */}
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+            <ProgressionChart
+              scans={activeScans}
+              patientName={activePatient.name}
+              onOpenArchive={onOpenArchive}
             />
-          )}
-
-          {/* Timeline Progression Graph */}
-          <ProgressionChart
-            scans={activeScans}
-            patientName={activePatient.name}
-            onOpenArchive={onOpenArchive}
-          />
-        </div>
+          </div>
+        </section>
 
         {/* ========================================================= */}
-        {/* RIGHT PANEL (Localized Patient Routing & Map) - 5 cols LG */}
+        {/* RIGHT COLUMN (Col Span 5): GEOSPATIAL TRIAGE MAP & ROUTE  */}
         {/* ========================================================= */}
-        <div className="lg:col-span-5 h-full">
+        <section className="col-span-12 xl:col-span-5 h-full overflow-hidden flex flex-col">
           <GeospatialTriage
             severity={currentScan ? currentScan.severity : "Critical"}
             confidence={currentScan ? currentScan.confidence : 0.998}
             diagnosis={currentScan ? currentScan.diagnosis : "Glioblastoma"}
             patientCity={activePatient.referralCity}
           />
-        </div>
-      </div>
-    </section>
+        </section>
+      </main>
+
+      {/* ============================================================= */}
+      {/* 3. INTERACTIVE INTAKE OVERLAYS                                */}
+      {/* ============================================================= */}
+      <UploadScanModal
+        isOpen={isUploadScanOpen}
+        onClose={() => setIsUploadScanOpen(false)}
+        activePatient={activePatient}
+        onScanProcessed={handleScanProcessed}
+      />
+
+      <AddPatientModal
+        isOpen={isAddPatientOpen}
+        onClose={() => setIsAddPatientOpen(false)}
+        onAddPatient={handleAddPatient}
+      />
+    </div>
   );
 }
