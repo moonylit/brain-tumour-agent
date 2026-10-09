@@ -53,24 +53,24 @@ export default function Stats({ refreshTrigger }: Props) {
     {
       value: stats ? stats.total_predictions.toLocaleString() : "-",
       label: "Total Predictions",
-      color: "text-sky-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.25)]",
+      color: "text-cyan-700",
     },
     {
       value: stats ? formatConfidence(stats.average_confidence) : "-",
       label: "Average Confidence",
-      color: "text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.25)]",
+      color: "text-emerald-700",
     },
     {
       value: stats ? formatTime(stats.average_processing_time_ms) : "-",
       label: "Average Inference",
-      color: "text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.25)]",
+      color: "text-amber-700",
     },
     {
       value: stats?.most_common_prediction
         ? formatTumorClass(stats.most_common_prediction)
         : "N/A",
       label: "Most Common Class",
-      color: "text-purple-400 drop-shadow-[0_0_15px_rgba(192,132,252,0.25)]",
+      color: "text-violet-700",
     },
   ];
 
@@ -79,10 +79,10 @@ export default function Stats({ refreshTrigger }: Props) {
   return (
     <section id="stats" className="mx-auto max-w-7xl px-6 sm:px-8 py-20">
       <div className="mb-14 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
           Prediction Statistics &amp; Analytics
         </h2>
-        <p className="mt-2 text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+        <p className="mt-2 text-sm text-slate-500 max-w-xl mx-auto leading-relaxed font-medium">
           Aggregated analytics computed in real-time from inference history.
         </p>
       </div>
@@ -93,10 +93,10 @@ export default function Stats({ refreshTrigger }: Props) {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="animate-pulse rounded-3xl border border-white/[0.06] bg-slate-900/60 p-8 text-center"
+              className="animate-pulse rounded-3xl border border-slate-200 bg-slate-100 p-8 text-center"
             >
-              <div className="mx-auto h-12 w-24 rounded bg-slate-800" />
-              <div className="mx-auto mt-4 h-4 w-32 rounded bg-slate-800/60" />
+              <div className="mx-auto h-12 w-24 rounded bg-slate-200" />
+              <div className="mx-auto mt-4 h-4 w-32 rounded bg-slate-200" />
             </div>
           ))}
         </div>
@@ -104,14 +104,14 @@ export default function Stats({ refreshTrigger }: Props) {
 
       {/* Error Banner */}
       {error && !stats && (
-        <div className="rounded-3xl border border-red-500/30 bg-red-950/40 p-8 text-center backdrop-blur-md">
-          <p className="font-semibold text-red-300">
+        <div className="rounded-3xl border border-rose-200 bg-rose-50 p-8 text-center backdrop-blur-md">
+          <p className="font-bold text-rose-900">
             Failed to load statistics from backend
           </p>
-          <p className="mt-1 text-sm text-red-400">{error}</p>
+          <p className="mt-1 text-sm text-rose-700 font-medium">{error}</p>
           <button
             onClick={fetchStats}
-            className="btn-primary mt-4 rounded-xl px-5 py-2.5 text-sm font-semibold text-white"
+            className="btn-primary mt-4 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-cyan-600/30"
           >
             Retry Connection
           </button>
@@ -125,14 +125,14 @@ export default function Stats({ refreshTrigger }: Props) {
             {primaryCards.map((stat) => (
               <div
                 key={stat.label}
-                className="glass-card-interactive rounded-3xl p-8 text-center"
+                className="glass-card-interactive rounded-3xl p-8 text-center bg-white/90 border border-slate-200/90 shadow-lg shadow-slate-200/40"
               >
                 <h3
-                  className={`text-4xl sm:text-5xl font-bold font-mono tracking-tight ${stat.color}`}
+                  className={`text-4xl sm:text-5xl font-black font-mono tracking-tight ${stat.color}`}
                 >
                   {stat.value}
                 </h3>
-                <p className="mt-3 text-xs font-mono font-medium uppercase tracking-wider text-slate-400">
+                <p className="mt-3 text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
                   {stat.label}
                 </p>
               </div>
@@ -141,12 +141,12 @@ export default function Stats({ refreshTrigger }: Props) {
 
           {/* Class Distribution Breakdown */}
           {stats.total_predictions > 0 && (
-            <div className="glass-card mt-12 rounded-3xl p-8 sm:p-10 border border-white/[0.08]">
-              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.06] pb-4">
-                <h3 className="text-xl font-bold tracking-tight text-white">
+            <div className="glass-card mt-12 rounded-3xl p-8 sm:p-10 border border-slate-200/90 bg-white/95 shadow-xl shadow-slate-200/50">
+              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                <h3 className="text-xl font-bold tracking-tight text-slate-900">
                   Class Distribution &amp; Percentages
                 </h3>
-                <span className="font-mono text-xs text-slate-400">
+                <span className="font-mono text-xs text-slate-500 font-medium">
                   Based on {stats.total_predictions} historical records
                 </span>
               </div>
@@ -160,27 +160,27 @@ export default function Stats({ refreshTrigger }: Props) {
                   return (
                     <div
                       key={cls}
-                      className="rounded-2xl border border-white/[0.06] bg-slate-950/60 p-5 backdrop-blur-md"
+                      className="rounded-2xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-200">
+                        <span className="font-bold text-slate-800">
                           {formattedClass}
                         </span>
-                        <span className="font-mono text-xs font-bold text-sky-400 bg-sky-950/40 border border-sky-500/20 px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-bold text-cyan-800 bg-cyan-100 border border-cyan-300 px-2 py-0.5 rounded-md">
                           {count} {count === 1 ? "scan" : "scans"}
                         </span>
                       </div>
 
-                      <div className="mt-4 flex items-center justify-between text-xs font-mono text-slate-400">
+                      <div className="mt-4 flex items-center justify-between text-xs font-mono text-slate-500">
                         <span>Cohort Share</span>
-                        <span className="font-semibold text-slate-300">
+                        <span className="font-bold text-slate-700">
                           {percentage.toFixed(1)}%
                         </span>
                       </div>
 
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-800/80">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-500"
+                          className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-violet-600 transition-all duration-500"
                           style={{
                             width: `${Math.min(Math.max(percentage, 0), 100)}%`,
                           }}

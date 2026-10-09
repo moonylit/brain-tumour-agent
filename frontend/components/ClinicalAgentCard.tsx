@@ -46,18 +46,18 @@ export default function ClinicalAgentCard({
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-cyan-500/30 bg-slate-950/70 p-6 backdrop-blur-md shadow-xl animate-pulse">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-4">
+      <div className="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-lg shadow-slate-200/50 backdrop-blur-xl animate-pulse">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
           <div className="space-y-2">
-            <div className="h-4 w-44 rounded bg-cyan-500/30" />
-            <div className="h-3 w-64 rounded bg-slate-700/50" />
+            <div className="h-4 w-44 rounded bg-cyan-100" />
+            <div className="h-3 w-64 rounded bg-slate-200" />
           </div>
-          <span className="h-6 w-28 rounded-full bg-cyan-500/20" />
+          <span className="h-6 w-28 rounded-full bg-cyan-100" />
         </div>
         <div className="space-y-4">
-          <div className="h-16 rounded-xl bg-slate-900/60 p-3" />
-          <div className="h-28 rounded-xl bg-slate-900/60 p-3" />
-          <div className="h-28 rounded-xl bg-slate-900/60 p-3" />
+          <div className="h-16 rounded-xl bg-slate-100 p-3" />
+          <div className="h-28 rounded-xl bg-slate-100 p-3" />
+          <div className="h-28 rounded-xl bg-slate-100 p-3" />
         </div>
       </div>
     );
@@ -65,8 +65,8 @@ export default function ClinicalAgentCard({
 
   if (!research) {
     return (
-      <div className="rounded-2xl border border-white/[0.08] bg-slate-950/50 p-6 text-center text-slate-400">
-        <p className="text-sm">Autonomous Clinical Agent research pending or unavailable.</p>
+      <div className="rounded-3xl border border-slate-200/90 bg-white/95 p-6 text-center text-slate-500 shadow-lg shadow-slate-200/50">
+        <p className="text-sm font-medium">Autonomous Clinical Agent research pending or unavailable.</p>
       </div>
     );
   }
@@ -74,17 +74,17 @@ export default function ClinicalAgentCard({
   const effectiveRegion = region || research.region || research.patient_city || "Jaipur";
 
   return (
-    <div className="flex flex-col rounded-2xl border border-cyan-500/30 bg-slate-950/85 p-6 backdrop-blur-xl shadow-[0_10px_35px_-15px_rgba(6,182,212,0.25)]">
+    <div className="flex flex-col rounded-3xl border border-slate-200/90 bg-white/95 p-6 backdrop-blur-xl shadow-lg shadow-slate-200/50">
       {/* Panel Header */}
-      <div className="border-b border-white/[0.08] pb-4 mb-5">
+      <div className="border-b border-slate-100 pb-4 mb-5">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-2.5 py-0.5 text-xs font-mono font-medium text-cyan-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-0.5 text-xs font-mono font-semibold text-cyan-800">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-600 animate-ping" />
               SerpApi AI Agent (Track 01)
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-0.5 text-[11px] font-mono text-slate-300">
-              <MapPin className="h-3 w-3 text-cyan-400" />
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-mono text-slate-700">
+              <MapPin className="h-3 w-3 text-cyan-600" />
               {effectiveRegion}
             </span>
           </div>
@@ -92,49 +92,49 @@ export default function ClinicalAgentCard({
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
               isNoTumor
-                ? "border border-emerald-500/30 bg-emerald-950/50 text-emerald-300"
-                : "border border-amber-500/30 bg-amber-950/50 text-amber-300"
+                ? "border border-emerald-300 bg-emerald-50 text-emerald-800"
+                : "border border-amber-300 bg-amber-50 text-amber-800"
             }`}
           >
             {isNoTumor ? (
               <>
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Baseline Guidance</span>
               </>
             ) : (
               <>
-                <ShieldAlert className="h-3.5 w-3.5 text-amber-400" />
+                <ShieldAlert className="h-3.5 w-3.5 text-amber-600" />
                 <span>Escalation Recommended</span>
               </>
             )}
           </span>
         </div>
 
-        <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-cyan-400" />
+        <h3 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-cyan-600" />
           Autonomous Clinical Agent Research &amp; Care Facilities
         </h3>
-        <p className="text-xs text-slate-400 mt-0.5">
-          SerpApi Tools: <code className="text-cyan-300 font-mono">web_search</code> (PubMed/NCCN) &amp;{" "}
-          <code className="text-cyan-300 font-mono">maps_search</code> (Tertiary Oncology Centers in {effectiveRegion})
+        <p className="text-xs text-slate-500 mt-0.5 font-medium">
+          SerpApi Tools: <code className="text-cyan-700 font-mono">web_search</code> (PubMed/NCCN) &amp;{" "}
+          <code className="text-cyan-700 font-mono">maps_search</code> (Tertiary Oncology Centers in {effectiveRegion})
         </p>
       </div>
 
       {/* Clinical Guidance / Decision Support Summary */}
       <div
-        className={`mb-5 rounded-xl border p-4 text-xs leading-relaxed ${
+        className={`mb-5 rounded-2xl border p-4 text-xs leading-relaxed shadow-sm ${
           isNoTumor
-            ? "border-emerald-500/25 bg-emerald-950/20 text-emerald-200/90"
-            : "border-cyan-500/25 bg-cyan-950/25 text-slate-200"
+            ? "border-emerald-200 bg-emerald-50/70 text-emerald-950"
+            : "border-cyan-200 bg-gradient-to-r from-cyan-50/60 to-violet-50/60 text-slate-800"
         }`}
       >
-        <div className="flex items-center gap-2 mb-1.5 font-semibold">
-          <Zap className={`h-4 w-4 ${isNoTumor ? "text-emerald-400" : "text-cyan-400"}`} />
-          <span className="text-xs font-mono uppercase tracking-wider text-slate-300">
+        <div className="flex items-center gap-2 mb-1.5 font-bold">
+          <Zap className={`h-4 w-4 ${isNoTumor ? "text-emerald-600" : "text-cyan-600"}`} />
+          <span className="text-xs font-mono uppercase tracking-wider text-slate-700 font-bold">
             Synthesized Clinical Action Plan
           </span>
         </div>
-        <p className="leading-relaxed">{research.clinical_summary}</p>
+        <p className="leading-relaxed font-medium">{research.clinical_summary}</p>
       </div>
 
       {/* Autonomous Queries Collapsible */}
@@ -143,10 +143,10 @@ export default function ClinicalAgentCard({
           <button
             type="button"
             onClick={() => setShowQueries(!showQueries)}
-            className="flex items-center justify-between w-full text-left font-mono text-[11px] text-slate-400 hover:text-slate-200 transition py-1"
+            className="flex items-center justify-between w-full text-left font-mono text-[11px] text-slate-600 hover:text-slate-900 transition py-1"
           >
             <span className="flex items-center gap-1.5">
-              <Zap className="h-3 w-3 text-cyan-400" />
+              <Zap className="h-3 w-3 text-cyan-600" />
               <span>{research.queries_executed.length} Autonomous SerpApi Queries Dispatched</span>
             </span>
             <span className="flex items-center gap-1 text-xs text-slate-500">
@@ -164,10 +164,10 @@ export default function ClinicalAgentCard({
             </span>
           </button>
           {showQueries && (
-            <div className="mt-2 space-y-1.5 rounded-lg border border-white/[0.06] bg-slate-900/60 p-2.5 text-[11px] font-mono text-slate-300">
+            <div className="mt-2 space-y-1.5 rounded-xl border border-slate-200 bg-slate-50 p-3 text-[11px] font-mono text-slate-700">
               {research.queries_executed.map((q, idx) => (
                 <div key={idx} className="flex items-start gap-1.5">
-                  <span className="text-cyan-400">›</span>
+                  <span className="text-cyan-600 font-bold">›</span>
                   <span className="break-all">{q}</span>
                 </div>
               ))}
@@ -177,14 +177,14 @@ export default function ClinicalAgentCard({
       )}
 
       {/* Tab Selectors (3 Sleek Tabs from Stitch Clinical Suite) */}
-      <div className="flex border-b border-white/[0.08] mb-4 gap-2 overflow-x-auto pb-1">
+      <div className="flex border-b border-slate-100 mb-4 gap-2 overflow-x-auto pb-1">
         <button
           type="button"
           onClick={() => setActiveTab("facilities")}
-          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
+          className={`flex items-center gap-1.5 pb-2 px-3 text-xs font-bold whitespace-nowrap transition rounded-lg ${
             activeTab === "facilities"
-              ? "border-emerald-400 text-emerald-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "bg-cyan-50 text-cyan-800 border-b-2 border-cyan-600 shadow-sm"
+              : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
           }`}
         >
           <Building2 className="h-3.5 w-3.5" />
@@ -193,10 +193,10 @@ export default function ClinicalAgentCard({
         <button
           type="button"
           onClick={() => setActiveTab("literature")}
-          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
+          className={`flex items-center gap-1.5 pb-2 px-3 text-xs font-bold whitespace-nowrap transition rounded-lg ${
             activeTab === "literature"
-              ? "border-cyan-400 text-cyan-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "bg-violet-50 text-violet-800 border-b-2 border-violet-600 shadow-sm"
+              : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
           }`}
         >
           <BookOpen className="h-3.5 w-3.5" />
@@ -205,10 +205,10 @@ export default function ClinicalAgentCard({
         <button
           type="button"
           onClick={() => setActiveTab("protocol")}
-          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-semibold whitespace-nowrap transition border-b-2 ${
+          className={`flex items-center gap-1.5 pb-2 px-3 text-xs font-bold whitespace-nowrap transition rounded-lg ${
             activeTab === "protocol"
-              ? "border-purple-400 text-purple-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "bg-cyan-50 text-cyan-800 border-b-2 border-cyan-600 shadow-sm"
+              : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
           }`}
         >
           <FileText className="h-3.5 w-3.5" />
@@ -220,8 +220,8 @@ export default function ClinicalAgentCard({
       {activeTab === "facilities" && (
         <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
           {!research.facilities || research.facilities.length === 0 ? (
-            <div className="rounded-xl border border-white/[0.04] bg-slate-900/40 p-4 text-center">
-              <p className="text-xs text-slate-400">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
+              <p className="text-xs text-slate-500">
                 {isNoTumor
                   ? "Scan is nominal. Specialized tertiary oncology hospital referral is not required."
                   : `No localized hospital facilities found in ${effectiveRegion}.`}
@@ -231,39 +231,39 @@ export default function ClinicalAgentCard({
             research.facilities.slice(0, 3).map((facility, idx) => (
               <div
                 key={idx}
-                className="group rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-emerald-500/40 hover:bg-slate-900/90"
+                className="group rounded-2xl border border-slate-200/90 bg-slate-50/80 p-3.5 transition hover:border-cyan-500 hover:bg-white shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-emerald-200 flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                  <h4 className="text-xs font-bold text-slate-900 group-hover:text-cyan-800 flex items-center gap-1.5">
+                    <Building2 className="h-3.5 w-3.5 text-cyan-600 shrink-0" />
                     <span>{facility.name}</span>
                   </h4>
                   {facility.rating !== null && facility.rating !== undefined && (
-                    <span className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-amber-300 border border-amber-500/20">
+                    <span className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-mono font-bold text-amber-800 border border-amber-200">
                       ★ {facility.rating}
                     </span>
                   )}
                 </div>
 
                 {facility.address && (
-                  <p className="text-[11px] text-slate-400 flex items-start gap-1.5 mb-2 leading-relaxed">
-                    <MapPin className="h-3 w-3 text-slate-500 shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-slate-600 flex items-start gap-1.5 mb-2 leading-relaxed">
+                    <MapPin className="h-3 w-3 text-slate-400 shrink-0 mt-0.5" />
                     <span>{facility.address}</span>
                   </p>
                 )}
 
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-400 pt-2 border-t border-white/[0.04]">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500 pt-2 border-t border-slate-200/60">
                   {facility.phone ? (
                     <a
                       href={`tel:${facility.phone.replace(/[^0-9+]/g, "")}`}
-                      className="inline-flex items-center gap-1 text-slate-300 hover:text-cyan-300 transition"
+                      className="inline-flex items-center gap-1 text-slate-700 hover:text-cyan-600 transition font-semibold"
                       title="Direct phone dialer"
                     >
-                      <Phone className="h-3 w-3 text-cyan-400" />
+                      <Phone className="h-3 w-3 text-cyan-600" />
                       <span>{facility.phone}</span>
                     </a>
                   ) : (
-                    <span className="text-slate-500">Regional care navigator</span>
+                    <span className="text-slate-400">Regional care navigator</span>
                   )}
 
                   {facility.link && (
@@ -271,7 +271,7 @@ export default function ClinicalAgentCard({
                       href={facility.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-emerald-400 hover:underline inline-flex items-center gap-1 ml-auto text-[11px] font-sans"
+                      className="text-cyan-600 hover:underline inline-flex items-center gap-1 ml-auto text-[11px] font-sans font-semibold"
                     >
                       <span>Navigate to Center</span>
                       <ExternalLink className="h-3 w-3" />
@@ -288,17 +288,17 @@ export default function ClinicalAgentCard({
       {activeTab === "literature" && (
         <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
           {!research.articles || research.articles.length === 0 ? (
-            <p className="text-xs text-slate-400 py-4 text-center">
+            <p className="text-xs text-slate-500 py-4 text-center">
               No literature entries returned for this scan.
             </p>
           ) : (
             research.articles.slice(0, 3).map((article, idx) => (
               <div
                 key={idx}
-                className="group rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-cyan-500/40 hover:bg-slate-900/90"
+                className="group rounded-2xl border border-slate-200/90 bg-slate-50/80 p-3.5 transition hover:border-violet-500 hover:bg-white shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-cyan-200 leading-snug">
+                  <h4 className="text-xs font-bold text-slate-900 group-hover:text-violet-800 leading-snug">
                     {article.title}
                   </h4>
                   {article.url && (
@@ -306,7 +306,7 @@ export default function ClinicalAgentCard({
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="shrink-0 p-1 rounded-md text-slate-400 hover:text-cyan-300 hover:bg-slate-800 transition"
+                      className="shrink-0 p-1 rounded-md text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition"
                       title="Open publication"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
@@ -314,12 +314,12 @@ export default function ClinicalAgentCard({
                   )}
                 </div>
 
-                <p className="text-[11px] text-slate-400 line-clamp-3 leading-relaxed mb-2.5">
+                <p className="text-[11px] text-slate-600 line-clamp-3 leading-relaxed mb-2.5">
                   {article.snippet}
                 </p>
 
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1.5 border-t border-white/[0.04]">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800/80 text-cyan-300 border border-slate-700/50 truncate max-w-[200px]">
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1.5 border-t border-slate-200/60">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-200/60 text-slate-700 border border-slate-200 truncate max-w-[200px] font-medium">
                     {article.source || "PubMed / Medical Registry"}
                   </span>
                   {article.url && (
@@ -327,7 +327,7 @@ export default function ClinicalAgentCard({
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-400 hover:underline inline-flex items-center gap-1 font-sans text-[11px]"
+                      className="text-violet-600 hover:underline inline-flex items-center gap-1 font-sans text-[11px] font-semibold"
                     >
                       <span>Read study</span>
                       <ExternalLink className="h-3 w-3" />
@@ -344,17 +344,17 @@ export default function ClinicalAgentCard({
       {activeTab === "protocol" && (
         <div className="space-y-3 flex-1 overflow-y-auto max-h-96 pr-1">
           {/* Card 1: Imaging Sequence */}
-          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-cyan-500/40">
+          <div className="rounded-2xl border border-slate-200/90 bg-slate-50/80 p-3.5 transition hover:border-cyan-500 hover:bg-white shadow-sm">
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="flex items-center gap-2 text-xs font-semibold text-cyan-300">
-                <FileText className="h-3.5 w-3.5 text-cyan-400" />
+              <span className="flex items-center gap-2 text-xs font-bold text-cyan-800">
+                <FileText className="h-3.5 w-3.5 text-cyan-600" />
                 <span>Multiparametric MRI Imaging Sequence</span>
               </span>
-              <span className="rounded bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 text-[10px] font-mono text-cyan-300">
+              <span className="rounded bg-cyan-100 border border-cyan-200 px-2 py-0.5 text-[10px] font-mono font-bold text-cyan-800">
                 ACR / EANO Protocol
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 leading-relaxed">
+            <p className="text-[11px] text-slate-700 leading-relaxed font-medium">
               {isNoTumor
                 ? "Reassuring baseline neuroimaging. Maintain regular clinical follow-up; repeat high-resolution axial T1/T2 imaging only if focal neurological deficits manifest."
                 : "Acquire volumetric 3D T1-weighted pre- & post-gadolinium contrast, axial T2-FLAIR, and DWI/ADC mapping to quantify peritumoral vasogenic edema, necrotic core boundaries, and midline shift."}
@@ -362,17 +362,17 @@ export default function ClinicalAgentCard({
           </div>
 
           {/* Card 2: Surgical Pathway */}
-          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-purple-500/40">
+          <div className="rounded-2xl border border-slate-200/90 bg-slate-50/80 p-3.5 transition hover:border-violet-500 hover:bg-white shadow-sm">
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="flex items-center gap-2 text-xs font-semibold text-purple-300">
-                <Compass className="h-3.5 w-3.5 text-purple-400" />
+              <span className="flex items-center gap-2 text-xs font-bold text-violet-800">
+                <Compass className="h-3.5 w-3.5 text-violet-600" />
                 <span>Surgical Pathway &amp; Resection Strategy</span>
               </span>
-              <span className="rounded bg-purple-950/60 border border-purple-800/50 px-2 py-0.5 text-[10px] font-mono text-purple-300">
+              <span className="rounded bg-violet-100 border border-violet-200 px-2 py-0.5 text-[10px] font-mono font-bold text-violet-800">
                 Neurosurgery Directive
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 leading-relaxed">
+            <p className="text-[11px] text-slate-700 leading-relaxed font-medium">
               {isNoTumor
                 ? "No surgical intervention indicated. Routine neurological outpatient evaluation if secondary headache symptoms persist."
                 : "Multidisciplinary neurosurgical review for 5-ALA fluorescence-guided maximal safe gross total resection (GTR) or stereotactic frameless biopsy under intraoperative functional neuromonitoring."}
@@ -380,17 +380,17 @@ export default function ClinicalAgentCard({
           </div>
 
           {/* Card 3: Molecular Biomarker Orders */}
-          <div className="rounded-xl border border-white/[0.06] bg-slate-900/60 p-3.5 transition hover:border-emerald-500/40">
+          <div className="rounded-2xl border border-slate-200/90 bg-slate-50/80 p-3.5 transition hover:border-emerald-500 hover:bg-white shadow-sm">
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
-                <Dna className="h-3.5 w-3.5 text-emerald-400" />
+              <span className="flex items-center gap-2 text-xs font-bold text-emerald-800">
+                <Dna className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Molecular Biomarker Panel Orders</span>
               </span>
-              <span className="rounded bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 text-[10px] font-mono text-emerald-300">
+              <span className="rounded bg-emerald-100 border border-emerald-200 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-800">
                 WHO CNS5 Classification
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 leading-relaxed">
+            <p className="text-[11px] text-slate-700 leading-relaxed font-medium">
               {isNoTumor
                 ? "No oncologic molecular biomarkers indicated for negative imaging findings."
                 : "Order reflex molecular NGS testing: IDH1/IDH2 mutational profiling, 1p/19q codeletion via FISH, MGMT promoter methylation assay, and TERT promoter alterations to guide targeted systemic therapy."}

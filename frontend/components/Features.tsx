@@ -6,7 +6,7 @@ export default function Features() {
         "Classify brain MRI scans within milliseconds using an optimized ResNet-50 deep learning model.",
       icon: (
         <svg
-          className="h-5 w-5 text-sky-400"
+          className="h-5 w-5 text-cyan-600"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -25,7 +25,7 @@ export default function Features() {
         "Grad-CAM heatmaps highlight the specific anatomical regions of the MRI that informed each prediction.",
       icon: (
         <svg
-          className="h-5 w-5 text-emerald-400"
+          className="h-5 w-5 text-emerald-600"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -46,7 +46,7 @@ export default function Features() {
         "Full softmax probability breakdown across glioma, meningioma, pituitary, and no-tumor classifications.",
       icon: (
         <svg
-          className="h-5 w-5 text-purple-400"
+          className="h-5 w-5 text-violet-600"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -66,10 +66,10 @@ export default function Features() {
   return (
     <section id="features" className="mx-auto max-w-7xl px-6 sm:px-8 py-20">
       <div className="mb-12 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
           Features &amp; Capabilities
         </h2>
-        <p className="mt-2 text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+        <p className="mt-2 text-sm text-slate-500 max-w-lg mx-auto leading-relaxed font-medium">
           Accurate MRI classification paired with transparent model interpretability.
         </p>
       </div>
@@ -78,17 +78,17 @@ export default function Features() {
         {features.map((feature) => (
           <div
             key={feature.title}
-            className="glass-card-interactive rounded-2xl p-7"
+            className="glass-card-interactive rounded-3xl p-7 bg-white/90 border border-slate-200/90 shadow-lg shadow-slate-200/40"
           >
-            <div className="mb-5 inline-flex p-3 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+            <div className="mb-5 inline-flex p-3 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
               {feature.icon}
             </div>
 
-            <h3 className="text-lg font-semibold text-white tracking-tight">
+            <h3 className="text-lg font-bold text-slate-900 tracking-tight">
               {feature.title}
             </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-600 font-medium">
               {feature.description}
             </p>
           </div>
