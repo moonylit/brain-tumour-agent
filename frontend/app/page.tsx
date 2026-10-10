@@ -68,9 +68,11 @@ export default function Home() {
           <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-lg font-bold text-slate-800 hover:text-blue-600 transition-colors">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-2xl">📊</span> View Patient EHR &amp; Prediction History{" "}
-              <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded ml-2">
-                Demo Data
-              </span>
+              {activeDemoPatient !== "Custom" && (
+                <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded ml-3">
+                  Demo Data
+                </span>
+              )}
               <select 
                 value={activeDemoPatient} 
                 onChange={(e) => setActiveDemoPatient(e.target.value)}

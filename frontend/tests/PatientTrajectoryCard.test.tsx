@@ -10,9 +10,7 @@ describe("PatientTrajectoryCard Component", () => {
     render(<PatientTrajectoryCard activePatient="Eleanor Vance" />);
 
     expect(
-      screen.getByText(
-        /Patient Profile: Eleanor Vance — Longitudinal Tumor Trajectory/i
-      )
+      screen.getByText(/Patient Profile: Eleanor Vance/i)
     ).toBeInTheDocument();
     expect(screen.getByText("Record Validated")).toBeInTheDocument();
     expect(screen.getByText("Active Longitudinal Tracking")).toBeInTheDocument();
@@ -22,9 +20,7 @@ describe("PatientTrajectoryCard Component", () => {
     render(<PatientTrajectoryCard activePatient="Marcus Webb" />);
 
     expect(
-      screen.getByText(
-        /Patient Profile: Marcus Webb — Longitudinal Tumor Trajectory/i
-      )
+      screen.getByText(/Patient Profile: Marcus Webb/i)
     ).toBeInTheDocument();
     expect(screen.getByText("Oligodendroglioma")).toBeInTheDocument();
     expect(screen.getByText("MRN-49103")).toBeInTheDocument();
@@ -61,14 +57,30 @@ describe("PatientTrajectoryCard Component", () => {
     expect(trajectoryData[4].predicted).toBe(21000);
   });
 
-  it("renders custom placeholder when activePatient is Custom", () => {
+  it("renders custom text input and placeholder when activePatient is Custom", () => {
     render(<PatientTrajectoryCard activePatient="Custom" />);
+
+    const input = screen.getByPlaceholderText("Enter New Patient Name...");
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "John Doe" } });
+    expect(input).toHaveValue("John Doe");
 
     expect(
       screen.getByText(
         "Upload historical MRI scans to generate longitudinal trajectory for new patient."
       )
     ).toBeInTheDocument();
+  });
+
+  it("renders Historical Scans Log gallery with scans and follow-up button for demo patients", () => {
+    render(<PatientTrajectoryCard activePatient="Eleanor Vance" />);
+
+    expect(screen.getByText("Historical Scans Log")).toBeInTheDocument();
+    expect(screen.getByText("SCAN 01")).toBeInTheDocument();
+    expect(screen.getByText("SCAN 02")).toBeInTheDocument();
+    expect(screen.getByText("SCAN 03")).toBeInTheDocument();
+    expect(screen.getByText("SCAN 04")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })).toBeInTheDocument();
   });
 
   it("calls onSelectPatient callback when a different patient is chosen from dropdown", () => {

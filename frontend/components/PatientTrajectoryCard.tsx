@@ -14,13 +14,10 @@ import {
 import {
   Activity,
   TrendingUp,
-  AlertTriangle,
-  FileText,
   UserCheck,
-  Calendar,
-  Sparkles,
   ShieldAlert,
 } from "lucide-react";
+
 
 export interface TrajectoryDataPoint {
   date: string;
@@ -141,23 +138,29 @@ export function getDynamicTrajectoryData(patientName: string) {
 }
 
 interface PatientTrajectoryCardProps {
-  activePatient: string;
+  activePatient?: string;
+  activeDemoPatient?: string;
   onSelectPatient?: (patient: string) => void;
 }
 
 export default function PatientTrajectoryCard({
   activePatient,
+  activeDemoPatient: activeDemoPatientProp,
   onSelectPatient,
 }: PatientTrajectoryCardProps) {
   const [mounted, setMounted] = useState(false);
+  const [customPatientName, setCustomPatientName] = useState("");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const activeDemoPatient =
+    activeDemoPatientProp || activePatient || "Eleanor Vance";
+
   const patientData = useMemo(
-    () => getDynamicTrajectoryData(activePatient),
-    [activePatient]
+    () => getDynamicTrajectoryData(activeDemoPatient),
+    [activeDemoPatient]
   );
 
   const {
@@ -176,46 +179,64 @@ export default function PatientTrajectoryCard({
   return (
     <div className="w-full">
       {/* Card Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
-                <UserCheck className="h-3.5 w-3.5" />
-                Record Validated
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
-                {mrn}
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 flex-wrap">
-              <Activity className="h-7 w-7 text-blue-600 shrink-0" />
-              <span>
-                Patient Profile: {activePatient} — Longitudinal Tumor Trajectory
-              </span>
-              {onSelectPatient && (
-                <select 
-                  value={activePatient} 
-                  onChange={(e) => onSelectPatient(e.target.value)}
-                  className="ml-4 text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
-                >
-                  <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
-                  <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
-                  <option value="Custom">Add New Patient (Live Upload)</option>
-                </select>
-              )}
-            </h2>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
+        <div className="w-full">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
+              <UserCheck className="h-3.5 w-3.5" />
+              Record Validated
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
+              {mrn}
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100">
+              {diagnosis}
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-slate-600 bg-slate-100">
+              {stage}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
-              <ShieldAlert className="h-4 w-4 text-amber-600" />
-              Active Surveillance
-            </span>
+          <div className="mb-6 flex items-center gap-4 flex-wrap">
+            {activeDemoPatient === "Custom" ? (
+              <input
+                type="text"
+                placeholder="Enter New Patient Name..."
+                value={customPatientName}
+                onChange={(e) => setCustomPatientName(e.target.value)}
+                className="text-2xl md:text-3xl font-extrabold bg-transparent border-b-2 border-slate-300 focus:border-blue-600 outline-none pb-1 w-full max-w-md text-slate-900 placeholder:text-slate-400"
+              />
+            ) : (
+              <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
+                Patient Profile: {activeDemoPatient}
+              </h3>
+            )}
+            {onSelectPatient && (
+              <select
+                value={activeDemoPatient}
+                onChange={(e) => onSelectPatient(e.target.value)}
+                className="ml-auto text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
+              >
+                <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
+                <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
+                <option value="Custom">Add New Patient (Live Upload)</option>
+              </select>
+            )}
           </div>
         </div>
 
-      {activePatient === "Custom" ? (
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
+            <ShieldAlert className="h-4 w-4 text-amber-600" />
+            Active Surveillance
+          </span>
+        </div>
+      </div>
+
+
+      {activeDemoPatient === "Custom" ? (
         <div className="w-full h-64 flex items-center justify-center bg-slate-50 border border-dashed border-slate-300 rounded-xl my-4">
+
           <p className="text-slate-500 font-medium">
             Upload historical MRI scans to generate longitudinal trajectory for new patient.
           </p>
@@ -338,57 +359,25 @@ export default function PatientTrajectoryCard({
           </p>
         </div>
 
-        {/* Right Column: Longitudinal Patient Summary & EHR Metrics */}
-        <div className="bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col gap-4">
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Clinical Trajectory
-            </span>
-            <h4 className="text-lg font-bold text-slate-900 mt-0.5">{diagnosis}</h4>
-            <p className="text-xs font-medium text-slate-600">{stage}</p>
+        {/* Right Column (col-span-1): Historical MRI Scans Gallery */}
+        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
+          <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Historical Scans Log</h4>
+          <div className="grid grid-cols-2 gap-3">
+            {['Jan 2026', 'May 2026', 'Aug 2026', 'Oct 2026'].map((date, idx) => (
+              <div key={idx} className="relative group cursor-pointer overflow-hidden rounded-xl bg-slate-800 aspect-square flex items-center justify-center border border-slate-300 hover:border-blue-500 transition-all">
+                <span className="text-slate-400 text-xs font-bold group-hover:scale-110 transition-transform">SCAN 0{idx + 1}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
+                  <span className="text-white text-[10px] font-black tracking-wider">{date}</span>
+                </div>
+              </div>
+            ))}
           </div>
-
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200/60">
-            <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-100">
-              <span className="text-[11px] font-semibold text-blue-700 block">Current Area</span>
-              <span className="text-lg font-black text-blue-900 mt-0.5 block">
-                {currentArea.toLocaleString()} <span className="text-xs font-normal text-blue-700">px²</span>
-              </span>
-              <span className="text-[10px] text-blue-600 font-medium mt-0.5 block">
-                Confirmed {anchorDate}
-              </span>
-            </div>
-
-            <div className="p-3 bg-purple-50/70 rounded-xl border border-purple-100">
-              <span className="text-[11px] font-semibold text-purple-700 block">AI Forecast (+8M)</span>
-              <span className="text-lg font-black text-purple-900 mt-0.5 block">
-                {projectedArea.toLocaleString()} <span className="text-xs font-normal text-purple-700">px²</span>
-              </span>
-              <span className="text-[10px] text-purple-600 font-medium mt-0.5 block">
-                +{projectedGrowthPct}% growth
-              </span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-600 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500">Baseline Scan:</span>
-              <span className="font-bold text-slate-700">{baselineArea.toLocaleString()} px²</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500">Clinical Protocol:</span>
-              <span className="font-semibold text-blue-700">Surveillance</span>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-800 flex items-start gap-2.5">
-            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-            <p className="leading-relaxed">
-              <strong>Volumetric Acceleration:</strong> Tumor area variance triggers automated SerpApi neuro-oncology referral routing below.
-            </p>
-          </div>
+          <button className="w-full mt-6 py-2.5 bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm">
+            + Attach Follow-up Scan
+          </button>
         </div>
       </div>
+
       )}
     </div>
   );
