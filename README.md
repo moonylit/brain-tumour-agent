@@ -1,67 +1,89 @@
-# Brain Tumour Agent: SerpApi Clinical Decision Support System
+<div align="center">
+  <h1>🧠 CerebrAI</h1>
+  <p><b>Autonomous Neuro-Oncology Triage & Geospatial Referral Engine</b></p>
+  <p>Empowering Primary Care Physicians with AI-Driven Diagnostics and Automated Inter-Facility Routing.</p>
 
-> **SerpApi Hackathon Entry**  
-> **Track**: **Track 01 — AI Agents**  
-> **Repository**: [`brain-tumour-agent`](https://github.com/moonylit/brain-tumour-agent)
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+  [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+  [![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
+  [![ResNet50](https://img.shields.io/badge/ResNet_50-FF6F00?style=for-the-badge&logo=keras&logoColor=white)](https://keras.io/)
+  [![SerpApi](https://img.shields.io/badge/SerpApi-0052CC?style=for-the-badge&logo=google&logoColor=white)](https://serpapi.com/)
 
-An autonomous AI clinical agent bridging Computer Vision perception and real-world medical intelligence. The system pairs fine-tuned transfer learning neuroimaging classification with an autonomous **SerpApi Clinical Decision Support Agent** powered by `serpapi-search-tools` to retrieve peer-reviewed PubMed/NCCN standard-of-care guidelines, active clinical trials, and localized tertiary neuro-oncology surgical centers.
+  <br />
+
+  > **SerpApi Hackathon Entry** • **Track 01: AI Agents** • **Repository:** [`brain-tumour-agent`](https://github.com/moonylit/brain-tumour-agent)
+</div>
 
 ---
 
-## System Architecture
+## 🎯 Clinical Value Proposition (B2B)
+
+*Not a self-diagnosis app.* CerebrAI is strictly a **physician-facing triage tool** designed for rural clinics, emergency departments, and primary care centers. It solves the critical "Door-to-Needle" delay by not just detecting intracranial anomalies on MRI, but instantly automating the referral pipeline to the nearest equipped specialized neurotrauma center.
+
+* ⏱️ **Zero-Delay Referral:** Generates instant transfer contacts, bed routing, and telephone links for local tertiary neurosurgical units.
+* 🛡️ **Physician Decision Support:** Pairs deep learning predictions with real-time PubMed standard-of-care guidelines and recruiting clinical trials.
+* 🔍 **Transparent Explainability:** Overlays Gradient-weighted Class Activation Mapping (Grad-CAM) heatmaps with synchronized dual-viewer inspection.
+* 📄 **Audit-Ready Documentation:** Exports co-branded, 2-page pathology-grade PDF dossiers with accession tracking and medical disclaimers.
+
+---
+
+## ⚙️ System Architecture & Data Pipeline
+
+CerebrAI operates on a transparent, multi-stage computational workflow designed for clinical reliability.
 
 ```mermaid
 flowchart LR
-    A["Brain MRI Scan\n& Dynamic Location"] --> B["Perception Engine\n(ResNet50 + Grad-CAM)"]
-    B --> C["Autonomous Query Planning\n(Dynamic Geo-Agent)"]
-    C --> D["SerpApi Search Tools\n(serpapi-search-tools)"]
-    D --> E["web_search()\n(PubMed, NCCN, ASCO Trials)"]
-    D --> F["maps_search()\n(Regional Tertiary Centers)"]
-    E --> G["Grounded Clinical Action\n& Triage Decision"]
+    A["📍 Brain MRI Scan & Dynamic Location"] --> B["🧠 Perception Engine (ResNet50 + Grad-CAM)"]
+    B --> C["🤖 Autonomous Query Planning (Dynamic Geo-Agent)"]
+    C --> D["🔍 SerpApi Search Tools (serpapi-search-tools)"]
+    D --> E["📚 web_search() (PubMed, NCCN, ASCO Trials)"]
+    D --> F["🏥 maps_search() (Regional Tertiary Centers)"]
+    E --> G["⚡ Grounded Clinical Action & Triage Decision"]
     F --> G
-    G --> H["Widescreen Dual-Viewer\n& Pathology-Grade PDF Dossier"]
+    G --> H["💻 Widescreen Dual-Viewer & Pathology Dossier"]
 ```
 
-### End-to-End Pipeline
+### 🟢 Phase 1: Ingestion & Perception
+* **Input:** 📍 Brain MRI Scan & Dynamic Location *(accepts WebP, JPEG, PNG, or any neuroimaging format up to 10MB)*
+* **Perception Engine:** 🧠 (ResNet50 + Grad-CAM)
+  > Deep neural network classification processing the scan to identify anomalies (*glioma, meningioma, pituitary, notumor*) powered by a fine-tuned ResNet-50 architecture. Explainability is enforced via Grad-CAM spatial heatmaps with dual asset generation (raw scan + salience heatmap overlay).
 
-1. **Perception Engine**:
-   - Deep neural network classification (`glioma`, `meningioma`, `pituitary`, `notumor`) powered by fine-tuned ResNet50.
-   - Explainability localization via Grad-CAM (Gradient-weighted Class Activation Mapping) with dual asset generation (raw preprocessed scan + salience heatmap overlay).
-2. **Autonomous Query Planning & Dynamic Geo-Routing**:
-   - Analyzes detected class, confidence thresholds, and dynamic patient geographic region (e.g., Jaipur, New Delhi, London, Boston, or browser auto-detected location).
-   - Generates targeted medical literature queries and regional healthcare discovery intents (`tertiary neuro-oncology cancer centers near {region}`).
-3. **SerpApi Search & Maps Tools**:
-   - Built directly on **`serpapi-search-tools`**:
-     * `web_search()`: Autonomously retrieves recent PubMed/NCCN standard-of-care guidelines and recruiting clinical trials.
-     * `maps_search()`: Discovers and geolocates tertiary neuro-oncology hospitals and specialized surgical centers in/around the specified patient region.
-4. **Grounded Clinical Action & High-Density UI**:
-   - Triage assessment: Reassuring baseline neuro-imaging guidance for normal scans; comprehensive multi-modal escalation plan for detected tumors.
-   - Interactive Dual-Viewer with synchronized aspect ratios, crosshair inspection guides, and side-by-side vs focus toggles.
-   - Structured JSON response, live UI panel alongside Grad-CAM visualization, and audit-ready 2-page Pathology-Grade PDF Diagnostic Dossier.
+### 🟡 Phase 2: Autonomous Geo-Agent
+* **Agent Trigger:** 🤖 Autonomous Query Planning
+  > The Dynamic Geo-Agent activates upon tumor detection, utilizing the clinic's real-time geographic coordinates (via browser geolocation or manual physician selection).
+* **Search Execution:** 🔍 SerpApi Search Tools (`serpapi-search-tools`)
+  > The agent prepares parallel queries to fetch both authoritative oncology literature and regional geographic routing data.
 
----
+### 🔵 Phase 3: Dual-Stream Data Fetching
+The pipeline splits into two concurrent SerpApi functions:
+1. 📚 **`web_search()`:** Scrapes authoritative clinical literature (PubMed, NCCN guidelines, ASCO clinical trials) for real-time treatment protocols and molecular biomarker criteria.
+2. 🏥 **`maps_search()`:** Scans Google Maps for the nearest equipped *Regional Tertiary Centers* based on the dynamic location input, extracting verified facility addresses, direct telephone numbers, ratings, and directions.
 
-## SerpApi Agent Capabilities
-
-The Clinical Decision Agent (`backend/app/clinical_agent.py`) executes autonomous research:
-
-- **Negative / No Tumor Scans**:
-  - Delivers reassuring baseline neuro-imaging findings without unnecessary specialty escalation.
-  - Returns preventive neurological lifestyle and headache appropriateness criteria.
-- **Tumor Detected (Glioma, Meningioma, Pituitary)**:
-  - **Evidence-Based Literature (`web_search`)**:
-    * Current NCCN / EANO / Endocrine Society clinical practice guidelines.
-    * Molecular biomarker protocols (IDH1/2 mutations, 1p/19q co-deletions, skull base radiosurgery).
-    * Active Phase II/III clinical trial identifiers (NCT registry links and trial abstracts).
-  - **Regional Care Facilities (`maps_search`)**:
-    * Tertiary cancer institutes and surgical neuro-oncology hospitals in the patient's region (default: Jaipur, India).
-    * Hospital name, star ratings, full addresses, telephone contacts, and web portals.
-  - **Resilience & Provenance**:
-    * Integrates live SerpApi execution (`live_serpapi`) with robust fallback to high-fidelity clinical benchmarks if keys are missing or network is unavailable, ensuring zero downtime.
+### 🟣 Phase 4: Synthesis & UI Rendering
+* **Decision Synthesis:** ⚡ Grounded Clinical Action & Triage Decision
+  > Merges the AI classification, medical literature, and routing data into a single actionable protocol. Negative scans receive reassuring baseline criteria; tumor scans receive multi-modal escalation protocols.
+* **Output:** 💻 Widescreen Dual-Viewer & Pathology-Grade Docs
+  > Presents the physician with an enterprise-grade dashboard, displaying the MRI heatmap alongside automated transfer routing, interactive map overlays, and exportable 2-page PDF dossiers.
 
 ---
 
-## Quickstart & Installation
+## 🤖 SerpApi Agent Capabilities
+
+The Clinical Decision Agent (`backend/app/clinical_agent.py`) executes autonomous research tailored to diagnostic findings:
+
+| Diagnostic State | Agent Strategy | Automated Output |
+| :--- | :--- | :--- |
+| **Negative / No Tumor (`notumor`)** | Baseline Neuro-Imaging Guidance | Reassuring non-escalation clinical notes, preventive lifestyle metrics, headache appropriateness criteria. |
+| **Tumor Detected (`glioma`, `meningioma`, `pituitary`)** | Evidence Literature (`web_search`) | Current NCCN/EANO/Endocrine Society guidelines, surgical resection standards, active Phase II/III trial identifiers (`NCT`). |
+| **Tumor Detected (`glioma`, `meningioma`, `pituitary`)** | Geospatial Discovery (`maps_search`) | Tertiary neuro-oncology hospitals, direct telephone contact, localized routing, verified Google ratings. |
+| **Fail-Safe Resilience** | Dual-Tier Execution | Live SerpApi execution with automatic fallback to high-fidelity benchmarks, guaranteeing zero downtime in critical clinical care. |
+
+---
+
+## 🚀 Quickstart & Installation
 
 ### 1. Environment Configuration
 
@@ -72,7 +94,7 @@ Create a `.env` file in the project root or backend folder with your SerpApi key
 SERPAPI_API_KEY=your_serpapi_api_key_here
 ```
 
-### 2. Backend Setup
+### 2. Backend Setup (FastAPI & ML Engine)
 
 Prerequisites: Python 3.10+ (Python 3.11 recommended).
 
@@ -90,12 +112,12 @@ source ../.venv-gradcam/bin/activate
 pip install -r requirements.txt
 
 # Start FastAPI server on port 8000
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Interactive OpenAPI Swagger docs will be accessible at `http://127.0.0.1:8000/docs`.
+> Interactive OpenAPI Swagger docs are live at `http://127.0.0.1:8000/docs`.
 
-### 3. Frontend Setup
+### 3. Frontend Setup (Next.js & React)
 
 Prerequisites: Node.js 18+ and npm.
 
@@ -106,7 +128,7 @@ cd frontend
 # Install dependencies
 npm install
 
-# Start development dashboard
+# Start development server
 npm run dev
 ```
 
@@ -114,97 +136,105 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## Testing
+## 🧪 Testing & Verification
 
-Run automated unit and integration tests across both backend and frontend:
+Both frontend and backend are covered with comprehensive test suites:
 
 ```bash
-# Backend pytest suite (30 passed tests including clinical agent tests)
-cd backend
-pytest tests
-
-# Frontend vitest suite (73 passed tests across 10 test suites)
+# Frontend Vitest Suite (96 passed tests across 12 test suites)
 cd frontend
 npm test
+
+# Backend Pytest Suite (All endpoint, ML, and agent tests)
+cd backend
+pytest tests -v
 ```
 
 ---
 
-## API Specification
+## 📡 API Specification
 
 ### `POST /predict`
-Uploads a brain MRI scan (JPG/PNG) and runs the perception model plus the autonomous SerpApi clinical agent.
+Uploads a brain MRI scan (WebP, JPG, PNG, etc.) and executes neural inference, Grad-CAM heatmap generation, and the SerpApi Clinical Agent.
 
-- **Query Parameters**:
-  - `patient_city` (*optional string*, default: `"Jaipur"`): Geographic region for hospital discovery.
-- **Multipart Form Data**:
-  - `file`: MRI image file.
-- **Response**:
+* **Parameters:**
+  * `file` *(multipart form)*: Axial Brain MRI file (up to 10MB).
+  * `region` *(form data, optional)*: Geographic target city (default: `"Jaipur"`).
+* **Sample Response:**
   ```json
   {
-    "prediction": "glioma",
+    "prediction": "meningioma",
     "confidence": 0.9856,
     "probabilities": {
-      "glioma": 0.9856,
-      "meningioma": 0.0084,
-      "pituitary": 0.004,
-      "notumor": 0.002
+      "glioma": 0.0084,
+      "meningioma": 0.9856,
+      "pituitary": 0.0040,
+      "notumor": 0.0020
     },
     "processing_time_ms": 145.2,
-    "heatmap_filename": "d88a61aba45941ccb779a2a0352e660c.png",
+    "heatmap_filename": "8ead867857914f239ab6dcc28bde9cfe.png",
+    "raw_heatmap_filename": "raw_8ead867857914f239ab6dcc28bde9cfe.png",
+    "accession_id": "ACC-20261010-EC8422",
+    "region": "Jaipur",
     "agent_research": {
       "status": "escalation_recommended",
-      "tumor_class": "Glioma",
+      "tumor_class": "Meningioma",
       "confidence": 0.9856,
-      "patient_city": "Jaipur",
+      "region": "Jaipur",
       "escalation_required": true,
-      "clinical_summary": "Presumptive Glioma detected with 98.6% confidence. Multidisciplinary surgical and radiation oncology evaluation indicated...",
+      "clinical_summary": "Presumptive Meningioma detected with 98.6% confidence. Multidisciplinary neurosurgical evaluation indicated.",
       "articles": [
         {
-          "title": "NCCN Clinical Practice Guidelines in Oncology: Central Nervous System Cancers (Glioma)",
-          "snippet": "First-line standard of care involves maximal safe surgical resection followed by concurrent temozolomide chemoradiotherapy...",
-          "url": "https://pubmed.ncbi.nlm.nih.gov/33227768/",
-          "source": "NCCN / PubMed"
+          "title": "EANO Guidelines on the Diagnosis and Treatment of Meningiomas",
+          "snippet": "First-line management includes maximal safe surgical resection or stereotactic radiosurgery for high-risk lesions...",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34327768/",
+          "source": "PubMed / EANO"
         }
       ],
       "facilities": [
         {
-          "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre (BMCHRC)",
-          "rating": 4.7,
-          "address": "Jawaharlal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302015",
-          "phone": "+91 141 270 0107",
-          "link": "https://www.bmchrc.org"
+          "name": "SMS Hospital & Institute of Medical Sciences (Department of Neurosurgery)",
+          "rating": 4.6,
+          "address": "JLN Marg, Ashok Nagar, Jaipur, Rajasthan 302004",
+          "phone": "+91 141 251 8200",
+          "link": "https://education.rajasthan.gov.in/smsmedicalcollege"
         }
       ],
       "queries_executed": [
-        "Glioma standard of care NCCN guidelines PubMed",
-        "Glioma novel therapeutics clinical trials",
-        "tertiary neuro oncology cancer hospital surgical center Jaipur"
+        "Meningioma tumor standard of care guidelines PubMed",
+        "Meningioma tumor novel therapeutics clinical trials",
+        "tertiary neuro-oncology center hospital near Jaipur"
       ],
       "source_mode": "live_serpapi",
-      "timestamp": "2026-10-04T12:00:00Z"
+      "timestamp": "2026-10-10T13:10:40.315Z"
     }
   }
   ```
 
 ### `GET /report`
-Downloads a PDF diagnostic report including patient info, Grad-CAM heatmap visualization, model validation benchmarks, and the **Evidence-Based Literature & Regional Oncology Centers** section synthesized by the SerpApi agent.
+Generates a downloadable, audit-ready 2-page PDF clinical dossier with patient metadata, accession IDs, high-resolution Grad-CAM overlays, model validation metrics, and synthesized referral routing.
 
 ### `GET /history`
 Retrieves past prediction records and agent telemetry with support for pagination, sorting, and tumor class filtering.
 
 ### `GET /statistics`
-Returns aggregate statistics, class distribution, and average confidence scores.
+Returns aggregate throughput statistics, class distributions, and inference benchmarks.
 
 ### `GET /evaluation` & `GET /evaluation/plots`
-Returns model validation metrics (Accuracy, Precision, Recall, F1) and precomputed ROC and Precision-Recall visualization curves.
+Returns model validation metrics (Accuracy, Precision, Recall, F1) and precomputed ROC / Precision-Recall visualization curves.
 
 ---
 
-## Tech Stack
+## 🛠️ Enterprise Tech Stack
 
-- **AI Agent Framework**: `serpapi-search-tools` (`web_search`, `maps_search`), `google-search-results`
-- **Deep Learning**: TensorFlow 2.15, Keras, ResNet50 Transfer Learning, Grad-CAM
-- **Backend**: FastAPI, Uvicorn, Pydantic, ReportLab, Pytest
-- **Frontend**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, Lucide Icons, Vitest
-- **Tooling**: GitHub CLI (`gh`), Python venv
+* **AI Agent & Intelligence:** `serpapi-search-tools` (`web_search`, `maps_search`), `google-search-results`
+* **Perception & Explainability:** TensorFlow 2.15, Keras, Fine-Tuned ResNet-50, OpenCV, Grad-CAM (Heatmap + Alpha Masking)
+* **Backend Services:** FastAPI, Uvicorn, Pydantic, ReportLab, Pytest
+* **Frontend Architecture:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, Lucide Icons, Vitest, Testing Library
+* **Clinical Workflow:** OpenStreetMap / Nominatim Dynamic Geocoding, Telephonic Routing, Pathology PDF Generation
+
+---
+
+<div align="center">
+  <sub>Built for the SerpApi Hackathon • Track 01: AI Agents • Designed for Primary Care Physicians</sub>
+</div>
