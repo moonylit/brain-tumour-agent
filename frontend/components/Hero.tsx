@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from "react";
 
 export default function Hero() {
-  const [typedText, setTypedText] = useState('');
   const fullText = "Autonomous Neuro-Oncology Triage";
+  const [typedText, setTypedText] = useState('');
+  const [showSubtitle, setShowSubtitle] = useState(false);
 
   useEffect(() => {
     let currentText = '';
     let i = 0;
+    // SLOWER TYPING SPEED (90ms instead of 50ms)
     const typingInterval = setInterval(() => {
       if (i < fullText.length) {
         currentText += fullText.charAt(i);
@@ -16,8 +18,11 @@ export default function Hero() {
         i++;
       } else {
         clearInterval(typingInterval);
+        // Trigger subtitle animation exactly 300ms after typing finishes
+        setTimeout(() => setShowSubtitle(true), 300);
       }
-    }, 50); // Speed of typing
+    }, 90); 
+
     return () => clearInterval(typingInterval);
   }, []);
 
@@ -46,24 +51,35 @@ export default function Hero() {
       </div>
 
       {/* Main Heading */}
-      <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 min-h-[4rem]">
-        {typedText.split('Neuro-Oncology').map((part, index, array) => (
-          <React.Fragment key={index}>
-            {part}
-            {index < array.length - 1 && (
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">
-                Neuro-Oncology
-              </span>
-            )}
-          </React.Fragment>
-        ))}
-        <span className="animate-pulse text-blue-600 font-light">|</span>
+      <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-8 min-h-[4.5rem]">
+        {typedText.includes("Neuro-Oncology") ? (
+          <>
+            {typedText.split("Neuro-Oncology")[0]}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">
+              Neuro-Oncology
+            </span>
+            {typedText.split("Neuro-Oncology")[1]}
+          </>
+        ) : (
+          typedText
+        )}
+        <span className="animate-pulse text-blue-500 font-light ml-1">|</span>
       </h1>
 
       {/* Subtitle */}
-      <p className="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal">
-        Upload an MRI scan to detect brain tumours and view Grad-CAM explainability heatmaps.
-      </p>
+      <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto flex flex-wrap justify-center gap-x-1.5 overflow-hidden min-h-[4rem]">
+        {showSubtitle && "Accelerate clinical decision-making. Upload MRI neuroimaging for instant multi-class tumor classification and transparent Grad-CAM spatial localization."
+          .split(' ')
+          .map((word, index) => (
+            <span
+              key={index}
+              className="inline-block text-slate-600 opacity-0 animate-[dropIn_0.4s_ease-out_forwards]"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
+              {word}
+            </span>
+          ))}
+      </div>
 
       {/* Action Buttons */}
       <div className="mt-12 flex flex-wrap items-center justify-center gap-5">
@@ -109,6 +125,13 @@ export default function Hero() {
           <span>Model Benchmarks</span>
         </a>
       </div>
+
+      <style>{`
+        @keyframes dropIn {
+          0% { opacity: 0; transform: translateY(-20px) scale(0.9); filter: blur(4px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+      `}</style>
     </section>
   );
 }
