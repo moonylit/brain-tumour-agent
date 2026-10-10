@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function Hero() {
-  const fullText = "AI-Powered Brain Tumor Diagnostics";
+  const fullText = "From Scan to Specialist. Zero Delay.";
   const [typedText, setTypedText] = useState('');
   const [showSubtitle, setShowSubtitle] = useState(false);
 
@@ -52,13 +52,21 @@ export default function Hero() {
 
       {/* Main Heading */}
       <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-8 min-h-[4.5rem]">
-        {typedText.includes("Brain Tumor") ? (
+        {typedText.includes("Zero Delay") ? (
           <>
-            {typedText.split("Brain Tumor")[0]}
+            {typedText.split("Zero Delay")[0]}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              Brain Tumor
+              Zero Delay.
             </span>
-            {typedText.split("Brain Tumor")[1]}
+            {typedText.split("Zero Delay")[1]?.replace(".", "")}
+          </>
+        ) : typedText.includes("SerpApi Intelligence") ? (
+          <>
+            {typedText.split("SerpApi Intelligence")[0]}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              SerpApi Intelligence
+            </span>
+            {typedText.split("SerpApi Intelligence")[1]}
           </>
         ) : (
           typedText
