@@ -563,7 +563,7 @@ def report(
         media_type="application/pdf",
         headers={
             "Content-Disposition": (
-                "attachment; filename=brain_tumour_report.pdf"
+                "attachment; filename=CerebrAI_Clinical_Report.pdf"
             ),
         },
     )

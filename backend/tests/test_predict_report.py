@@ -87,7 +87,7 @@ def test_report_download_success(client):
     assert response.status_code == 200
     assert response.headers.get("content-type") == "application/pdf"
     assert "attachment" in response.headers.get("content-disposition", "")
-    assert "brain_tumour_report.pdf" in response.headers.get("content-disposition", "")
+    assert "CerebrAI_Clinical_Report.pdf" in response.headers.get("content-disposition", "")
     # Check standard PDF file signature
     assert response.content.startswith(b"%PDF")
 

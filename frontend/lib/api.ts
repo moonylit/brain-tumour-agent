@@ -229,7 +229,7 @@ export async function downloadReport(region?: string): Promise<void> {
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", "brain_tumour_report.pdf");
+  link.setAttribute("download", "CerebrAI_Clinical_Report.pdf");
   document.body.appendChild(link);
   link.click();
   link.parentNode?.removeChild(link);
