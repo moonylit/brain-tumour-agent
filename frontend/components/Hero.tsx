@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function Hero() {
-  const fullText = "Autonomous Neuro-Oncology Triage";
+  const fullText = "AI-Powered Brain Tumor Diagnostics";
   const [typedText, setTypedText] = useState('');
   const [showSubtitle, setShowSubtitle] = useState(false);
 
@@ -52,13 +52,13 @@ export default function Hero() {
 
       {/* Main Heading */}
       <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-8 min-h-[4.5rem]">
-        {typedText.includes("Neuro-Oncology") ? (
+        {typedText.includes("Brain Tumor") ? (
           <>
-            {typedText.split("Neuro-Oncology")[0]}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">
-              Neuro-Oncology
+            {typedText.split("Brain Tumor")[0]}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              Brain Tumor
             </span>
-            {typedText.split("Neuro-Oncology")[1]}
+            {typedText.split("Brain Tumor")[1]}
           </>
         ) : (
           typedText
@@ -68,13 +68,13 @@ export default function Hero() {
 
       {/* Subtitle */}
       <div className="text-lg md:text-xl font-medium max-w-2xl mx-auto flex flex-wrap justify-center gap-x-1.5 overflow-hidden min-h-[4rem]">
-        {showSubtitle && "Accelerate clinical decision-making. Upload MRI neuroimaging for instant multi-class tumor classification and transparent Grad-CAM spatial localization."
+        {showSubtitle && "Upload an MRI scan for instant analysis. CerebrAI detects the anomaly, classifies the tumor type, and generates visual heatmaps to explain the results."
           .split(' ')
           .map((word, index) => (
             <span
               key={index}
               className="inline-block text-slate-600 opacity-0 animate-[dropIn_0.4s_ease-out_forwards]"
-              style={{ animationDelay: `${index * 60}ms` }}
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               {word}
             </span>
