@@ -56,13 +56,19 @@ export default function Navbar() {
           Upload
         </a>
         <a
+          href="#statistics"
+          className="text-sm font-bold text-slate-600 hover:text-blue-600 transition"
+        >
+          Statistics
+        </a>
+        <a
           href="#history"
           className="text-sm font-bold text-slate-600 hover:text-blue-600 transition"
         >
           History
         </a>
         <a
-          href="#pipeline"
+          href="#features"
           className="text-sm font-bold text-slate-600 hover:text-blue-600 transition"
         >
           Features

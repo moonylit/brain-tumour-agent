@@ -30,13 +30,17 @@ describe("Navbar Component", () => {
       "href",
       "#upload",
     );
+    expect(screen.getByRole("link", { name: "Statistics" })).toHaveAttribute(
+      "href",
+      "#statistics",
+    );
     expect(screen.getByRole("link", { name: "History" })).toHaveAttribute(
       "href",
       "#history",
     );
     expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
       "href",
-      "#pipeline",
+      "#features",
     );
   });
 

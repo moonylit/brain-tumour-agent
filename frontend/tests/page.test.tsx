@@ -63,7 +63,11 @@ describe("Page Integration (app/page.tsx)", () => {
     expect(screen.getByText("Upload MRI Scan")).toBeInTheDocument();
     expect(screen.getByText("Geographic Referral Routing")).toBeInTheDocument();
 
-    // 4. Discreet Collapsible History Accordion
+    // 4. Model Performance Metrics Statistics Section
+    expect(screen.getByText("Model Performance Metrics")).toBeInTheDocument();
+    expect(screen.getByText("Validation Accuracy")).toBeInTheDocument();
+
+    // 5. Discreet Collapsible History Accordion
     expect(
       screen.getByText(/View Patient EHR & Prediction History/i),
     ).toBeInTheDocument();

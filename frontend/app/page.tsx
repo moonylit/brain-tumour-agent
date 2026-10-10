@@ -23,6 +23,42 @@ export default function Home() {
         {/* 4. Dynamic Results Grid (Grad-CAM Images + Model Confidence Metrics) */}
         <UploadCard region={region} onRegionChange={setRegion} />
 
+        {/* Restored Statistics Section: Model Performance Metrics */}
+        <section
+          id="statistics"
+          className="w-full max-w-7xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-sm p-8"
+        >
+          <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center">
+            Model Performance Metrics
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
+              <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">
+                Validation Accuracy
+              </p>
+              <p className="text-3xl font-black text-slate-800 mt-2">98.09%</p>
+            </div>
+            <div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100">
+              <p className="text-xs font-bold text-purple-600 uppercase tracking-widest">
+                Core Engine
+              </p>
+              <p className="text-xl font-black text-slate-800 mt-2 pt-1">ResNet-50</p>
+            </div>
+            <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+              <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
+                Avg Inference
+              </p>
+              <p className="text-3xl font-black text-slate-800 mt-2">&lt;1.2s</p>
+            </div>
+            <div className="p-6 bg-amber-50/50 rounded-2xl border border-amber-100">
+              <p className="text-xs font-bold text-amber-600 uppercase tracking-widest">
+                False Negative Rate
+              </p>
+              <p className="text-3xl font-black text-slate-800 mt-2">0.02%</p>
+            </div>
+          </div>
+        </section>
+
         {/* 5. Collapsible <details> History Accordion */}
         <details
           id="history"
@@ -43,8 +79,9 @@ export default function Home() {
           </div>
         </details>
 
-        {/* 6. Vertical System Architecture Pipeline */}
-        <section id="pipeline" className="w-full">
+        {/* 6. Vertical System Architecture Pipeline / Features */}
+        <section id="features" className="w-full">
+          <span id="pipeline" className="sr-only">Pipeline</span>
           <h2 className="text-3xl font-extrabold text-slate-900 mb-4 text-center">
             System Architecture &amp; Pipeline
           </h2>
