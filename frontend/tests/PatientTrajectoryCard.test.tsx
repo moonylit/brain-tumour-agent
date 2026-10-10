@@ -257,7 +257,7 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.getByText(/SCAN 02 • May 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/SCAN 03 • Aug 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/SCAN 04 • Oct 2026/i)).toBeInTheDocument();
-    expect(screen.getAllByText("Glioblastoma")).toHaveLength(4);
+    expect(screen.getAllByText(/Glioblastoma/i)).toHaveLength(4);
     expect(screen.getByAltText("Scan 1")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })
