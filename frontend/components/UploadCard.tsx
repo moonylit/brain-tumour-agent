@@ -188,11 +188,25 @@ export default function UploadCard({
                 <Upload className="h-8 w-8 text-blue-600" />
                 <span>Upload MRI Scan</span>
               </h2>
-              <div className="mx-auto inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 rounded-md shadow-sm border border-slate-700 mb-8 hover:scale-105 transition-transform cursor-default">
-                <div className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-[10px] font-mono font-bold text-slate-400 tracking-wider uppercase">Track 01</span>
-                <span className="text-slate-600 mx-1">/</span>
-                <span className="text-[11px] font-mono font-black text-blue-400 tracking-wider uppercase">SerpApi Decision Agent</span>
+              <div className="mx-auto inline-flex items-center gap-4 px-6 py-3 bg-slate-900 rounded-xl shadow-md border border-slate-700 mb-10 hover:shadow-lg hover:border-slate-600 transition-all cursor-default whitespace-nowrap">
+                {/* Larger Pulsing Dot */}
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </div>
+                
+                {/* Enlarged Text 1 */}
+                <span className="text-sm md:text-base font-mono font-bold text-slate-200 tracking-widest uppercase">
+                  Track 01
+                </span>
+                
+                {/* Sleek Divider */}
+                <span className="text-slate-600 font-light text-xl">/</span>
+                
+                {/* Enlarged Text 2 */}
+                <span className="text-sm md:text-base font-mono font-black text-blue-400 tracking-widest uppercase drop-shadow-sm">
+                  SerpApi Decision Agent
+                </span>
               </div>
             </div>
             <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
