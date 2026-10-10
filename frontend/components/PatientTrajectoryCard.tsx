@@ -142,6 +142,8 @@ export interface CustomScanPoint {
   area: number | null;
   forecastArea: number | null;
   type: string;
+  imagePreview?: string;
+  prediction?: string;
 }
 
 interface PatientTrajectoryCardProps {
@@ -270,18 +272,26 @@ export default function PatientTrajectoryCard({
             accept="image/*" 
             className="hidden" 
             onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                // Simulate instant scan processing for trajectory
+              if (e.target.files && e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const localImageUrl = URL.createObjectURL(file);
+
                 setTimeout(() => {
                   const newArea = Math.floor(Math.random() * 3000) + 1500;
+                  // Fallback to global predictionResult if available, otherwise simulate for the historical array
+                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Tumor Detected'; 
+
                   const newScan = {
                     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     area: newArea,
                     forecastArea: null,
-                    type: 'Observed'
+                    type: 'Observed',
+                    imagePreview: localImageUrl,
+                    prediction: scanPrediction
                   };
-                  setCustomScans(prev => [...prev, newScan]);
+                  
+                  // Remove existing forecasts and push the new scan with its image
+                  setCustomScans(prev => [...prev.filter(s => s.type !== 'AI Forecast'), newScan]);
                 }, 600);
               }
             }}
@@ -302,18 +312,26 @@ export default function PatientTrajectoryCard({
             accept="image/*" 
             className="hidden" 
             onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                // Simulate instant scan processing for trajectory
+              if (e.target.files && e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const localImageUrl = URL.createObjectURL(file);
+
                 setTimeout(() => {
                   const newArea = Math.floor(Math.random() * 3000) + 1500;
+                  // Fallback to global predictionResult if available, otherwise simulate for the historical array
+                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Tumor Detected'; 
+
                   const newScan = {
                     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     area: newArea,
                     forecastArea: null,
-                    type: 'Observed'
+                    type: 'Observed',
+                    imagePreview: localImageUrl,
+                    prediction: scanPrediction
                   };
-                  setCustomScans(prev => [...prev, newScan]);
+                  
+                  // Remove existing forecasts and push the new scan with its image
+                  setCustomScans(prev => [...prev.filter(s => s.type !== 'AI Forecast'), newScan]);
                 }, 600);
               }
             }}
@@ -406,10 +424,29 @@ export default function PatientTrajectoryCard({
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Patient MRI Log</h4>
               <div className="grid grid-cols-2 gap-3 overflow-y-auto mb-4 flex-grow">
                 {customScans.filter(scan => scan.type === 'Observed').map((scan, idx) => (
-                  <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-800 aspect-square flex items-center justify-center border border-slate-300">
-                    <span className="text-slate-400 text-xs font-bold">SCAN 0{idx + 1}</span>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
-                      <span className="text-white text-[10px] font-black tracking-wider">{scan.date}</span>
+                  <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-900 aspect-square flex items-center justify-center border border-slate-300 shadow-sm">
+
+                    {/* Actual MRI Image */}
+                    {scan.imagePreview && (
+                      <img 
+                        src={scan.imagePreview} 
+                        alt={`Scan 0${idx+1}`} 
+                        className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500 z-0" 
+                      />
+                    )}
+
+                    {/* Prediction Badge Top Right */}
+                    {scan.prediction && (
+                      <div className="absolute top-2 right-2 bg-blue-600/90 backdrop-blur text-white text-[9px] font-bold px-2 py-1 rounded shadow-sm z-10 uppercase tracking-wider">
+                        {scan.prediction}
+                      </div>
+                    )}
+
+                    {/* Date & Title Bottom Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-3 z-0 pointer-events-none">
+                      <span className="text-white text-[10px] font-black tracking-wider drop-shadow-md">
+                        SCAN 0{idx + 1} • {scan.date}
+                      </span>
                     </div>
                   </div>
                 ))}

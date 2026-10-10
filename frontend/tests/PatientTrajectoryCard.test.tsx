@@ -145,13 +145,22 @@ describe("PatientTrajectoryCard Component", () => {
     expect(updatedState[0].area).toBeGreaterThanOrEqual(1500);
     expect(updatedState[0].forecastArea).toBeNull();
     expect(updatedState[0].type).toBe("Observed");
+    expect(updatedState[0].prediction).toBe("Tumor Detected");
+    expect(updatedState[0].imagePreview).toBeDefined();
 
     vi.useRealTimers();
   });
 
-  it("renders dynamic Recharts graph, Patient MRI Log gallery, follow-up button, and triggers stitched trajectory prediction for Custom patient with scans", () => {
+  it("renders dynamic Recharts graph, Patient MRI Log gallery with images and predictions, follow-up button, and triggers stitched trajectory prediction for Custom patient with scans", () => {
     const mockScans = [
-      { date: "Oct 10", area: 2400, forecastArea: null, type: "Observed" },
+      {
+        date: "Oct 10",
+        area: 2400,
+        forecastArea: null,
+        type: "Observed",
+        imagePreview: "blob:http://localhost/scan1.png",
+        prediction: "Meningioma",
+      },
     ];
     const setScansMock = vi.fn();
 
@@ -165,8 +174,11 @@ describe("PatientTrajectoryCard Component", () => {
 
     // Custom Patient MRI Log gallery
     expect(screen.getByText("Patient MRI Log")).toBeInTheDocument();
-    expect(screen.getByText("SCAN 01")).toBeInTheDocument();
-    expect(screen.getByText("Oct 10")).toBeInTheDocument();
+    expect(screen.getByText(/SCAN 01 • Oct 10/i)).toBeInTheDocument();
+    expect(screen.getByText("Meningioma")).toBeInTheDocument();
+    const scanImg = screen.getByAltText("Scan 01");
+    expect(scanImg).toBeInTheDocument();
+    expect(scanImg).toHaveAttribute("src", "blob:http://localhost/scan1.png");
 
     // Recharts container buttons
     const followUpBtn = screen.getByRole("button", {

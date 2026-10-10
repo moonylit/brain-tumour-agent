@@ -50,6 +50,7 @@ export default function Home() {
               area: newArea,
               forecastArea: null, // Null for observed data
               type: "Observed",
+              prediction: res.prediction,
             };
             setCustomScans((prev) => [...prev, newScan]);
           }}
