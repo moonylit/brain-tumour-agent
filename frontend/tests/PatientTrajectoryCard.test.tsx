@@ -264,20 +264,25 @@ describe("PatientTrajectoryCard Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("calls onSelectPatient callback when a different patient is chosen from dropdown", () => {
+  it("saves new patient with Pending Scan condition and switches view when Enter key is pressed", () => {
     const onSelect = vi.fn();
+    const setDirectoryMock = vi.fn();
+
     render(
       <PatientTrajectoryCard
-        activePatient="Eleanor Vance"
+        activePatient="Custom"
+        customScans={[]}
         onSelectPatient={onSelect}
+        setPatientDirectory={setDirectoryMock}
       />
     );
 
-    const dropdown = screen.getByRole("combobox");
-    expect(dropdown).toHaveValue("Eleanor Vance");
+    const input = screen.getByPlaceholderText("Enter New Patient Name...");
+    fireEvent.change(input, { target: { value: "Sarah Connor" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    fireEvent.change(dropdown, { target: { value: "Marcus Brody" } });
-    expect(onSelect).toHaveBeenCalledWith("Marcus Brody");
+    expect(setDirectoryMock).toHaveBeenCalled();
+    expect(onSelect).toHaveBeenCalledWith("Sarah Connor");
   });
 
   it("handles native drag-and-drop on Custom Patient EHR dropzone and activates hover states", () => {

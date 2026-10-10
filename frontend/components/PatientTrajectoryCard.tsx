@@ -312,6 +312,34 @@ export default function PatientTrajectoryCard({
                   placeholder="Enter New Patient Name..." 
                   value={customPatientName}
                   onChange={(e) => setCustomPatientName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && customPatientName.trim() !== '') {
+                      e.preventDefault();
+                      
+                      // Extract condition if a scan exists, otherwise set as Pending
+                      const detectedCondition = customScans.length > 0 && customScans[0].prediction 
+                        ? customScans[0].prediction 
+                        : 'Pending Scan';
+                      
+                      const newPatientName = customPatientName.trim();
+                      
+                      const newPatient = {
+                        id: `pat_${Date.now()}`,
+                        name: newPatientName,
+                        condition: detectedCondition
+                      };
+                      
+                      // Add the new patient to the global directory list
+                      setPatientDirectory(prev => {
+                        // Prevent duplicate entries if the user hits enter multiple times
+                        if (prev.some(p => p.name === newPatientName)) return prev;
+                        return [...prev, newPatient];
+                      });
+                      
+                      // Auto-switch the main dropdown to this newly saved patient
+                      setActiveDemoPatient(newPatientName);
+                    }
+                  }}
                   className="text-3xl font-extrabold text-slate-800 bg-transparent border-b-2 border-blue-600 focus:outline-none w-full max-w-md pb-2"
                 />
 
@@ -348,19 +376,6 @@ export default function PatientTrajectoryCard({
                 Patient Profile: {activeDemoPatient}
               </h3>
             )}
-            <select 
-              value={activeDemoPatient} 
-              onChange={(e) => setActiveDemoPatient(e.target.value)}
-              className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 cursor-pointer ml-auto"
-            >
-              {patientDirectory.map(patient => (
-                <option key={patient.id} value={patient.name}>
-                  {patient.name} ({patient.condition})
-                </option>
-              ))}
-              <hr />
-              <option value="Custom">+ Add New Patient (Live Upload)</option>
-            </select>
           </div>
         </div>
 

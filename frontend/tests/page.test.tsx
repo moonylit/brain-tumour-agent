@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Home from "../app/page";
 import * as api from "../lib/api";
 
@@ -83,4 +83,15 @@ describe("Page Integration (app/page.tsx)", () => {
       screen.getByText(/NeuroAgent is an experimental AI decision-support system/i),
     ).toBeInTheDocument();
   });
+
+  it("allows selecting different patients from primary EHR dropdown", () => {
+    render(<Home />);
+    const dropdown = screen.getByDisplayValue(/Eleanor Vance/i);
+    expect(dropdown).toBeInTheDocument();
+    expect(dropdown).toHaveValue("Eleanor Vance");
+
+    fireEvent.change(dropdown, { target: { value: "Marcus Brody" } });
+    expect(dropdown).toHaveValue("Marcus Brody");
+  });
 });
+
