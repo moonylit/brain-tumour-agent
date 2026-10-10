@@ -270,8 +270,8 @@ export default function UploadCard({
       </div>
 
       {/* Prediction Results Display */}
-      {result && (
-        <div className="max-w-7xl mx-auto mt-10 px-4">
+      <div className="max-w-7xl mx-auto mt-10 px-4">
+        {result ? (
           <PredictionCard
             prediction={result.prediction}
             confidence={result.confidence}
@@ -283,8 +283,12 @@ export default function UploadCard({
             accessionId={result.accession_id}
             agentResearch={result.agent_research}
           />
-        </div>
-      )}
+        ) : (
+          <div className="p-12 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200">
+            Awaiting neuro-imaging upload for ResNet-50 analysis...
+          </div>
+        )}
+      </div>
     </section>
   );
 }
