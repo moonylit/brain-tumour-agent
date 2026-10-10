@@ -887,5 +887,176 @@
         },
         "accession_id": "ACC-20261009-A89FC0",
         "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T02:23:33.695321",
+        "filename": "Te-no_15.jpg",
+        "prediction": "notumor",
+        "confidence": 0.9999974966049194,
+        "processing_time_ms": 78975.22,
+        "heatmap_filename": "ad843b1b06f94e63926f36bf85c3c3db.png",
+        "agent_research": {
+            "status": "baseline_normal",
+            "tumor_class": "No Tumor",
+            "confidence": 1.0,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": false,
+            "clinical_summary": "Reassuring baseline neuro-imaging findings: No intracranial mass lesion, abnormal focal enhancement, or acute space-occupying neoplasm detected on MRI. Standard neurological wellness guidelines apply. Follow-up is recommended only if persistent focal neurological deficits or severe cephalalgia arise.",
+            "articles": [
+                {
+                    "title": "Research malpractice and the issue of incidental findings",
+                    "snippet": "Human subject research involving brain imaging is likely to reveal significant incidental findings of abnormal brain morphology.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/18547205/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Disclosing incidental findings in brain research: the rights ...",
+                    "snippet": "To identify ethical concerns and fill existing gaps, we conducted a comprehensive review of papers that focused explicitly on the discovery of IFs in minors.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/24006134/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Impact of Incidental Findings on Neuroimaging Research ...",
+                    "snippet": "Incidental findings are not uncommon,1\u20134 ranging from 0.2% to 1.6% for incidentally found brain tumors within the study population, or vascular abnormalities,",
+                    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7051757/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Are incidental findings on brain magnetic resonance ...",
+                    "snippet": "We report a higher prevalence of intracranial incidental findings in children with developmental delay as compared with those children with ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/20558674/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [],
+            "queries_executed": [
+                "normal brain MRI incidental findings clinical guidelines PubMed"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-09T20:53:30.353898+00:00"
+        },
+        "probabilities": {
+            "glioma": 2.359440259169787e-06,
+            "meningioma": 1.3386885200361576e-07,
+            "notumor": 0.9999974966049194,
+            "pituitary": 5.086024049832938e-12
+        },
+        "accession_id": "ACC-20261009-1AAF09",
+        "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T02:23:39.680760",
+        "filename": "Te-no_15.jpg",
+        "prediction": "notumor",
+        "confidence": 0.9999974966049194,
+        "processing_time_ms": 773.76,
+        "heatmap_filename": "ea46c0f4b3244a08921167b05a4b994f.png",
+        "agent_research": {
+            "status": "baseline_normal",
+            "tumor_class": "No Tumor",
+            "confidence": 1.0,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": false,
+            "clinical_summary": "Reassuring baseline neuro-imaging findings: No intracranial mass lesion, abnormal focal enhancement, or acute space-occupying neoplasm detected on MRI. Standard neurological wellness guidelines apply. Follow-up is recommended only if persistent focal neurological deficits or severe cephalalgia arise.",
+            "articles": [
+                {
+                    "title": "Research malpractice and the issue of incidental findings",
+                    "snippet": "Human subject research involving brain imaging is likely to reveal significant incidental findings of abnormal brain morphology.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/18547205/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Disclosing incidental findings in brain research: the rights ...",
+                    "snippet": "To identify ethical concerns and fill existing gaps, we conducted a comprehensive review of papers that focused explicitly on the discovery of IFs in minors.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/24006134/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Impact of Incidental Findings on Neuroimaging Research ...",
+                    "snippet": "Incidental findings are not uncommon,1\u20134 ranging from 0.2% to 1.6% for incidentally found brain tumors within the study population, or vascular abnormalities,",
+                    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7051757/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Are incidental findings on brain magnetic resonance ...",
+                    "snippet": "We report a higher prevalence of intracranial incidental findings in children with developmental delay as compared with those children with ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/20558674/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [],
+            "queries_executed": [
+                "normal brain MRI incidental findings clinical guidelines PubMed"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-09T20:53:37.333918+00:00"
+        },
+        "probabilities": {
+            "glioma": 2.359440259169787e-06,
+            "meningioma": 1.3386885200361576e-07,
+            "notumor": 0.9999974966049194,
+            "pituitary": 5.086024049832938e-12
+        },
+        "accession_id": "ACC-20261009-F142A6",
+        "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T02:23:44.948019",
+        "filename": "Te-no_22.jpg",
+        "prediction": "notumor",
+        "confidence": 1.0,
+        "processing_time_ms": 603.32,
+        "heatmap_filename": "6f377723aa854009b7694fa919474167.png",
+        "agent_research": {
+            "status": "baseline_normal",
+            "tumor_class": "No Tumor",
+            "confidence": 1.0,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": false,
+            "clinical_summary": "Reassuring baseline neuro-imaging findings: No intracranial mass lesion, abnormal focal enhancement, or acute space-occupying neoplasm detected on MRI. Standard neurological wellness guidelines apply. Follow-up is recommended only if persistent focal neurological deficits or severe cephalalgia arise.",
+            "articles": [
+                {
+                    "title": "Research malpractice and the issue of incidental findings",
+                    "snippet": "Human subject research involving brain imaging is likely to reveal significant incidental findings of abnormal brain morphology.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/18547205/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Disclosing incidental findings in brain research: the rights ...",
+                    "snippet": "To identify ethical concerns and fill existing gaps, we conducted a comprehensive review of papers that focused explicitly on the discovery of IFs in minors.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/24006134/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Impact of Incidental Findings on Neuroimaging Research ...",
+                    "snippet": "Incidental findings are not uncommon,1\u20134 ranging from 0.2% to 1.6% for incidentally found brain tumors within the study population, or vascular abnormalities,",
+                    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7051757/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Are incidental findings on brain magnetic resonance ...",
+                    "snippet": "We report a higher prevalence of intracranial incidental findings in children with developmental delay as compared with those children with ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/20558674/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [],
+            "queries_executed": [
+                "normal brain MRI incidental findings clinical guidelines PubMed"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-09T20:53:42.773600+00:00"
+        },
+        "probabilities": {
+            "glioma": 6.816381487029233e-11,
+            "meningioma": 4.066964010007723e-08,
+            "notumor": 1.0,
+            "pituitary": 1.3756639057060926e-13
+        },
+        "accession_id": "ACC-20261009-301689",
+        "region": "Jaipur"
     }
 ]

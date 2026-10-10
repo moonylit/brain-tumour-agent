@@ -46,10 +46,12 @@ describe("Page Integration (app/page.tsx)", () => {
   it("renders all top-level landing page sections without crashing", async () => {
     render(<Home />);
 
-    // Navbar
+    // 1. Sticky Header
     expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
+    expect(screen.getByText("API Online")).toBeInTheDocument();
+    expect(screen.getByLabelText("Patient Selector")).toBeInTheDocument();
 
-    // Hero section
+    // 2. Hero Section
     expect(
       screen.getByText("AI Powered MRI Classification"),
     ).toBeInTheDocument();
@@ -57,34 +59,27 @@ describe("Page Integration (app/page.tsx)", () => {
       screen.getByRole("heading", { level: 1, name: /Brain Tumour/i }),
     ).toBeInTheDocument();
 
-    // Upload section
+    // 3. Core Action Grid
     expect(screen.getByText("Upload MRI Scan")).toBeInTheDocument();
+    expect(screen.getByText("Geographic Referral Routing")).toBeInTheDocument();
 
-    // Dedicated Evaluation section
-    expect(screen.getByText("Model Evaluation")).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Confusion Matrix" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "ROC Curve" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Precision-Recall" })).toBeInTheDocument();
-
-    // Features section
+    // 5. EHR Platform (Patient Trajectory)
     expect(
-      screen.getByRole("heading", { level: 2, name: /Features/i }),
+      screen.getByText(/Patient Profile: Eleanor Vance — Longitudinal Tumor Trajectory/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Fast Prediction")).toBeInTheDocument();
-    expect(screen.getByText("Explainable AI")).toBeInTheDocument();
-
-    // Stats section
     expect(
-      screen.getByText("Prediction Statistics & Analytics"),
+      screen.getByText(/Volumetric Tumor Area Over Time/i),
     ).toBeInTheDocument();
 
-    // History section (inside UploadCard)
-    expect(screen.getByText("Prediction History")).toBeInTheDocument();
+    // 6. System Architecture Pipeline
+    expect(screen.getByText("System Architecture & Pipeline")).toBeInTheDocument();
+    expect(screen.getByText("ResNet-50 Deep Learning Model")).toBeInTheDocument();
+    expect(screen.getByText("Gradient-Weighted Activation Maps")).toBeInTheDocument();
+    expect(screen.getByText("Geospatial Decision Agent")).toBeInTheDocument();
 
-    // Footer
+    // 7. Footer
     expect(
-      screen.getByText(/Built with Next\.js • FastAPI • TensorFlow • ResNet50/i),
+      screen.getByText("Built for Autonomous Clinical Triage"),
     ).toBeInTheDocument();
-    expect(screen.getByText("© 2026 BrainTumourAI")).toBeInTheDocument();
   });
 });

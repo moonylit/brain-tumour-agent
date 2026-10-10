@@ -3,12 +3,8 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 import UploadCard from "@/components/UploadCard";
-import EvaluationCard from "@/components/EvaluationCard";
-import Features from "@/components/Features";
-import Stats from "@/components/Stats";
-import Footer from "@/components/Footer";
+import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
@@ -27,30 +23,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
+      {/* 1. THE STICKY HEADER */}
       <Navbar
         activePatient={activePatient}
         onSelectPatient={setActivePatient}
         patients={patients}
         onAddNewPatient={handleAddNewPatient}
       />
-      <div className="flex-1 flex flex-col space-y-12 pb-16">
-        <Hero />
-        <PatientTrajectoryCard activePatient={activePatient} />
-        <UploadCard region={region} onRegionChange={setRegion} />
-        <EvaluationCard />
-        <Features />
-        <Stats />
 
-        {/* System Architecture & Pipeline */}
+      <div className="flex-1 flex flex-col gap-16 pb-16">
+        {/* 2. THE HERO SECTION */}
+        <Hero />
+
+        {/* 3. THE CORE ACTION GRID & 4. THE DIAGNOSTIC RESULTS */}
+        <UploadCard region={region} onRegionChange={setRegion} />
+
+        {/* 5. THE EHR PLATFORM (Patient Trajectory) */}
+        <PatientTrajectoryCard activePatient={activePatient} />
+
+        {/* 6. THE SYSTEM ARCHITECTURE PIPELINE */}
         <section id="pipeline" className="w-full">
-          <h2 className="text-3xl font-extrabold text-slate-900 mt-24 mb-4 text-center">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-4 text-center">
             System Architecture &amp; Pipeline
           </h2>
           <p className="text-lg text-slate-600 text-center max-w-2xl mx-auto mb-12">
             A transparent breakdown of the data flow and machine learning models powering the NeuroAgent engine.
           </p>
 
-          <div className="relative flex flex-col gap-8 max-w-4xl mx-auto px-4 mb-24">
+          <div className="relative flex flex-col gap-8 max-w-4xl mx-auto px-4">
             <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-emerald-200"></div>
 
             {/* Step 1: Classification Engine */}
@@ -115,7 +115,11 @@ export default function Home() {
           </div>
         </section>
       </div>
-      <Footer />
+
+      {/* 7. FOOTER */}
+      <footer className="w-full py-8 text-center text-slate-500 text-sm mt-12 border-t border-slate-200">
+        Built for Autonomous Clinical Triage
+      </footer>
     </main>
   );
 }
