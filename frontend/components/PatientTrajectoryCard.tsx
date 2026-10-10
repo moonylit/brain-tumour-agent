@@ -41,9 +41,9 @@ export function getDynamicTrajectoryData(patientName: string) {
 
   // Patient profile specifics
   let baseAnchor = 8900;
-  let mrn = "MRN-84920";
-  let diagnosis = "Glioblastoma Multiforme";
-  let stage = "WHO Grade IV (IDH-wildtype)";
+  let mrn = "REC-ACTIVE";
+  let diagnosis = "Active Longitudinal Tracking";
+  let stage = "Standard Clinical Protocol";
   let baselineFactor = 0.1348;
   let midFactor = 0.382;
   let proj1Factor = 1.5955;
@@ -186,7 +186,7 @@ export default function PatientTrajectoryCard({
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
                 <UserCheck className="h-3.5 w-3.5" />
-                EHR Integrated
+                Record Validated
               </span>
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
                 {mrn}
@@ -368,14 +368,14 @@ export default function PatientTrajectoryCard({
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-500">Clinical Protocol:</span>
-              <span className="font-semibold text-blue-700">Resection Staging</span>
+              <span className="font-semibold text-blue-700">Surveillance</span>
             </div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-800 flex items-start gap-2.5">
             <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong>High Growth Velocity:</strong> Tumor volume acceleration triggers immediate clinical triage and automated SerpApi neuro-oncology referral routing below.
+              <strong>Volumetric Acceleration:</strong> Tumor area variance triggers automated SerpApi neuro-oncology referral routing below.
             </p>
           </div>
         </div>

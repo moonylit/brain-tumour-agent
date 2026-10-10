@@ -8,7 +8,6 @@ import {
 } from "@/lib/api";
 
 import PredictionCard from "./PredictionCard";
-import HistoryCard from "./HistoryCard";
 import RegionSelector from "./RegionSelector";
 import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
 
@@ -286,11 +285,6 @@ export default function UploadCard({
           />
         </div>
       )}
-
-      {/* History Component Embed */}
-      <div className="max-w-7xl mx-auto mt-10 px-4">
-        <HistoryCard refreshTrigger={refreshTrigger} />
-      </div>
     </section>
   );
 }

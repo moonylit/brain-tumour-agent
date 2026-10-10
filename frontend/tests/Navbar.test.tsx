@@ -23,7 +23,8 @@ describe("Navbar Component", () => {
 
     render(<Navbar />);
 
-    expect(screen.getByText("POWERED BY")).toBeInTheDocument();
+    expect(screen.getByText(/Powered By/i)).toBeInTheDocument();
+    expect(screen.getByText("SerpApi")).toBeInTheDocument();
     expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Upload" })).toHaveAttribute(
       "href",
@@ -32,6 +33,10 @@ describe("Navbar Component", () => {
     expect(screen.getByRole("link", { name: "History" })).toHaveAttribute(
       "href",
       "#history",
+    );
+    expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
+      "href",
+      "#pipeline",
     );
   });
 
@@ -43,9 +48,6 @@ describe("Navbar Component", () => {
     render(<Navbar />);
 
     expect(await screen.findByText("API Online")).toBeInTheDocument();
-    const statusPill = screen.getByTitle("Backend connected and healthy");
-    expect(statusPill).toBeInTheDocument();
-    expect(statusPill).toHaveClass("text-emerald-400");
   });
 
   it("displays 'API Offline' status pill when backend health check fails", async () => {
@@ -56,9 +58,6 @@ describe("Navbar Component", () => {
     render(<Navbar />);
 
     expect(await screen.findByText("API Offline")).toBeInTheDocument();
-    const statusPill = screen.getByTitle("Backend is currently unreachable");
-    expect(statusPill).toBeInTheDocument();
-    expect(statusPill).toHaveClass("text-slate-400");
   });
 
   it("cleans up interval timer when unmounted", () => {

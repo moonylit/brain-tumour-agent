@@ -13,8 +13,8 @@ describe("PatientTrajectoryCard Component", () => {
         /Patient Profile: Eleanor Vance — Longitudinal Tumor Trajectory/i
       )
     ).toBeInTheDocument();
-    expect(screen.getByText("EHR Integrated")).toBeInTheDocument();
-    expect(screen.getByText("Glioblastoma Multiforme")).toBeInTheDocument();
+    expect(screen.getByText("Record Validated")).toBeInTheDocument();
+    expect(screen.getByText("Active Longitudinal Tracking")).toBeInTheDocument();
   });
 
   it("renders patient profile heading for Marcus Webb with specific diagnosis", () => {

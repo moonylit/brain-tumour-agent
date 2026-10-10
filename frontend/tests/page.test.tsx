@@ -43,13 +43,13 @@ describe("Page Integration (app/page.tsx)", () => {
     vi.clearAllMocks();
   });
 
-  it("renders all top-level landing page sections without crashing", async () => {
+  it("renders all top-level landing page sections in the standardized order without crashing", async () => {
     render(<Home />);
 
-    // 1. Sticky Header
+    // 1. Header (SerpApi / Nav / BrainTumourAI)
     expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
+    expect(screen.getByText("SerpApi")).toBeInTheDocument();
     expect(screen.getByText("API Online")).toBeInTheDocument();
-    expect(screen.getByLabelText("Patient Selector")).toBeInTheDocument();
 
     // 2. Hero Section
     expect(
@@ -63,21 +63,18 @@ describe("Page Integration (app/page.tsx)", () => {
     expect(screen.getByText("Upload MRI Scan")).toBeInTheDocument();
     expect(screen.getByText("Geographic Referral Routing")).toBeInTheDocument();
 
-    // 5. EHR Platform (Patient Trajectory)
+    // 4. Discreet Collapsible History Accordion
     expect(
-      screen.getByText(/Patient Profile: Eleanor Vance — Longitudinal Tumor Trajectory/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Volumetric Tumor Area Over Time/i),
+      screen.getByText(/View Patient EHR & Prediction History/i),
     ).toBeInTheDocument();
 
-    // 6. System Architecture Pipeline
+    // 5. System Architecture Pipeline
     expect(screen.getByText("System Architecture & Pipeline")).toBeInTheDocument();
     expect(screen.getByText("ResNet-50 Deep Learning Model")).toBeInTheDocument();
     expect(screen.getByText("Gradient-Weighted Activation Maps")).toBeInTheDocument();
     expect(screen.getByText("Geospatial Decision Agent")).toBeInTheDocument();
 
-    // 7. Footer
+    // 6. Footer
     expect(
       screen.getByText("Built for Autonomous Clinical Triage"),
     ).toBeInTheDocument();

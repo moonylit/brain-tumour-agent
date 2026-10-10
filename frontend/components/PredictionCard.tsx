@@ -90,16 +90,19 @@ export default function PredictionCard({
           </h2>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span
-            className={`rounded-2xl border-2 px-6 py-3 text-lg sm:text-xl font-black tracking-wide shadow-md ${
-              isNoTumor
-                ? "border-emerald-300 bg-emerald-100 text-emerald-900"
-                : "border-rose-300 bg-rose-100 text-rose-900"
-            }`}
-          >
-            {formattedPrediction}
+        <div
+          className={`overflow-hidden p-6 rounded-2xl border-2 flex flex-col items-center justify-center text-center shadow-md min-w-[220px] max-w-sm w-full ${
+            isNoTumor
+              ? "border-emerald-300 bg-emerald-50/80 text-emerald-900"
+              : "border-purple-200 bg-purple-50/50 text-slate-800"
+          }`}
+        >
+          <span className="text-xs font-bold text-purple-600 tracking-widest uppercase">
+            Identified Class
           </span>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tight break-words text-center w-full mt-2">
+            {formattedPrediction}
+          </h2>
         </div>
       </div>
 

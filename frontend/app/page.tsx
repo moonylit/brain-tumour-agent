@@ -4,45 +4,41 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
-import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
-import Stats from "@/components/Stats";
+import HistoryCard from "@/components/HistoryCard";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
-  const [activePatient, setActivePatient] = useState("Eleanor Vance");
-  const [patients, setPatients] = useState<string[]>([
-    "Eleanor Vance",
-    "Marcus Webb",
-  ]);
-
-  function handleAddNewPatient(name: string) {
-    if (!patients.includes(name)) {
-      setPatients((prev) => [...prev, name]);
-    }
-    setActivePatient(name);
-  }
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
-      {/* 1. THE STICKY HEADER */}
-      <Navbar
-        activePatient={activePatient}
-        onSelectPatient={setActivePatient}
-        patients={patients}
-        onAddNewPatient={handleAddNewPatient}
-      />
+      {/* 1. Header (SerpApi / Nav / BrainTumourAI) */}
+      <Navbar />
 
       <div className="flex-1 flex flex-col gap-16 pb-16">
-        {/* 2. THE HERO SECTION */}
+        {/* 2. Hero Title & Subtitle */}
         <Hero />
 
-        {/* 3. THE CORE ACTION GRID & 4. THE DIAGNOSTIC RESULTS */}
+        {/* 3. Core Grid: Upload Box (Left) + SerpApi Maps Iframe (Right) */}
+        {/* 4. Dynamic Results Grid (Grad-CAM Images + Model Confidence Metrics) */}
         <UploadCard region={region} onRegionChange={setRegion} />
 
-        {/* 5. THE EHR PLATFORM (Patient Trajectory) */}
-        <PatientTrajectoryCard activePatient={activePatient} />
+        {/* 5. Collapsible <details> History Accordion */}
+        <details
+          id="history"
+          className="group w-full max-w-7xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-sm"
+        >
+          <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-lg font-bold text-slate-800 hover:text-blue-600 transition-colors">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📊</span> View Patient EHR &amp; Prediction History
+            </div>
+            <span className="transition group-open:rotate-180">▼</span>
+          </summary>
+          <div className="p-6 border-t border-slate-200">
+            <HistoryCard />
+          </div>
+        </details>
 
-        {/* 6. THE SYSTEM ARCHITECTURE PIPELINE */}
+        {/* 6. Vertical System Architecture Pipeline */}
         <section id="pipeline" className="w-full">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-4 text-center">
             System Architecture &amp; Pipeline
@@ -115,12 +111,9 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Prediction Statistics & Analytics */}
-        <Stats />
       </div>
 
-      {/* 7. FOOTER */}
+      {/* 7. Footer */}
       <footer className="w-full py-8 text-center text-slate-500 text-sm mt-12 border-t border-slate-200">
         Built for Autonomous Clinical Triage
       </footer>
