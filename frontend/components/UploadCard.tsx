@@ -17,11 +17,13 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 interface UploadCardProps {
   region?: string;
   onRegionChange?: (region: string) => void;
+  onPrediction?: (result: PredictionResponse) => void;
 }
 
 export default function UploadCard({
   region: propRegion,
   onRegionChange,
+  onPrediction,
 }: UploadCardProps = {}) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [localRegion, setLocalRegion] = useState("Jaipur");
@@ -99,11 +101,14 @@ export default function UploadCard({
           : await predictMRI(selectedImage, targetRegion);
 
       setResult(predictionData);
+      onPrediction?.(predictionData);
 
       // Trigger history & stats refresh
       setRefreshTrigger((prev) => prev + 1);
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("new-prediction"));
+        window.dispatchEvent(
+          new CustomEvent("new-prediction", { detail: predictionData })
+        );
       }
     } catch (error: unknown) {
       console.error("Prediction failed:", error);
@@ -139,7 +144,7 @@ export default function UploadCard({
               </div>
 
               <label
-                htmlFor="mri-file-input"
+                htmlFor="mri-upload-input"
                 className="cursor-pointer block text-base sm:text-lg font-bold text-slate-800 hover:text-blue-700"
               >
                 <span className="text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-700">
@@ -150,7 +155,7 @@ export default function UploadCard({
 
               <input
                 type="file"
-                id="mri-file-input"
+                id="mri-upload-input"
                 accept="image/jpeg,image/png"
                 onChange={handleImageChange}
                 className="mt-4 block w-full max-w-xs mx-auto cursor-pointer text-xs sm:text-sm text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-bold file:text-white hover:file:bg-blue-700 shadow-sm transition"

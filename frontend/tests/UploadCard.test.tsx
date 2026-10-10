@@ -35,7 +35,7 @@ describe("UploadCard Component", () => {
 
   it("validates and rejects unsupported file formats", async () => {
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const invalidFile = new File(["dummy text"], "notes.txt", {
       type: "text/plain",
@@ -51,7 +51,7 @@ describe("UploadCard Component", () => {
 
   it("validates and rejects empty (0-byte) files", async () => {
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
 
@@ -64,7 +64,7 @@ describe("UploadCard Component", () => {
 
   it("validates and rejects files larger than 10MB", async () => {
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const largeFile = new File(["a".repeat(1024)], "huge.png", {
       type: "image/png",
@@ -80,7 +80,7 @@ describe("UploadCard Component", () => {
 
   it("allows dismissing error banner via close button", async () => {
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
     fireEvent.change(input, { target: { files: [emptyFile] } });
@@ -99,7 +99,7 @@ describe("UploadCard Component", () => {
 
   it("shows image preview and Analyze button when valid image is selected", async () => {
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const validFile = new File(["valid-content"], "brain_mri.jpg", {
       type: "image/jpeg",
@@ -137,7 +137,7 @@ describe("UploadCard Component", () => {
     const dispatchEventSpy = vi.spyOn(window, "dispatchEvent");
 
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const validFile = new File(["sample-scan"], "scan.png", {
       type: "image/png",
@@ -176,7 +176,7 @@ describe("UploadCard Component", () => {
     );
 
     render(<UploadCard />);
-    const input = document.getElementById("mri-file-input") as HTMLInputElement;
+    const input = (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
 
     const validFile = new File(["valid"], "scan.jpg", { type: "image/jpeg" });
     fireEvent.change(input, { target: { files: [validFile] } });

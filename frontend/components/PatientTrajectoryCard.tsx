@@ -14,9 +14,9 @@ import {
 import {
   Activity,
   TrendingUp,
-  UserCheck,
   ShieldAlert,
 } from "lucide-react";
+
 
 
 export interface TrajectoryDataPoint {
@@ -140,12 +140,14 @@ export function getDynamicTrajectoryData(patientName: string) {
 interface PatientTrajectoryCardProps {
   activePatient?: string;
   activeDemoPatient?: string;
+  predictionResult?: string | null;
   onSelectPatient?: (patient: string) => void;
 }
 
 export default function PatientTrajectoryCard({
   activePatient,
   activeDemoPatient: activeDemoPatientProp,
+  predictionResult,
   onSelectPatient,
 }: PatientTrajectoryCardProps) {
   const [mounted, setMounted] = useState(false);
@@ -181,20 +183,19 @@ export default function PatientTrajectoryCard({
       {/* Card Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
         <div className="w-full">
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
-              <UserCheck className="h-3.5 w-3.5" />
-              Record Validated
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
-              {mrn}
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100">
-              {diagnosis}
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-slate-600 bg-slate-100">
-              {stage}
-            </span>
+          <div className="flex flex-wrap gap-3 mb-6">
+            {activeDemoPatient !== "Custom" ? (
+              <>
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Record Validated</span>
+                <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">MRN-DEMO</span>
+                <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">Historical Demo Data</span>
+              </>
+            ) : predictionResult ? (
+              <>
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">New Record Active</span>
+                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">{predictionResult}</span>
+              </>
+            ) : null}
           </div>
 
           <div className="mb-6 flex items-center gap-4 flex-wrap">
@@ -225,21 +226,30 @@ export default function PatientTrajectoryCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
-            <ShieldAlert className="h-4 w-4 text-amber-600" />
-            Active Surveillance
-          </span>
-        </div>
+        {activeDemoPatient !== "Custom" && (
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
+              <ShieldAlert className="h-4 w-4 text-amber-600" />
+              Active Surveillance
+            </span>
+          </div>
+        )}
       </div>
 
-
       {activeDemoPatient === "Custom" ? (
-        <div className="w-full h-64 flex items-center justify-center bg-slate-50 border border-dashed border-slate-300 rounded-xl my-4">
+        <div className="w-full h-64 flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-3">
+            <span className="text-xl text-blue-600">⬆️</span>
+          </div>
+          <p className="text-slate-700 font-bold mb-1 text-lg">Upload First MRI Scan</p>
+          <p className="text-slate-400 text-sm font-medium mb-6">Initialize trajectory for new patient</p>
 
-          <p className="text-slate-500 font-medium">
-            Upload historical MRI scans to generate longitudinal trajectory for new patient.
-          </p>
+          <button 
+            onClick={() => (document.getElementById('mri-upload-input') || document.getElementById('mri-file-input'))?.click()} 
+            className="px-8 py-3 bg-blue-600 text-white text-sm font-bold uppercase tracking-wider rounded-full hover:bg-blue-700 shadow-md transition-all active:scale-95"
+          >
+            Select MRI File
+          </button>
         </div>
       ) : (
       /* Main 2-Column EHR Trajectory Grid */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
@@ -10,6 +10,19 @@ import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
   const [activeDemoPatient, setActiveDemoPatient] = useState("Eleanor Vance");
+  const [predictionResult, setPredictionResult] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleNewPrediction = (e: Event) => {
+      const customEvent = e as CustomEvent<{ prediction?: string }>;
+      if (customEvent.detail?.prediction) {
+        setPredictionResult(customEvent.detail.prediction);
+      }
+    };
+    window.addEventListener("new-prediction", handleNewPrediction);
+    return () =>
+      window.removeEventListener("new-prediction", handleNewPrediction);
+  }, []);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
@@ -22,7 +35,11 @@ export default function Home() {
 
         {/* 3. Core Grid: Upload Box (Left) + SerpApi Maps Iframe (Right) */}
         {/* 4. Dynamic Results Grid (Grad-CAM Images + Model Confidence Metrics) */}
-        <UploadCard region={region} onRegionChange={setRegion} />
+        <UploadCard
+          region={region}
+          onRegionChange={setRegion}
+          onPrediction={(res) => setPredictionResult(res.prediction)}
+        />
 
         {/* Restored Full ML Statistics Section */}
         <section
@@ -89,6 +106,7 @@ export default function Home() {
           <div className="p-6 border-t border-slate-200 space-y-8">
             <PatientTrajectoryCard
               activePatient={activeDemoPatient}
+              predictionResult={predictionResult}
               onSelectPatient={setActiveDemoPatient}
             />
             <HistoryCard />

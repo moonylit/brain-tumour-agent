@@ -6,24 +6,26 @@ import PatientTrajectoryCard, {
 } from "../components/PatientTrajectoryCard";
 
 describe("PatientTrajectoryCard Component", () => {
-  it("renders patient profile heading for Eleanor Vance", () => {
+  it("renders patient profile heading and demo badges for Eleanor Vance", () => {
     render(<PatientTrajectoryCard activePatient="Eleanor Vance" />);
 
     expect(
       screen.getByText(/Patient Profile: Eleanor Vance/i)
     ).toBeInTheDocument();
     expect(screen.getByText("Record Validated")).toBeInTheDocument();
-    expect(screen.getByText("Active Longitudinal Tracking")).toBeInTheDocument();
+    expect(screen.getByText("MRN-DEMO")).toBeInTheDocument();
+    expect(screen.getByText("Historical Demo Data")).toBeInTheDocument();
   });
 
-  it("renders patient profile heading for Marcus Webb with specific diagnosis", () => {
+  it("renders patient profile heading for Marcus Webb with demo badges", () => {
     render(<PatientTrajectoryCard activePatient="Marcus Webb" />);
 
     expect(
       screen.getByText(/Patient Profile: Marcus Webb/i)
     ).toBeInTheDocument();
-    expect(screen.getByText("Oligodendroglioma")).toBeInTheDocument();
-    expect(screen.getByText("MRN-49103")).toBeInTheDocument();
+    expect(screen.getByText("Record Validated")).toBeInTheDocument();
+    expect(screen.getByText("MRN-DEMO")).toBeInTheDocument();
+    expect(screen.getByText("Historical Demo Data")).toBeInTheDocument();
   });
 
   it("dynamically generates trajectory dates relative to current calendar without hardcoding", () => {
@@ -57,20 +59,58 @@ describe("PatientTrajectoryCard Component", () => {
     expect(trajectoryData[4].predicted).toBe(21000);
   });
 
-  it("renders custom text input and placeholder when activePatient is Custom", () => {
+  it("renders custom text input and interactive upload dropzone when activePatient is Custom without prediction", () => {
     render(<PatientTrajectoryCard activePatient="Custom" />);
 
+    // Custom patient input
     const input = screen.getByPlaceholderText("Enter New Patient Name...");
     expect(input).toBeInTheDocument();
     fireEvent.change(input, { target: { value: "John Doe" } });
     expect(input).toHaveValue("John Doe");
 
+    // Badges must be hidden / absent
+    expect(screen.queryByText("Record Validated")).not.toBeInTheDocument();
+    expect(screen.queryByText("MRN-DEMO")).not.toBeInTheDocument();
+    expect(screen.queryByText("Historical Demo Data")).not.toBeInTheDocument();
+    expect(screen.queryByText("New Record Active")).not.toBeInTheDocument();
+
+    // Dropzone content
+    expect(screen.getByText("Upload First MRI Scan")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Upload historical MRI scans to generate longitudinal trajectory for new patient."
-      )
+      screen.getByText("Initialize trajectory for new patient")
     ).toBeInTheDocument();
+    const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
+    expect(uploadBtn).toBeInTheDocument();
   });
+
+  it("renders live prediction badges when activePatient is Custom and predictionResult is present", () => {
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        predictionResult="Meningioma"
+      />
+    );
+
+    expect(screen.getByText("New Record Active")).toBeInTheDocument();
+    expect(screen.getByText("Meningioma")).toBeInTheDocument();
+    expect(screen.queryByText("MRN-DEMO")).not.toBeInTheDocument();
+  });
+
+  it("triggers file input click when clicking Select MRI File button", () => {
+    const hiddenInput = document.createElement("input");
+    hiddenInput.type = "file";
+    hiddenInput.id = "mri-upload-input";
+    const clickSpy = vi.spyOn(hiddenInput, "click");
+    document.body.appendChild(hiddenInput);
+
+    render(<PatientTrajectoryCard activePatient="Custom" />);
+    const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
+    fireEvent.click(uploadBtn);
+
+    expect(clickSpy).toHaveBeenCalled();
+    document.body.removeChild(hiddenInput);
+  });
+
 
   it("renders Historical Scans Log gallery with scans and follow-up button for demo patients", () => {
     render(<PatientTrajectoryCard activePatient="Eleanor Vance" />);
