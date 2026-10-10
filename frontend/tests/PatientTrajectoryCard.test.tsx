@@ -366,8 +366,36 @@ describe("PatientTrajectoryCard Component", () => {
     expect(setDirectoryMock).toHaveBeenCalled();
     expect(onSelect).toHaveBeenCalledWith("David Miller");
   });
+  it("renders Live Clinical Session badge and custom scans for a live registered patient without demo data", () => {
+    const mockScans = [
+      {
+        date: "Oct 10",
+        area: 3100,
+        forecastArea: null,
+        type: "Observed",
+        imagePreview: "blob:http://localhost/sarah_scan.png",
+        prediction: "Glioblastoma",
+      },
+    ];
+
+    render(
+      <PatientTrajectoryCard
+        activePatient="Sarah Connor"
+        customScans={mockScans}
+      />
+    );
+
+    // Live badges
+    expect(screen.getByText("Record Validated")).toBeInTheDocument();
+    expect(screen.getByText("Live Clinical Session")).toBeInTheDocument();
+    expect(screen.queryByText("MRN-DEMO")).not.toBeInTheDocument();
+    expect(screen.queryByText("Historical Demo Data")).not.toBeInTheDocument();
+
+    // Patient Profile Heading
+    expect(screen.getByText(/Patient Profile: Sarah Connor/i)).toBeInTheDocument();
+
+    // Renders custom scans, NOT historical scans log
+    expect(screen.getByText("Patient MRI Log")).toBeInTheDocument();
+    expect(screen.queryByText("Historical Scans Log")).not.toBeInTheDocument();
+  });
 });
-
-
-
-

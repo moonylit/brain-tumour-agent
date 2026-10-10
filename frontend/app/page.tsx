@@ -148,7 +148,7 @@ export default function Home() {
           <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-lg font-bold text-slate-800 hover:text-blue-600 transition-colors">
             <div className="flex items-center gap-3 flex-wrap">
               <span>View Patient EHR &amp; Prediction History</span>{" "}
-              {activeDemoPatient !== "Custom" && (
+              {(activeDemoPatient === "Eleanor Vance" || activeDemoPatient === "Marcus Brody") && (
                 <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded ml-3">
                   Demo Data
                 </span>

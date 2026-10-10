@@ -284,28 +284,43 @@ export default function PatientTrajectoryCard({
     anchorDate,
   } = patientData;
 
+  const isDemoPatient = activeDemoPatient === 'Eleanor Vance' || activeDemoPatient === 'Marcus Brody' || activeDemoPatient === 'Marcus Webb';
+  const isCustomEmptyState = activeDemoPatient === 'Custom';
+  const isLivePatient = !isDemoPatient && !isCustomEmptyState;
+
   return (
     <div className="w-full">
       {/* Card Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
         <div className="w-full">
-          <div className="flex flex-wrap gap-3 mb-6">
-            {activeDemoPatient !== "Custom" ? (
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            {!isCustomEmptyState && (
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">Record Validated</span>
+            )}
+
+            {isDemoPatient && (
               <>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Record Validated</span>
-                <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">MRN-DEMO</span>
-                <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">Historical Demo Data</span>
+                <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold">MRN-DEMO</span>
+                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">Historical Demo Data</span>
               </>
-            ) : predictionResult ? (
+            )}
+
+            {isLivePatient && (
+              <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold border border-emerald-200">
+                Live Clinical Session
+              </span>
+            )}
+
+            {isCustomEmptyState && predictionResult && (
               <>
                 <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">New Record Active</span>
                 <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">{predictionResult}</span>
               </>
-            ) : null}
+            )}
           </div>
 
           <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
-            {activeDemoPatient === 'Custom' ? (
+            {isCustomEmptyState ? (
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full mb-8">
                 <input 
                   type="text" 
@@ -372,14 +387,14 @@ export default function PatientTrajectoryCard({
                 )}
               </div>
             ) : (
-              <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
+              <h2 className="text-3xl font-extrabold text-slate-900 mb-8">
                 Patient Profile: {activeDemoPatient}
-              </h3>
+              </h2>
             )}
           </div>
         </div>
 
-        {activeDemoPatient !== "Custom" && (
+        {isDemoPatient && (
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
               <ShieldAlert className="h-4 w-4 text-amber-600" />
@@ -389,7 +404,7 @@ export default function PatientTrajectoryCard({
         )}
       </div>
 
-      {activeDemoPatient === "Custom" && customScans.length === 0 ? (
+      {(isCustomEmptyState || isLivePatient) && customScans.length === 0 ? (
         <div 
           onDragOver={(e) => handleDragOver(e, setIsDraggingEHR)}
           onDragLeave={(e) => handleDragLeave(e, setIsDraggingEHR)}
@@ -448,7 +463,7 @@ export default function PatientTrajectoryCard({
             Select MRI File
           </button>
         </div>
-      ) : activeDemoPatient === "Custom" && customScans.length > 0 ? (
+      ) : (isCustomEmptyState || isLivePatient) && customScans.length > 0 ? (
         <div className="w-full">
           <input 
             type="file" 
@@ -640,7 +655,7 @@ export default function PatientTrajectoryCard({
             </div>
           </div>
         </div>
-      ) : (
+      ) : isDemoPatient ? (
       /* Main 2-Column EHR Trajectory Grid */
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Left/Center (Col-Span-2): Recharts LineChart */}
@@ -819,8 +834,7 @@ export default function PatientTrajectoryCard({
           </button>
         </div>
       </div>
-
-      )}
+      ) : null}
     </div>
   );
 }
