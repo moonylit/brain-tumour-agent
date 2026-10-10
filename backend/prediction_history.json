@@ -1327,5 +1327,217 @@
         },
         "accession_id": "ACC-20261010-997B10",
         "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T16:50:46.420588",
+        "filename": "d4c2e5f1-fbb5-4fc9-9874-ae74d01dbd78.jpg",
+        "prediction": "glioma",
+        "confidence": 0.9765565395355225,
+        "processing_time_ms": 1114.56,
+        "heatmap_filename": "6854d3300a3f4a7ea43524a62f5abd42.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Glioma",
+            "confidence": 0.9766,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Glioma detected with 97.7% confidence. High-priority neuro-oncology escalation indicated in the Jaipur referral catchment. Immediate multidisciplinary evaluation is recommended to assess for maximal safe surgical resection, molecular neuropathology (IDH1/2 mutation & 1p/19q co-deletion profiling), and adjuvant chemoradiotherapy planning.",
+            "articles": [
+                {
+                    "title": "NCCN Clinical Practice Guidelines in Oncology: Central Nervous System Cancers (Glioma)",
+                    "snippet": "First-line standard of care involves maximal safe surgical resection followed by concurrent temozolomide (TMZ) chemoradiotherapy (Stupp protocol) and tumor-treating fields (TTFields).",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/33227768/",
+                    "source": "National Comprehensive Cancer Network (NCCN) / PubMed"
+                },
+                {
+                    "title": "Targeted Molecular Therapies & IDH Inhibitors in Residual Gliomas",
+                    "snippet": "Pathological assessment of IDH1/2 mutation status and 1p/19q co-deletion is critical. Vorasidenib significantly delays disease progression in residual IDH-mutant lower-grade and diffuse gliomas.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/37272516/",
+                    "source": "New England Journal of Medicine (NEJM)"
+                },
+                {
+                    "title": "EANO guidelines on the diagnosis and treatment of diffuse ...",
+                    "snippet": "EANO provides recommendations for the diagnosis, treatment and follow-up of adult patients with diffuse gliomas.",
+                    "url": "https://www.nature.com/articles/s41571-020-00447-z",
+                    "source": "Nature"
+                },
+                {
+                    "title": "SEOM clinical guideline of diagnosis and management of low ...",
+                    "snippet": "Radiation therapy is part of the standard management for low-grade glioma. C Follow-up -Follow-up with FLAIR or T2-weighted MRI is the standard of care. These ...",
+                    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5785601/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Radiotherapy of high-grade gliomas: current standards and ...",
+                    "snippet": "The current standards in radiotherapy of high-grade gliomas (HGG) are based on anatomic imaging techniques, usually computed tomography (CT) scanning and ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/24384237/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Management of glioma - Evidence reviews for the ... - NCBI",
+                    "snippet": "Management of low-grade glioma remains controversial, with large variations in practice. Areas of controversy include the role and timing for radiotherapy and ...",
+                    "url": "https://www.ncbi.nlm.nih.gov/books/NBK570011/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "RHL Renova Cancer Centre | Cancer Hospital in Jaipur",
+                    "rating": 4.9,
+                    "address": "RHL Renova Cancer Centre, Hospital Rd, opp. Jaipuria Hospital, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 350 6177",
+                    "link": "http://www.renovahospitals.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre",
+                    "rating": 4.7,
+                    "address": "Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 84400 49999",
+                    "link": "http://www.bmchrc.org/"
+                },
+                {
+                    "name": "UM Cancer Hospital Jaipur",
+                    "rating": 4.8,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 70233 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Dr. N.C Poonia - Neuro Care Hospital & Research Centre Pvt. Ltd. - Best Neurosurgeon in Jaipur, Rajasthan",
+                    "rating": 4.4,
+                    "address": "1/611, Sector 2, Sector-1, Vidyadhar Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302039, India",
+                    "phone": "+91 141 223 6712",
+                    "link": "http://www.neurocarehospital.com/"
+                },
+                {
+                    "name": "Priyush Neuro & Super Speciality Hospital",
+                    "rating": 4.5,
+                    "address": "2/154, B2 Bypass Rd, SFS Manasarovar, Hans Vihar, Mansarovar, Jaipur, Rajasthan 302020, India",
+                    "phone": "+91 86900 99711",
+                    "link": "https://priyushhospital.com/"
+                },
+                {
+                    "name": "Manipal Hospital Jaipur",
+                    "rating": 4.9,
+                    "address": "Sikar Rd, Sector 2, Sector 5, Vidyadhar Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302039, India",
+                    "phone": "+91 91166 56540",
+                    "link": "https://www.manipalhospitals.com/jaipur/?utm_source=Organic&utm_medium=GMB&utm_campaign=website-click"
+                },
+                {
+                    "name": "Mahatma Gandhi Hospital Jaipur",
+                    "rating": 3.9,
+                    "address": "RIICO Institutional Area, Mahatma Gandhi Rd, Ricco Industrial Area, Sitapura, Jaipur, Rajasthan 302022, India",
+                    "phone": "+91 141 277 1777",
+                    "link": "https://www.mgmch.org/"
+                },
+                {
+                    "name": "Dr Umesh Khandelwal",
+                    "rating": 4.9,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 97845 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Advanced Neurology & Super Specialty Hospital",
+                    "rating": 4.3,
+                    "address": "\u092c\u094d\u0930\u0947\u0928 \u091f\u0949\u0935\u0930, D-357, Gaurav Tower Marg, near Gaurav Tower, D-Block, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "Dr. Mukesh Choudhary - MD, DM (Medical Oncology), Cancer & Blood Diseases Specialist, Best Cancer Doctor In Jaipur",
+                    "rating": 5.0,
+                    "address": "UM Cancer Hospital, VKI Road No. 2, Main, Sikar Rd, Jaipur, Rajasthan 302039, India",
+                    "phone": "+91 70233 22618",
+                    "link": "https://www.umcancerhospital.com/"
+                },
+                {
+                    "name": "Eternal Multispeciality Hospital",
+                    "rating": 4.7,
+                    "address": "3A, Jagatpura Rd, near Jawahar Circle, Chainpura, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 95491 58888",
+                    "link": "https://www.eternalhospital.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre Blood Bank",
+                    "rating": 3.6,
+                    "address": "Bhagwan Mahavir Cancer Hospital & Research Centre, Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 270 0107",
+                    "link": "http://www.bmchrc.org/"
+                },
+                {
+                    "name": "Brain Tower",
+                    "rating": 4.3,
+                    "address": "D-357, Sector 10 Rd, D-Block, Sector 4, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "JNU Main Campus (University, Hospital & Medical College)",
+                    "rating": 3.3,
+                    "address": "Agra - Jaipur Rd, near New RTO Office, Jagatpura, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 311 9000",
+                    "link": null
+                },
+                {
+                    "name": "Dr. Abhishek Pareek ( Cancer Surgeon Jaipur )",
+                    "rating": 4.9,
+                    "address": "RHL RENOVA, CANCER CENTER, opp. RAJASTHAN JAIPURIA HOSPITAL, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 95608 66506",
+                    "link": "http://www.drabhishekpareek.in/"
+                },
+                {
+                    "name": "UM Cancer Care Centre Chomu Jaipur",
+                    "rating": 5.0,
+                    "address": "Vidhya Gram Road, Jaipur - Jhunjhunu Bypass Rd, Radhaswami Bagh, Chomu, Rajasthan 303702, India",
+                    "phone": "+91 99281 45085",
+                    "link": null
+                },
+                {
+                    "name": "RHL - Rajasthan Hospital | \u0906\u0930 \u090f\u091a \u090f\u0932 - \u0930\u093e\u091c\u0938\u094d\u0925\u093e\u0928 \u0939\u0949\u0938\u094d\u092a\u093f\u091f\u0932",
+                    "rating": 4.5,
+                    "address": "Jawahar Lal Nehru Marg, opp. RAJASTHAN JAIPURIA HOSPITAL, Jai Jawan Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 272 0020",
+                    "link": "http://www.rajasthanhospital.in/"
+                },
+                {
+                    "name": "CKS Hospitals",
+                    "rating": 4.0,
+                    "address": "98A, Sikar Rd, Vishwakarma Industrial Area, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302013, India",
+                    "phone": "+91 141 331 3233",
+                    "link": "https://ckshospitals.com/"
+                },
+                {
+                    "name": "Shri ram cancer and superspeciality",
+                    "rating": 2.6,
+                    "address": "QV93+WJC, Ricco Industrial Area, Sitapura, Jaipur, Rajasthan 302022, India",
+                    "phone": null,
+                    "link": null
+                },
+                {
+                    "name": "Dr Himanshu Gupta",
+                    "rating": 4.6,
+                    "address": "Dr. Himanshu Brain and Spine Clinic, VISION TOWER, Pradhan Marg, Block B, Vidyut Abhiyanta Colony, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 96500 52767",
+                    "link": "http://www.drhimanshugupta.com/"
+                }
+            ],
+            "queries_executed": [
+                "Glioma tumor standard of care guidelines PubMed",
+                "Glioma tumor novel therapeutics clinical trials",
+                "tertiary neuro-oncology center hospital near Jaipur"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-10T11:20:38.724919+00:00"
+        },
+        "probabilities": {
+            "glioma": 0.9765565395355225,
+            "meningioma": 6.194301386130974e-05,
+            "notumor": 0.022301364690065384,
+            "pituitary": 0.0010802027536556125
+        },
+        "accession_id": "ACC-20261010-22D3FB",
+        "region": "Jaipur"
     }
 ]

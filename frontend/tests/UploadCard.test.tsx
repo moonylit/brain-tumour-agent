@@ -221,5 +221,56 @@ describe("UploadCard Component", () => {
     expect(await screen.findByAltText("MRI Preview")).toBeInTheDocument();
     expect(screen.getByText(/dropped_mri\.jpg/i)).toBeInTheDocument();
   });
+
+  it("renders manual location prompt initially and activates detection on button click", async () => {
+    render(<UploadCard />);
+
+    // Initial idle state
+    expect(screen.getByText("Location Authentication Required")).toBeInTheDocument();
+    const detectBtn = screen.getByRole("button", { name: /Detect Facility Location/i });
+    expect(detectBtn).toBeInTheDocument();
+    expect(
+      screen.getByText("Awaiting location data to compute optimal transfer routes..."),
+    ).toBeInTheDocument();
+
+    const mockGetCurrentPosition = vi.fn((success) => {
+      success({
+        coords: { latitude: 26.9124, longitude: 75.7873 },
+      });
+    });
+
+    const originalGeolocation = navigator.geolocation;
+    Object.defineProperty(navigator, "geolocation", {
+      value: { getCurrentPosition: mockGetCurrentPosition },
+      configurable: true,
+    });
+
+    const originalFetch = global.fetch;
+    global.fetch = vi.fn().mockResolvedValue({
+      json: vi.fn().mockResolvedValue({
+        address: { city: "Jaipur" },
+      }),
+    } as unknown as Response);
+
+    fireEvent.click(detectBtn);
+
+    expect(mockGetCurrentPosition).toHaveBeenCalled();
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Primary Regional Neuro-Trauma Center/i)).toBeInTheDocument();
+      },
+      { timeout: 3500 },
+    );
+
+    expect(screen.getByText(/Jaipur • Neurology Specialization/i)).toBeInTheDocument();
+
+    // Cleanup
+    Object.defineProperty(navigator, "geolocation", {
+      value: originalGeolocation,
+      configurable: true,
+    });
+    global.fetch = originalFetch;
+  });
 });
 
