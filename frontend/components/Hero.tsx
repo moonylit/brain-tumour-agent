@@ -1,15 +1,26 @@
 export default function Hero() {
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-24 pb-20 text-center">
-      {/* Subtle Badge */}
-      <div className="inline-flex items-center gap-2.5 rounded-full border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2 text-sm font-semibold text-blue-900 shadow-sm">
+      {/* Enterprise Clinical Status Badge */}
+      <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-slate-50 border border-slate-200 rounded-full shadow-sm mb-8 hover:shadow-md transition-shadow cursor-default">
+        {/* Live Pulsing Indicator */}
         <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
         </span>
-        <span>AI Powered MRI Classification</span>
-        <span className="text-blue-300">•</span>
-        <span className="font-mono text-xs font-bold text-indigo-700">ResNet-50</span>
+
+        {/* Core Value Proposition */}
+        <span className="text-sm font-extrabold text-slate-800 tracking-wide uppercase">
+          Autonomous Classification & Grad-CAM Segmentation
+        </span>
+
+        {/* Divider */}
+        <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
+
+        {/* Tech Stack Highlight */}
+        <span className="text-xs font-black text-blue-600 tracking-widest uppercase">
+          ResNet-50 Pipeline
+        </span>
       </div>
 
       {/* Main Heading */}

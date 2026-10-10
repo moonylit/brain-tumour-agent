@@ -53,7 +53,7 @@ describe("Page Integration (app/page.tsx)", () => {
 
     // 2. Hero Section
     expect(
-      screen.getByText("AI Powered MRI Classification"),
+      screen.getByText(/Autonomous Classification & Grad-CAM Segmentation/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 1, name: /Brain Tumour/i }),

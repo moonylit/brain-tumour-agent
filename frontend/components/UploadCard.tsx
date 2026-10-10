@@ -77,6 +77,26 @@ export default function UploadCard({
     setErrorMessage(null);
   }
 
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setErrorMessage(null);
+    const file = event.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const validationError = validateFile(file);
+    if (validationError) {
+      setErrorMessage(validationError);
+      setSelectedImage(null);
+      setPreview(null);
+      return;
+    }
+
+    setSelectedImage(file);
+    setPreview(URL.createObjectURL(file));
+    setResult(null);
+    setErrorMessage(null);
+  }
+
   async function handleUpload() {
     if (!selectedImage) {
       setErrorMessage("Please select an MRI image file first.");
@@ -120,45 +140,53 @@ export default function UploadCard({
 
   return (
     <section id="upload" className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mt-8 px-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 w-full max-w-7xl mx-auto my-12 px-4">
         {/* Left Column (Upload Card) */}
-        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col gap-6">
+        <div className="bg-white p-8 md:p-12 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col h-full">
           <div>
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
-                <Upload className="h-7 w-7 text-blue-600" />
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4 flex items-center gap-3">
+                <Upload className="h-8 w-8 text-blue-600" />
                 <span>Upload MRI Scan</span>
               </h2>
               <span className="rounded-full border border-blue-200 bg-blue-50/90 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-xs">
                 Track 01: SerpApi Decision Agent
               </span>
             </div>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
               Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
             </p>
 
-            {/* Upload Zone */}
-            <div className="border-2 border-dashed border-blue-400 p-12 bg-blue-50/50 rounded-xl text-center transition-all duration-300 hover:border-blue-600 hover:bg-blue-50/80">
+            {/* Massive Upload Dropzone */}
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}
+              className="w-full min-h-[300px] flex flex-col items-center justify-center bg-blue-50/40 border-2 border-dashed border-blue-300 rounded-3xl hover:border-blue-500 hover:bg-blue-50 transition-all p-10 text-center"
+            >
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25">
                 <Upload className="h-7 w-7 text-white" />
               </div>
 
-              <label
-                htmlFor="mri-upload-input"
-                className="cursor-pointer block text-base sm:text-lg font-bold text-slate-800 hover:text-blue-700"
-              >
-                <span className="text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-700">
-                  Browse neuroimaging file
-                </span>{" "}
-                or select from local directory
+              <label htmlFor="mri-upload-input" className="cursor-pointer">
+                <p className="text-xl font-bold text-slate-800 mb-2 text-center">
+                  Browse neuroimaging file or select from local directory
+                </p>
               </label>
+
+              <button
+                type="button"
+                onClick={() => document.getElementById("mri-upload-input")?.click()}
+                className="mt-6 px-10 py-4 bg-blue-600 text-white text-base font-bold uppercase tracking-wider rounded-xl hover:bg-blue-700 shadow-md transition-all active:scale-95 cursor-pointer"
+              >
+                Choose File
+              </button>
 
               <input
                 type="file"
                 id="mri-upload-input"
                 accept="image/jpeg,image/png"
                 onChange={handleImageChange}
-                className="mt-4 block w-full max-w-xs mx-auto cursor-pointer text-xs sm:text-sm text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-bold file:text-white hover:file:bg-blue-700 shadow-sm transition"
+                className="hidden"
               />
 
               <p className="mt-4 text-xs font-mono font-medium text-slate-500">
@@ -169,7 +197,7 @@ export default function UploadCard({
 
           {/* Error Notification Banner */}
           {errorMessage && (
-            <div className="flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50/90 p-4 text-rose-800 shadow-md">
+            <div className="flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-rose-50/90 p-4 text-rose-800 shadow-md mt-6">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
               <div className="flex-1 text-sm sm:text-base">
                 <strong className="block font-bold text-rose-900">
@@ -189,7 +217,7 @@ export default function UploadCard({
 
           {/* Selected Image Preview & Action Button */}
           {preview && (
-            <div className="rounded-2xl border border-white/60 bg-white/60 backdrop-blur-md p-5 shadow-inner">
+            <div className="rounded-2xl border border-white/60 bg-white/60 backdrop-blur-md p-5 shadow-inner mt-6">
               <div className="flex items-center justify-between mb-3 border-b border-blue-200/60 pb-2">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
                   Selected Scan
@@ -241,15 +269,15 @@ export default function UploadCard({
         </div>
 
         {/* Right Column (SerpApi Geographic Referral Routing) */}
-        <div className="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col gap-6">
+        <div className="bg-white p-8 md:p-12 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col h-full">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Sparkles className="h-6 w-6 text-blue-600" />
-              <h3 className="text-2xl font-extrabold text-slate-900">
+              <Sparkles className="h-8 w-8 text-blue-600" />
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
                 Geographic Referral Routing
-              </h3>
+              </h2>
             </div>
-            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
               Target metropolitan region for autonomous hospital geolocation and tertiary surgical center referral routing:
             </p>
 
@@ -261,7 +289,7 @@ export default function UploadCard({
           </div>
 
           {/* Live Interactive Map with Nearby Hospitals */}
-          <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
+          <div className="w-full h-72 md:h-96 mt-8 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative">
             <iframe
               width="100%"
               height="100%"

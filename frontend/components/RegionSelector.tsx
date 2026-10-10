@@ -121,10 +121,10 @@ export default function RegionSelector({
           }}
           disabled={disabled}
           placeholder="e.g., Jaipur, New Delhi, London, Boston"
-          className="w-full bg-white border-2 border-blue-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 rounded-2xl px-4 py-3.5 text-base font-semibold text-slate-800 placeholder-slate-400 outline-none shadow-xs transition disabled:opacity-50"
+          className="w-full px-6 py-4 text-lg bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-slate-800 font-medium disabled:opacity-50"
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <Sparkles className="h-4 w-4 text-blue-400" />
+          <Sparkles className="h-5 w-5 text-blue-400" />
         </div>
       </div>
 
@@ -133,8 +133,8 @@ export default function RegionSelector({
       )}
 
       {/* Preset Hubs */}
-      <div className="flex flex-wrap items-center gap-2 pt-1">
-        <span className="text-xs font-bold text-slate-500 mr-0.5">Quick Hubs:</span>
+      <div className="flex flex-wrap gap-3 mt-4 items-center">
+        <span className="text-sm font-bold text-slate-500 mr-0.5">Quick Hubs:</span>
         {PRESET_REGIONS.map((preset) => (
           <button
             key={preset}
@@ -144,7 +144,7 @@ export default function RegionSelector({
               setDetectError(null);
               onChange(preset);
             }}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
+            className={`px-4 py-2 text-sm font-bold rounded-lg transition ${
               value.trim().toLowerCase() === preset.toLowerCase()
                 ? "bg-blue-600 text-white border border-blue-600 shadow-sm"
                 : "bg-blue-50/70 hover:bg-blue-100 text-blue-900 border border-blue-200/80"
