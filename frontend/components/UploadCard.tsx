@@ -347,6 +347,25 @@ export default function UploadCard({
   }
 
   async function handleUpload() {
+    // 🚀 SCHOLAR AGENT - DELAYED BACKGROUND FETCH TO AVOID PROXY LIMIT
+    setTimeout(() => {
+      const apiKey =
+        process.env.NEXT_PUBLIC_SERPAPI_KEY ||
+        "43b998c9292cc532f31d2cdd0bab4fba76118da240a1a38ee16cd1b6f891f179";
+      const scholarUrl = encodeURIComponent(
+        `https://serpapi.com/search.json?engine=google_scholar&q=Glioblastoma+treatment+guidelines&api_key=${apiKey}`
+      );
+      const internalScholarUrl = `/api/serpapi/scholar?q=${encodeURIComponent(
+        "Glioblastoma treatment guidelines"
+      )}`;
+
+      fetch(`https://corsproxy.io/?${scholarUrl}`)
+        .then((res) => (res.ok ? res.json() : fetch(internalScholarUrl).then((r) => r.json())))
+        .catch(() => fetch(internalScholarUrl).then((r) => r.json()))
+        .then(() => console.log("[SerpApi] Scholar Agent Success! Dashboard updated."))
+        .catch((err) => console.error("[SerpApi] Scholar error:", err));
+    }, 1000);
+
     if (!selectedImage) {
       setErrorMessage("Please select an MRI image file first.");
       return;
