@@ -46,7 +46,7 @@ export function getDynamicTrajectoryData(patientName: string) {
   let proj1Factor = 1.5955;
   let proj2Factor = 2.3595;
 
-  if (patientName === "Marcus Webb") {
+  if (patientName === "Marcus Webb" || patientName === "Marcus Brody") {
     baseAnchor = 3400;
     mrn = "MRN-49103";
     diagnosis = "Oligodendroglioma";
@@ -146,6 +146,12 @@ export interface CustomScanPoint {
   prediction?: string;
 }
 
+export interface PatientDirectoryItem {
+  id: string;
+  name: string;
+  condition: string;
+}
+
 interface PatientTrajectoryCardProps {
   activePatient?: string;
   activeDemoPatient?: string;
@@ -154,6 +160,8 @@ interface PatientTrajectoryCardProps {
   customScans?: CustomScanPoint[];
   setCustomScans?: React.Dispatch<React.SetStateAction<CustomScanPoint[]>>;
   onSelectPatient?: (patient: string) => void;
+  patientDirectory?: PatientDirectoryItem[];
+  setPatientDirectory?: React.Dispatch<React.SetStateAction<PatientDirectoryItem[]>>;
   isDraggingEHR?: boolean;
   setIsDraggingEHR?: React.Dispatch<React.SetStateAction<boolean>>;
   handleDragOver?: (
@@ -179,12 +187,21 @@ export default function PatientTrajectoryCard({
   customScans: propCustomScans,
   setCustomScans: propSetCustomScans,
   onSelectPatient,
+  patientDirectory: propPatientDirectory,
+  setPatientDirectory: propSetPatientDirectory,
   isDraggingEHR: propIsDraggingEHR,
   setIsDraggingEHR: propSetIsDraggingEHR,
   handleDragOver: propHandleDragOver,
   handleDragLeave: propHandleDragLeave,
   handleDrop: propHandleDrop,
 }: PatientTrajectoryCardProps) {
+  const [localPatientDirectory, setLocalPatientDirectory] = useState<PatientDirectoryItem[]>([
+    { id: 'demo1', name: 'Eleanor Vance', condition: 'Glioblastoma' },
+    { id: 'demo2', name: 'Marcus Brody', condition: 'Meningioma' }
+  ]);
+  const patientDirectory = propPatientDirectory !== undefined ? propPatientDirectory : localPatientDirectory;
+  const setPatientDirectory = propSetPatientDirectory || setLocalPatientDirectory;
+
   const [localIsDraggingEHR, setLocalIsDraggingEHR] = useState(false);
   const isDraggingEHR = propIsDraggingEHR !== undefined ? propIsDraggingEHR : localIsDraggingEHR;
   const setIsDraggingEHR = propSetIsDraggingEHR || setLocalIsDraggingEHR;
@@ -239,8 +256,15 @@ export default function PatientTrajectoryCard({
     setMounted(true);
   }, []);
 
+  const [localActiveDemoPatient, setLocalActiveDemoPatient] = useState(
+    activeDemoPatientProp || activePatient || "Eleanor Vance"
+  );
   const activeDemoPatient =
-    activeDemoPatientProp || activePatient || "Eleanor Vance";
+    activeDemoPatientProp || activePatient || localActiveDemoPatient;
+  const setActiveDemoPatient = (patientName: string) => {
+    setLocalActiveDemoPatient(patientName);
+    onSelectPatient?.(patientName);
+  };
 
   const patientData = useMemo(
     () => getDynamicTrajectoryData(activeDemoPatient),
@@ -280,31 +304,63 @@ export default function PatientTrajectoryCard({
             ) : null}
           </div>
 
-          <div className="mb-6 flex items-center gap-4 flex-wrap">
-            {activeDemoPatient === "Custom" ? (
-              <input
-                type="text"
-                placeholder="Enter New Patient Name..."
-                value={customPatientName}
-                onChange={(e) => setCustomPatientName(e.target.value)}
-                className="text-2xl md:text-3xl font-extrabold bg-transparent border-b-2 border-slate-300 focus:border-blue-600 outline-none pb-1 w-full max-w-md text-slate-900 placeholder:text-slate-400"
-              />
+          <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+            {activeDemoPatient === 'Custom' ? (
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full mb-8">
+                <input 
+                  type="text" 
+                  placeholder="Enter New Patient Name..." 
+                  value={customPatientName}
+                  onChange={(e) => setCustomPatientName(e.target.value)}
+                  className="text-3xl font-extrabold text-slate-800 bg-transparent border-b-2 border-blue-600 focus:outline-none w-full max-w-md pb-2"
+                />
+
+                {/* Only show Save button if name exists AND a scan has been uploaded to get the prediction */}
+                {customPatientName.trim() !== '' && customScans.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      // Extract the prediction from the recently uploaded scan
+                      const detectedCondition = customScans[0]?.prediction || 'Unknown Anomaly';
+
+                      const newPatient = {
+                        id: `pat_${Date.now()}`,
+                        name: customPatientName,
+                        condition: detectedCondition
+                      };
+
+                      // Push to the global dropdown array
+                      setPatientDirectory(prev => [...prev, newPatient]);
+
+                      // Auto-switch the dropdown to this newly saved patient
+                      setActiveDemoPatient(newPatient.name);
+                    }}
+                    className="px-6 py-2.5 bg-emerald-600 text-white text-sm font-black uppercase tracking-wider rounded-lg hover:bg-emerald-700 shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Save to EHR
+                  </button>
+                )}
+              </div>
             ) : (
               <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
                 Patient Profile: {activeDemoPatient}
               </h3>
             )}
-            {onSelectPatient && (
-              <select
-                value={activeDemoPatient}
-                onChange={(e) => onSelectPatient(e.target.value)}
-                className="ml-auto text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
-              >
-                <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
-                <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
-                <option value="Custom">Add New Patient (Live Upload)</option>
-              </select>
-            )}
+            <select 
+              value={activeDemoPatient} 
+              onChange={(e) => setActiveDemoPatient(e.target.value)}
+              className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 cursor-pointer ml-auto"
+            >
+              {patientDirectory.map(patient => (
+                <option key={patient.id} value={patient.name}>
+                  {patient.name} ({patient.condition})
+                </option>
+              ))}
+              <hr />
+              <option value="Custom">+ Add New Patient (Live Upload)</option>
+            </select>
           </div>
         </div>
 

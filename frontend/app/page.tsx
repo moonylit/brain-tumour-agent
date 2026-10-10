@@ -14,6 +14,10 @@ export default function Home() {
   const [predictionResult, setPredictionResult] = useState<string | null>(null);
   const [gradCamUrl, setGradCamUrl] = useState<string | null>(null);
   const [customScans, setCustomScans] = useState<any[]>([]);
+  const [patientDirectory, setPatientDirectory] = useState([
+    { id: 'demo1', name: 'Eleanor Vance', condition: 'Glioblastoma' },
+    { id: 'demo2', name: 'Marcus Brody', condition: 'Meningioma' }
+  ]);
 
   const [isDraggingMain, setIsDraggingMain] = useState(false);
   const [isDraggingEHR, setIsDraggingEHR] = useState(false);
@@ -153,11 +157,15 @@ export default function Home() {
                 value={activeDemoPatient} 
                 onChange={(e) => setActiveDemoPatient(e.target.value)}
                 onClick={(e) => e.stopPropagation()}
-                className="ml-4 text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
+                className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 cursor-pointer ml-4"
               >
-                <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
-                <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
-                <option value="Custom">Add New Patient (Live Upload)</option>
+                {patientDirectory.map(patient => (
+                  <option key={patient.id} value={patient.name}>
+                    {patient.name} ({patient.condition})
+                  </option>
+                ))}
+                <hr />
+                <option value="Custom">+ Add New Patient (Live Upload)</option>
               </select>
             </div>
             <span className="transition group-open:rotate-180">▼</span>
@@ -170,6 +178,8 @@ export default function Home() {
               customScans={customScans}
               setCustomScans={setCustomScans}
               onSelectPatient={setActiveDemoPatient}
+              patientDirectory={patientDirectory}
+              setPatientDirectory={setPatientDirectory}
               isDraggingEHR={isDraggingEHR}
               setIsDraggingEHR={setIsDraggingEHR}
               handleDragOver={handleDragOver}

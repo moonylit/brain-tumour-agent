@@ -257,7 +257,7 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.getByText(/SCAN 02 • May 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/SCAN 03 • Aug 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/SCAN 04 • Oct 2026/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Glioblastoma/i)).toHaveLength(4);
+    expect(screen.getAllByText("GLIOBLASTOMA")).toHaveLength(4);
     expect(screen.getByAltText("Scan 1")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })
@@ -276,8 +276,8 @@ describe("PatientTrajectoryCard Component", () => {
     const dropdown = screen.getByRole("combobox");
     expect(dropdown).toHaveValue("Eleanor Vance");
 
-    fireEvent.change(dropdown, { target: { value: "Marcus Webb" } });
-    expect(onSelect).toHaveBeenCalledWith("Marcus Webb");
+    fireEvent.change(dropdown, { target: { value: "Marcus Brody" } });
+    expect(onSelect).toHaveBeenCalledWith("Marcus Brody");
   });
 
   it("handles native drag-and-drop on Custom Patient EHR dropzone and activates hover states", () => {
@@ -320,7 +320,49 @@ describe("PatientTrajectoryCard Component", () => {
     expect(setScansMock).toHaveBeenCalled();
     vi.useRealTimers();
   });
+
+  it("shows Save to EHR button when name is typed and scans exist, and persists new patient", () => {
+    const onSelect = vi.fn();
+    const setDirectoryMock = vi.fn();
+    const mockScans = [
+      {
+        date: "Oct 10",
+        area: 2500,
+        forecastArea: null,
+        type: "Observed",
+        prediction: "Glioblastoma Multiforme",
+      },
+    ];
+
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        customScans={mockScans}
+        onSelectPatient={onSelect}
+        setPatientDirectory={setDirectoryMock}
+      />
+    );
+
+    // Save button not visible when input is empty
+    expect(screen.queryByRole("button", { name: /Save to EHR/i })).not.toBeInTheDocument();
+
+    // Type patient name
+    const input = screen.getByPlaceholderText("Enter New Patient Name...");
+    fireEvent.change(input, { target: { value: "David Miller" } });
+
+    // Save button appears
+    const saveBtn = screen.getByRole("button", { name: /Save to EHR/i });
+    expect(saveBtn).toBeInTheDocument();
+
+    // Click Save
+    fireEvent.click(saveBtn);
+
+    // Calls setPatientDirectory and auto-switches active patient
+    expect(setDirectoryMock).toHaveBeenCalled();
+    expect(onSelect).toHaveBeenCalledWith("David Miller");
+  });
 });
+
 
 
 
