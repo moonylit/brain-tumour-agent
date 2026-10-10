@@ -256,11 +256,38 @@ export default function PatientTrajectoryCard({
       </div>
 
       {activeDemoPatient === "Custom" && customScans.length === 0 ? (
-        <div className="w-full h-64 flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors">
-          <p className="text-slate-700 font-bold mb-1 text-lg">Upload Baseline MRI Scan</p>
-          <button
-            onClick={() => (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
-            className="mt-4 px-8 py-3 bg-blue-600 text-white text-sm font-bold uppercase rounded-full hover:bg-blue-700 shadow-md transition-all"
+        <div className="w-full h-64 flex flex-col items-center justify-center bg-blue-50/50 border-2 border-dashed border-blue-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
+          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shadow-sm mb-3">
+            <span className="text-lg text-blue-600">⬆️</span>
+          </div>
+          <p className="text-slate-800 font-bold mb-1 text-lg">Upload First MRI Scan</p>
+          <p className="text-slate-500 text-sm mb-4">Initialize trajectory for new patient</p>
+          <input 
+            type="file" 
+            id="historical-mri-upload" 
+            accept="image/*" 
+            className="hidden" 
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                // Simulate instant scan processing for trajectory
+                setTimeout(() => {
+                  const newArea = Math.floor(Math.random() * 3000) + 1500;
+                  const newScan = {
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    area: newArea,
+                    forecastArea: null,
+                    type: 'Observed'
+                  };
+                  setCustomScans(prev => [...prev, newScan]);
+                }, 600);
+              }
+            }}
+          />
+          <button 
+            type="button"
+            onClick={() => document.getElementById('historical-mri-upload')?.click()}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm transition-all"
           >
             Select MRI File
           </button>
@@ -351,8 +378,30 @@ export default function PatientTrajectoryCard({
           </div>
 
           <div className="mt-6 flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 flex-wrap gap-4">
+            <input 
+              type="file" 
+              id="historical-mri-upload" 
+              accept="image/*" 
+              className="hidden" 
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  // Simulate instant scan processing for trajectory
+                  setTimeout(() => {
+                    const newArea = Math.floor(Math.random() * 3000) + 1500;
+                    const newScan = {
+                      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                      area: newArea,
+                      forecastArea: null,
+                      type: 'Observed'
+                    };
+                    setCustomScans(prev => [...prev, newScan]);
+                  }, 600);
+                }
+              }}
+            />
             <button
-              onClick={() => (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
+              onClick={() => (document.getElementById("historical-mri-upload") || document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
               className="px-6 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm font-bold rounded-lg hover:bg-blue-50 transition-all"
             >
               + Add Follow-up Scan

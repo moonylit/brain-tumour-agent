@@ -75,9 +75,18 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.queryByText("New Record Active")).not.toBeInTheDocument();
 
     // Dropzone content
-    expect(screen.getByText("Upload Baseline MRI Scan")).toBeInTheDocument();
+    expect(screen.getByText("Upload First MRI Scan")).toBeInTheDocument();
+    expect(
+      screen.getByText("Initialize trajectory for new patient")
+    ).toBeInTheDocument();
     const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
     expect(uploadBtn).toBeInTheDocument();
+
+    // Hidden file input exists
+    const fileInput = document.getElementById("historical-mri-upload");
+    expect(fileInput).toBeInTheDocument();
+    expect(fileInput).toHaveAttribute("type", "file");
+    expect(fileInput).toHaveAttribute("accept", "image/*");
   });
 
   it("renders live prediction badges when activePatient is Custom and predictionResult is present", () => {
@@ -94,18 +103,50 @@ describe("PatientTrajectoryCard Component", () => {
   });
 
   it("triggers file input click when clicking Select MRI File button", () => {
-    const hiddenInput = document.createElement("input");
-    hiddenInput.type = "file";
-    hiddenInput.id = "mri-upload-input";
-    const clickSpy = vi.spyOn(hiddenInput, "click");
-    document.body.appendChild(hiddenInput);
-
     render(<PatientTrajectoryCard activePatient="Custom" customScans={[]} />);
+    const fileInput = document.getElementById(
+      "historical-mri-upload"
+    ) as HTMLInputElement;
+    expect(fileInput).toBeInTheDocument();
+    const clickSpy = vi.spyOn(fileInput, "click");
+
     const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
     fireEvent.click(uploadBtn);
 
     expect(clickSpy).toHaveBeenCalled();
-    document.body.removeChild(hiddenInput);
+  });
+
+  it("adds new scan to customScans on file upload change", () => {
+    vi.useFakeTimers();
+    const setScansMock = vi.fn();
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        customScans={[]}
+        setCustomScans={setScansMock}
+      />
+    );
+
+    const fileInput = document.getElementById(
+      "historical-mri-upload"
+    ) as HTMLInputElement;
+    const testFile = new File(["dummy content"], "brain_scan.png", {
+      type: "image/png",
+    });
+
+    fireEvent.change(fileInput, { target: { files: [testFile] } });
+
+    vi.advanceTimersByTime(650);
+
+    expect(setScansMock).toHaveBeenCalledTimes(1);
+    const updater = setScansMock.mock.calls[0][0];
+    const updatedState = updater([]);
+    expect(updatedState).toHaveLength(1);
+    expect(updatedState[0].area).toBeGreaterThanOrEqual(1500);
+    expect(updatedState[0].forecastArea).toBeNull();
+    expect(updatedState[0].type).toBe("Observed");
+
+    vi.useRealTimers();
   });
 
   it("renders dynamic Recharts graph, follow-up button, and triggers future forecast prediction for Custom patient with scans", () => {
@@ -123,9 +164,19 @@ describe("PatientTrajectoryCard Component", () => {
     );
 
     // Recharts container buttons
-    expect(
-      screen.getByRole("button", { name: /\+ Add Follow-up Scan/i })
-    ).toBeInTheDocument();
+    const followUpBtn = screen.getByRole("button", {
+      name: /\+ Add Follow-up Scan/i,
+    });
+    expect(followUpBtn).toBeInTheDocument();
+
+    const fileInput = document.getElementById(
+      "historical-mri-upload"
+    ) as HTMLInputElement;
+    expect(fileInput).toBeInTheDocument();
+    const clickSpy = vi.spyOn(fileInput, "click");
+    fireEvent.click(followUpBtn);
+    expect(clickSpy).toHaveBeenCalled();
+
     const forecastBtn = screen.getByRole("button", {
       name: /Predict Future Trajectory/i,
     });
