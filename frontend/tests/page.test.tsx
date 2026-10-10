@@ -56,7 +56,7 @@ describe("Page Integration (app/page.tsx)", () => {
       screen.getByText(/Autonomous Classification & Grad-CAM Segmentation/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 1, name: /Brain Tumour/i }),
+      screen.getByText(/Analyze MRI Scan/i),
     ).toBeInTheDocument();
 
     // 3. Core Action Grid

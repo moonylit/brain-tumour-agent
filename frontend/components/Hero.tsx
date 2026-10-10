@@ -1,4 +1,26 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+
 export default function Hero() {
+  const [typedText, setTypedText] = useState('');
+  const fullText = "Autonomous Neuro-Oncology Triage";
+
+  useEffect(() => {
+    let currentText = '';
+    let i = 0;
+    const typingInterval = setInterval(() => {
+      if (i < fullText.length) {
+        currentText += fullText.charAt(i);
+        setTypedText(currentText);
+        i++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 50); // Speed of typing
+    return () => clearInterval(typingInterval);
+  }, []);
+
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-24 pb-20 text-center">
       {/* Enterprise Clinical Status Badge */}
@@ -24,10 +46,18 @@ export default function Hero() {
       </div>
 
       {/* Main Heading */}
-      <h1 className="mt-8 text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight mb-6 leading-[1.1]">
-        <span className="bg-gradient-to-r from-slate-950 via-blue-950 to-indigo-950 bg-clip-text text-transparent">
-          Brain Tumour Detector
-        </span>
+      <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 min-h-[4rem]">
+        {typedText.split('Neuro-Oncology').map((part, index, array) => (
+          <React.Fragment key={index}>
+            {part}
+            {index < array.length - 1 && (
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">
+                Neuro-Oncology
+              </span>
+            )}
+          </React.Fragment>
+        ))}
+        <span className="animate-pulse text-blue-600 font-light">|</span>
       </h1>
 
       {/* Subtitle */}

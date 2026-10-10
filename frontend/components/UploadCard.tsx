@@ -188,9 +188,12 @@ export default function UploadCard({
                 <Upload className="h-8 w-8 text-blue-600" />
                 <span>Upload MRI Scan</span>
               </h2>
-              <span className="rounded-full border border-blue-200 bg-blue-50/90 px-3.5 py-1 text-xs font-mono font-bold text-blue-800 shadow-xs">
-                Track 01: SerpApi Decision Agent
-              </span>
+              <div className="mx-auto inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 rounded-md shadow-sm border border-slate-700 mb-8 hover:scale-105 transition-transform cursor-default">
+                <div className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span className="text-[10px] font-mono font-bold text-slate-400 tracking-wider uppercase">Track 01</span>
+                <span className="text-slate-600 mx-1">/</span>
+                <span className="text-[11px] font-mono font-black text-blue-400 tracking-wider uppercase">SerpApi Decision Agent</span>
+              </div>
             </div>
             <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
               Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.

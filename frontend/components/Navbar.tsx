@@ -41,19 +41,13 @@ export default function Navbar() {
     <header className="flex justify-between items-center w-full px-8 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
       {/* Left Column */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
-          <svg
-            className="h-5 w-5 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-4 4 4 4 0 0 0 2 3.46A4 4 0 0 0 7 18a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4 4 4 0 0 0 1-3.54A4 4 0 0 0 20 11a4 4 0 0 0-4-4V6a4 4 0 0 0-4-4z" />
-            <path d="M12 2v20" />
+        <div className="relative w-12 h-12 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/20 border border-blue-500/30 overflow-hidden group">
+          {/* Subtle inner glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.6)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          {/* Advanced Neural SVG */}
+          <svg className="w-6 h-6 text-blue-400 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
           </svg>
         </div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
