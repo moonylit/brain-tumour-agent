@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
 import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
+import Stats from "@/components/Stats";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
@@ -114,6 +115,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Prediction Statistics & Analytics */}
+        <Stats />
       </div>
 
       {/* 7. FOOTER */}

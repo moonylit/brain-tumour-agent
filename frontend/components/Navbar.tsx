@@ -18,6 +18,7 @@ export default function Navbar({
 }: NavbarProps = {}) {
   const [isBackendOnline, setIsBackendOnline] = useState<boolean | null>(null);
   const [localPatient, setLocalPatient] = useState(activePatient);
+  const [serpApiImgFailed, setSerpApiImgFailed] = useState(false);
   const currentPatient = activePatient ?? localPatient;
 
   useEffect(() => {
@@ -49,64 +50,46 @@ export default function Navbar({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full flex flex-col md:flex-row items-center justify-between px-8 py-4 bg-white/70 backdrop-blur-xl border-b border-white/80 shadow-[0_4px_30px_rgb(0,0,0,0.03)] gap-4 md:gap-0">
-      {/* Left: Branding & Logo */}
-      <a href="#" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25">
-          <svg
-            className="h-6 w-6 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z" />
-            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
-          </svg>
-        </div>
-        <span className="text-2xl font-extrabold tracking-tight text-slate-900">
-          BrainTumourAI
+    <header className="flex items-center justify-between w-full px-8 py-4 bg-white/70 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50">
+      {/* Left Column: SerpApi Branding */}
+      <div className="flex items-center">
+        <span className="text-sm font-bold text-slate-500 tracking-wider">
+          POWERED BY
         </span>
-      </a>
+        {!serpApiImgFailed ? (
+          <img
+            src="https://serpapi.com/images/logo.svg"
+            alt="SerpApi"
+            className="h-6 ml-2 opacity-80"
+            onError={() => setSerpApiImgFailed(true)}
+          />
+        ) : (
+          <span className="ml-2 font-black text-blue-600">SerpApi</span>
+        )}
+      </div>
 
-      {/* Center: Navigation Pill */}
-      <nav className="hidden md:flex items-center gap-8 bg-slate-50/80 px-8 py-2.5 rounded-full border border-slate-200 shadow-inner">
-        <a
-          href="#upload"
-          className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          Upload
-        </a>
-        <a
-          href="#evaluation"
-          className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          Evaluation
-        </a>
-        <a
-          href="#stats"
-          className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          Statistics
-        </a>
-        <a
-          href="#history"
-          className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          History
-        </a>
-        <a
-          href="#features"
-          className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors"
-        >
-          Features
-        </a>
-      </nav>
+      {/* Center Column: Logo and Navigation Group */}
+      <div className="flex items-center gap-6">
+        <h1 className="text-2xl font-extrabold text-slate-900">
+          BrainTumourAI
+        </h1>
+        <nav className="hidden md:flex items-center gap-6 bg-slate-50 px-6 py-2 rounded-full border border-slate-200">
+          <a
+            href="#upload"
+            className="text-sm font-bold text-slate-600 hover:text-blue-600 transition"
+          >
+            Upload
+          </a>
+          <a
+            href="#history"
+            className="text-sm font-bold text-slate-600 hover:text-blue-600 transition"
+          >
+            History
+          </a>
+        </nav>
+      </div>
 
-      {/* Right: Live Status Badge & Patient EHR Selector */}
+      {/* Right Column: Pulsating API Online Badge & Patient Selector */}
       <div className="flex items-center gap-4">
         {/* Patient Selector Dropdown */}
         <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50/90 px-3.5 py-1.5 shadow-2xs">
@@ -158,7 +141,7 @@ export default function Navbar({
           </select>
         </div>
 
-        {/* Live Status Badge */}
+        {/* Live Pulsating Status Badge */}
         {isBackendOnline !== false ? (
           <div
             title="Backend connected and healthy"

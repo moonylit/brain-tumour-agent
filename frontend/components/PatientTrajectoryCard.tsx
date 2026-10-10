@@ -172,34 +172,41 @@ export default function PatientTrajectoryCard({
   } = patientData;
 
   return (
-    <div className="w-full max-w-7xl mx-auto mb-8 bg-white/60 backdrop-blur-xl p-8 rounded-3xl border border-white/80 shadow-lg">
-      {/* Card Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
-              <UserCheck className="h-3.5 w-3.5" />
-              EHR Integrated
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
-              {mrn}
+    <details className="group w-full max-w-7xl mx-auto mb-16 bg-white/60 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-sm transition-all duration-300">
+      <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-xl font-bold text-slate-800 hover:text-blue-600">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">📁</span> Patient EHR History: {activePatient} (Longitudinal Tracking)
+        </div>
+        <span className="transition group-open:rotate-180">▼</span>
+      </summary>
+      <div className="p-6 border-t border-slate-200">
+        {/* Card Header */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-blue-100 text-blue-700 border border-blue-200">
+                <UserCheck className="h-3.5 w-3.5" />
+                EHR Integrated
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-500 bg-slate-100">
+                {mrn}
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+              <Activity className="h-7 w-7 text-blue-600 shrink-0" />
+              <span>
+                Patient Profile: {activePatient} — Longitudinal Tumor Trajectory
+              </span>
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
+              <ShieldAlert className="h-4 w-4 text-amber-600" />
+              Active Surveillance
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-            <Activity className="h-7 w-7 text-blue-600 shrink-0" />
-            <span>
-              Patient Profile: {activePatient} — Longitudinal Tumor Trajectory
-            </span>
-          </h2>
         </div>
-
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
-            <ShieldAlert className="h-4 w-4 text-amber-600" />
-            Active Surveillance
-          </span>
-        </div>
-      </div>
 
       {/* Main 2-Column EHR Trajectory Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -374,5 +381,6 @@ export default function PatientTrajectoryCard({
         </div>
       </div>
     </div>
-  );
+  </details>
+);
 }

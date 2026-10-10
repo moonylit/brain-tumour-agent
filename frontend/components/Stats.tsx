@@ -130,21 +130,37 @@ export default function Stats({ refreshTrigger }: Props) {
       {stats && (
         <>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {primaryCards.map((stat) => (
-              <div
-                key={stat.label}
-                className={`rounded-3xl p-10 text-center transition-all hover:scale-102 hover:shadow-xl ${stat.bg}`}
-              >
-                <h3
-                  className={`text-5xl sm:text-6xl font-black font-mono tracking-tight ${stat.color}`}
+            {primaryCards.map((stat) =>
+              stat.label === "Most Common Class" ? (
+                <div
+                  key={stat.label}
+                  className="overflow-hidden p-6 flex flex-col items-center justify-center bg-purple-50/50 rounded-2xl border border-purple-100 transition-all hover:scale-102 hover:shadow-md"
                 >
-                  {stat.value}
-                </h3>
-                <p className={`mt-4 text-sm font-mono font-bold uppercase tracking-wider ${stat.labelColor}`}>
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+                  <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight break-words text-center w-full">
+                    {stat.value}
+                  </h3>
+                  <p className="text-xs font-bold text-purple-600 tracking-widest uppercase mt-1">
+                    {stat.label}
+                  </p>
+                </div>
+              ) : (
+                <div
+                  key={stat.label}
+                  className={`rounded-3xl p-10 text-center transition-all hover:scale-102 hover:shadow-xl ${stat.bg}`}
+                >
+                  <h3
+                    className={`text-5xl sm:text-6xl font-black font-mono tracking-tight ${stat.color}`}
+                  >
+                    {stat.value}
+                  </h3>
+                  <p
+                    className={`mt-4 text-sm font-mono font-bold uppercase tracking-wider ${stat.labelColor}`}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              )
+            )}
           </div>
 
           {/* Class Distribution Breakdown */}

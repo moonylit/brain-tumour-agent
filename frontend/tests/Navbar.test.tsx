@@ -16,33 +16,22 @@ describe("Navbar Component", () => {
     vi.clearAllMocks();
   });
 
-  it("renders brand logo and all navigation section links", () => {
+  it("renders SerpApi branding, brand logo, and navigation links", () => {
     (api.checkBackendHealth as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
       { status: "healthy", model_loaded: true },
     );
 
     render(<Navbar />);
 
+    expect(screen.getByText("POWERED BY")).toBeInTheDocument();
     expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Upload" })).toHaveAttribute(
       "href",
       "#upload",
     );
-    expect(screen.getByRole("link", { name: "Evaluation" })).toHaveAttribute(
-      "href",
-      "#evaluation",
-    );
-    expect(screen.getByRole("link", { name: "Statistics" })).toHaveAttribute(
-      "href",
-      "#stats",
-    );
     expect(screen.getByRole("link", { name: "History" })).toHaveAttribute(
       "href",
       "#history",
-    );
-    expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
-      "href",
-      "#features",
     );
   });
 
