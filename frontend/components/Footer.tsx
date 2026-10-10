@@ -9,6 +9,15 @@ export default function Footer() {
           <span className="text-slate-500 font-medium">Clinical Diagnostic Suite</span>
         </div>
 
+        <div className="flex items-center justify-center gap-3 opacity-85 hover:opacity-100 transition-opacity">
+          <span className="text-[11px] font-black text-slate-400 tracking-[0.2em] uppercase">Powered By</span>
+          <img 
+            src="/serpapi-logo.png" 
+            alt="SerpApi Logo" 
+            className="h-8 object-contain drop-shadow-sm" 
+          />
+        </div>
+
         <p className="text-slate-500 font-medium">
           Built with Next.js • FastAPI • TensorFlow • ResNet50
         </p>

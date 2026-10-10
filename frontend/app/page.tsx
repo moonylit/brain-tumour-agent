@@ -281,6 +281,17 @@ export default function Home() {
           </svg>
           <span><strong>Disclaimer:</strong> NeuroAgent is an experimental AI decision-support system. Always consult a qualified healthcare provider for medical advice, diagnosis, or treatment.</span>
         </p>
+
+        <div className="flex items-center justify-center gap-3 mt-12 opacity-85 hover:opacity-100 transition-opacity">
+          <span className="text-[11px] font-black text-slate-400 tracking-[0.2em] uppercase">Powered By</span>
+
+          {/* Antigravity: Ensure the src path maps correctly to the user's uploaded SerpApi logo image */}
+          <img 
+            src="/serpapi-logo.png" /* Update this path to match the pasted image asset */
+            alt="SerpApi Logo" 
+            className="h-8 object-contain drop-shadow-sm" 
+          />
+        </div>
       </footer>
     </main>
   );

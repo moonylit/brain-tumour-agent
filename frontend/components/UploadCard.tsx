@@ -188,23 +188,14 @@ export default function UploadCard({
                 <Upload className="h-8 w-8 text-blue-600" />
                 <span>Upload MRI Scan</span>
               </h2>
-              <div className="mx-auto inline-flex items-center gap-4 px-6 py-3 bg-slate-900 rounded-xl shadow-md border border-slate-700 mb-10 hover:shadow-lg hover:border-slate-600 transition-all cursor-default whitespace-nowrap">
-                {/* Larger Pulsing Dot */}
-                <div className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              <div className="mx-auto inline-flex items-center gap-3 px-5 py-2.5 bg-blue-50/50 rounded-full shadow-sm border border-blue-200 mb-8 hover:bg-blue-100/50 hover:border-blue-300 transition-all cursor-default whitespace-nowrap">
+                <div className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                 </div>
-                
-                {/* Enlarged Text 1 */}
-                <span className="text-sm md:text-base font-mono font-bold text-slate-200 tracking-widest uppercase">
-                  Track 01
-                </span>
-                
-                {/* Sleek Divider */}
-                <span className="text-slate-600 font-light text-xl">/</span>
-                
-                {/* Enlarged Text 2 */}
-                <span className="text-sm md:text-base font-mono font-black text-blue-400 tracking-widest uppercase drop-shadow-sm">
+                <span className="text-sm font-bold text-slate-500 tracking-wider uppercase">Track 01</span>
+                <span className="text-slate-300 font-light text-lg">/</span>
+                <span className="text-sm font-black text-blue-600 tracking-widest uppercase">
                   SerpApi Decision Agent
                 </span>
               </div>
