@@ -145,8 +145,43 @@ describe("PatientTrajectoryCard Component", () => {
     expect(updatedState[0].area).toBeGreaterThanOrEqual(1500);
     expect(updatedState[0].forecastArea).toBeNull();
     expect(updatedState[0].type).toBe("Observed");
-    expect(updatedState[0].prediction).toBe("Tumor Detected");
+    expect(updatedState[0].prediction).toBe("Meningioma (Grade II)");
     expect(updatedState[0].imagePreview).toBeDefined();
+
+    vi.useRealTimers();
+  });
+
+  it("prioritizes gradCamUrl over local image when provided", () => {
+    vi.useFakeTimers();
+    const setScansMock = vi.fn();
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        gradCamUrl="https://api.neuroagent.org/heatmaps/gradcam_sample.png"
+        predictionResult="Glioblastoma (Grade IV)"
+        customScans={[]}
+        setCustomScans={setScansMock}
+      />
+    );
+
+    const fileInput = document.getElementById(
+      "historical-mri-upload"
+    ) as HTMLInputElement;
+    const testFile = new File(["dummy content"], "brain_scan.png", {
+      type: "image/png",
+    });
+
+    fireEvent.change(fileInput, { target: { files: [testFile] } });
+
+    vi.advanceTimersByTime(650);
+
+    expect(setScansMock).toHaveBeenCalledTimes(1);
+    const updater = setScansMock.mock.calls[0][0];
+    const updatedState = updater([]);
+    expect(updatedState[0].prediction).toBe("Glioblastoma (Grade IV)");
+    expect(updatedState[0].imagePreview).toBe(
+      "https://api.neuroagent.org/heatmaps/gradcam_sample.png"
+    );
 
     vi.useRealTimers();
   });
@@ -214,17 +249,19 @@ describe("PatientTrajectoryCard Component", () => {
     expect(updatedScans[1].forecastArea).toBeGreaterThanOrEqual(2400);
   });
 
-
-
-  it("renders Historical Scans Log gallery with scans and follow-up button for demo patients", () => {
+  it("renders Historical Scans Log gallery with mock images, specific predictions, and follow-up button for demo patients", () => {
     render(<PatientTrajectoryCard activePatient="Eleanor Vance" />);
 
     expect(screen.getByText("Historical Scans Log")).toBeInTheDocument();
-    expect(screen.getByText("SCAN 01")).toBeInTheDocument();
-    expect(screen.getByText("SCAN 02")).toBeInTheDocument();
-    expect(screen.getByText("SCAN 03")).toBeInTheDocument();
-    expect(screen.getByText("SCAN 04")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })).toBeInTheDocument();
+    expect(screen.getByText(/SCAN 01 • Jan 2026/i)).toBeInTheDocument();
+    expect(screen.getByText(/SCAN 02 • May 2026/i)).toBeInTheDocument();
+    expect(screen.getByText(/SCAN 03 • Aug 2026/i)).toBeInTheDocument();
+    expect(screen.getByText(/SCAN 04 • Oct 2026/i)).toBeInTheDocument();
+    expect(screen.getAllByText("Glioblastoma")).toHaveLength(4);
+    expect(screen.getByAltText("Scan 1")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })
+    ).toBeInTheDocument();
   });
 
   it("calls onSelectPatient callback when a different patient is chosen from dropdown", () => {

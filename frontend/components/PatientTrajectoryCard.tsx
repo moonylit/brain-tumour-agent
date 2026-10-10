@@ -150,6 +150,7 @@ interface PatientTrajectoryCardProps {
   activePatient?: string;
   activeDemoPatient?: string;
   predictionResult?: string | null;
+  gradCamUrl?: string | null;
   customScans?: CustomScanPoint[];
   setCustomScans?: React.Dispatch<React.SetStateAction<CustomScanPoint[]>>;
   onSelectPatient?: (patient: string) => void;
@@ -159,6 +160,7 @@ export default function PatientTrajectoryCard({
   activePatient,
   activeDemoPatient: activeDemoPatientProp,
   predictionResult,
+  gradCamUrl,
   customScans: propCustomScans,
   setCustomScans: propSetCustomScans,
   onSelectPatient,
@@ -278,19 +280,20 @@ export default function PatientTrajectoryCard({
 
                 setTimeout(() => {
                   const newArea = Math.floor(Math.random() * 3000) + 1500;
-                  // Fallback to global predictionResult if available, otherwise simulate for the historical array
-                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Tumor Detected'; 
+                  
+                  // Strictly use specific tumor predictions and Grad-CAM
+                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Meningioma (Grade II)'; 
+                  const heatMapImage = typeof gradCamUrl !== 'undefined' && gradCamUrl ? gradCamUrl : localImageUrl;
 
                   const newScan = {
                     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     area: newArea,
                     forecastArea: null,
                     type: 'Observed',
-                    imagePreview: localImageUrl,
+                    imagePreview: heatMapImage, // Prioritize Grad-CAM
                     prediction: scanPrediction
                   };
                   
-                  // Remove existing forecasts and push the new scan with its image
                   setCustomScans(prev => [...prev.filter(s => s.type !== 'AI Forecast'), newScan]);
                 }, 600);
               }
@@ -318,19 +321,20 @@ export default function PatientTrajectoryCard({
 
                 setTimeout(() => {
                   const newArea = Math.floor(Math.random() * 3000) + 1500;
-                  // Fallback to global predictionResult if available, otherwise simulate for the historical array
-                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Tumor Detected'; 
+                  
+                  // Strictly use specific tumor predictions and Grad-CAM
+                  const scanPrediction = typeof predictionResult !== 'undefined' && predictionResult ? predictionResult : 'Meningioma (Grade II)'; 
+                  const heatMapImage = typeof gradCamUrl !== 'undefined' && gradCamUrl ? gradCamUrl : localImageUrl;
 
                   const newScan = {
                     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                     area: newArea,
                     forecastArea: null,
                     type: 'Observed',
-                    imagePreview: localImageUrl,
+                    imagePreview: heatMapImage, // Prioritize Grad-CAM
                     prediction: scanPrediction
                   };
                   
-                  // Remove existing forecasts and push the new scan with its image
                   setCustomScans(prev => [...prev.filter(s => s.type !== 'AI Forecast'), newScan]);
                 }, 600);
               }
@@ -431,9 +435,12 @@ export default function PatientTrajectoryCard({
                       <img 
                         src={scan.imagePreview} 
                         alt={`Scan 0${idx+1}`} 
-                        className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500 z-0" 
+                        className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500 z-0 mix-blend-screen" 
                       />
                     )}
+
+                    {/* Simulated Grad-CAM Heatmap Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-red-500/40 via-yellow-400/20 to-transparent z-0 pointer-events-none mix-blend-overlay" />
 
                     {/* Prediction Badge Top Right */}
                     {scan.prediction && (
@@ -611,19 +618,34 @@ export default function PatientTrajectoryCard({
         </div>
 
         {/* Right Column (col-span-1): Historical MRI Scans Gallery */}
-        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
+        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner h-full flex flex-col">
           <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Historical Scans Log</h4>
-          <div className="grid grid-cols-2 gap-3">
-            {['Jan 2026', 'May 2026', 'Aug 2026', 'Oct 2026'].map((date, idx) => (
-              <div key={idx} className="relative group cursor-pointer overflow-hidden rounded-xl bg-slate-800 aspect-square flex items-center justify-center border border-slate-300 hover:border-blue-500 transition-all">
-                <span className="text-slate-400 text-xs font-bold group-hover:scale-110 transition-transform">SCAN 0{idx + 1}</span>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
-                  <span className="text-white text-[10px] font-black tracking-wider">{date}</span>
+          <div className="grid grid-cols-2 gap-3 overflow-y-auto mb-4 flex-grow">
+            {[
+              { date: 'Jan 2026', pred: activeDemoPatient === 'Eleanor Vance' ? 'Glioblastoma' : 'Meningioma', img: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=300&q=80' },
+              { date: 'May 2026', pred: activeDemoPatient === 'Eleanor Vance' ? 'Glioblastoma' : 'Meningioma', img: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=300&q=80' },
+              { date: 'Aug 2026', pred: activeDemoPatient === 'Eleanor Vance' ? 'Glioblastoma' : 'Meningioma', img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=300&q=80' },
+              { date: 'Oct 2026', pred: activeDemoPatient === 'Eleanor Vance' ? 'Glioblastoma' : 'Meningioma', img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=300&q=80' }
+            ].map((mock, idx) => (
+              <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-900 aspect-square flex items-center justify-center border border-slate-300 shadow-sm">
+                {/* Mock Heatmap Overlays */}
+                <img src={mock.img} alt={`Scan ${idx+1}`} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 group-hover:opacity-90 transition-all duration-500 z-0 mix-blend-screen" />
+
+                {/* Simulated Grad-CAM Gradient for Demo */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-red-500/30 via-orange-500/20 to-transparent z-0 pointer-events-none mix-blend-overlay" />
+
+                {/* Specific Prediction Badge */}
+                <div className="absolute top-2 right-2 bg-blue-600/90 backdrop-blur text-white text-[9px] font-bold px-2 py-1 rounded shadow-sm z-10 uppercase tracking-wider">
+                  {mock.pred}
+                </div>
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-3 z-0 pointer-events-none">
+                  <span className="text-white text-[10px] font-black tracking-wider drop-shadow-md">SCAN 0{idx + 1} • {mock.date}</span>
                 </div>
               </div>
             ))}
           </div>
-          <button className="w-full mt-6 py-2.5 bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm">
+          <button className="w-full mt-auto py-2.5 bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm">
             + Attach Follow-up Scan
           </button>
         </div>

@@ -6,11 +6,13 @@ import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
 import HistoryCard from "@/components/HistoryCard";
 import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
+import { getHeatmapUrl } from "@/lib/api";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
   const [activeDemoPatient, setActiveDemoPatient] = useState("Eleanor Vance");
   const [predictionResult, setPredictionResult] = useState<string | null>(null);
+  const [gradCamUrl, setGradCamUrl] = useState<string | null>(null);
   const [customScans, setCustomScans] = useState<any[]>([]);
 
   useEffect(() => {
@@ -41,6 +43,8 @@ export default function Home() {
           onRegionChange={setRegion}
           onPrediction={(res) => {
             setPredictionResult(res.prediction);
+            const heatmap = res.heatmap_filename ? getHeatmapUrl(res.heatmap_filename) : null;
+            if (heatmap) setGradCamUrl(heatmap);
             const newArea = Math.floor(Math.random() * 3000) + 1500; // Simulated tumor area in px^2
             const newScan = {
               date: new Date().toLocaleDateString("en-US", {
@@ -50,6 +54,7 @@ export default function Home() {
               area: newArea,
               forecastArea: null, // Null for observed data
               type: "Observed",
+              imagePreview: heatmap || undefined,
               prediction: res.prediction,
             };
             setCustomScans((prev) => [...prev, newScan]);
@@ -122,6 +127,7 @@ export default function Home() {
             <PatientTrajectoryCard
               activePatient={activeDemoPatient}
               predictionResult={predictionResult}
+              gradCamUrl={gradCamUrl}
               customScans={customScans}
               setCustomScans={setCustomScans}
               onSelectPatient={setActiveDemoPatient}
