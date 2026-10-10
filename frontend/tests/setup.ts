@@ -46,6 +46,20 @@ if (typeof window !== "undefined") {
     },
     configurable: true,
   });
+
+  // Polyfill IntersectionObserver for scroll-triggered animation tests
+  if (typeof (window as any).IntersectionObserver === "undefined") {
+    class MockIntersectionObserver {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+      constructor(callback: any) {
+        callback([{ isIntersecting: true }]);
+      }
+    }
+    (window as any).IntersectionObserver = MockIntersectionObserver;
+    (global as any).IntersectionObserver = MockIntersectionObserver;
+  }
 }
 
 

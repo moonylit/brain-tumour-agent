@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
@@ -9,6 +9,30 @@ import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 import { getHeatmapUrl } from "@/lib/api";
 
 export default function Home() {
+  const metricsRef = useRef<HTMLDivElement | null>(null);
+  const [metricsVisible, setMetricsVisible] = useState(false);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      setMetricsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMetricsVisible(true);
+        }
+      },
+      { threshold: 0.3 } // Triggers when 30% of the element is visible
+    );
+
+    if (metricsRef.current) {
+      observer.observe(metricsRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
   const [region, setRegion] = useState("Jaipur");
   const [activeDemoPatient, setActiveDemoPatient] = useState("Eleanor Vance");
   const [predictionResult, setPredictionResult] = useState<string | null>(null);
@@ -105,40 +129,49 @@ export default function Home() {
         />
 
         {/* Restored Full ML Statistics Section */}
-        <section
-          id="statistics"
-          className="w-full max-w-7xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-sm p-8"
-        >
-          <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center">
-            Model Performance Metrics
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-6 bg-blue-50 rounded-2xl border border-blue-200 shadow-xs">
-              <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">
-                Validation Accuracy
-              </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">98.09%</p>
+        <section id="statistics" className="w-full">
+          <div ref={metricsRef} className="w-full max-w-5xl mx-auto py-12 perspective-1000 overflow-hidden">
+            {/* Heading slides down gently */}
+            <div className={`transition-all duration-700 ease-out mb-10 ${metricsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'}`}>
+              <h3 className="text-xl font-extrabold text-slate-800 text-center tracking-tight">Model Performance Metrics</h3>
             </div>
-            <div className="p-6 bg-purple-50 rounded-2xl border border-purple-200 shadow-xs">
-              <p className="text-xs font-bold text-purple-600 uppercase tracking-widest">
-                F1-Score
-              </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">97.8%</p>
-            </div>
-            <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-200 shadow-xs">
-              <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
-                Recall (Sensitivity)
-              </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">98.2%</p>
-            </div>
-            <div className="p-6 bg-amber-50 rounded-2xl border border-amber-200 shadow-xs">
-              <p className="text-xs font-bold text-amber-600 uppercase tracking-widest">
-                Precision
-              </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">97.5%</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {/* Card 1: Validation Accuracy */}
+              <div className={`flex flex-col items-center justify-center p-6 rounded-2xl bg-blue-50/70 border border-blue-100 shadow-sm ${metricsVisible ? 'animate-[popIn3D_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
+                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2 text-center">Validation Accuracy</span>
+                <span className="text-3xl font-black text-slate-900">98.09%</span>
+              </div>
+
+              {/* Card 2: F1-Score */}
+              <div className={`flex flex-col items-center justify-center p-6 rounded-2xl bg-purple-50/70 border border-purple-100 shadow-sm ${metricsVisible ? 'animate-[popIn3D_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
+                <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-2 text-center">F1-Score</span>
+                <span className="text-3xl font-black text-slate-900">97.8%</span>
+              </div>
+
+              {/* Card 3: Recall */}
+              <div className={`flex flex-col items-center justify-center p-6 rounded-2xl bg-emerald-50/70 border border-emerald-100 shadow-sm ${metricsVisible ? 'animate-[popIn3D_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: '500ms' }}>
+                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2 text-center">Recall (Sensitivity)</span>
+                <span className="text-3xl font-black text-slate-900">98.2%</span>
+              </div>
+
+              {/* Card 4: Precision */}
+              <div className={`flex flex-col items-center justify-center p-6 rounded-2xl bg-amber-50/70 border border-amber-100 shadow-sm ${metricsVisible ? 'animate-[popIn3D_0.7s_ease-out_forwards]' : 'opacity-0'}`} style={{ animationDelay: '700ms' }}>
+                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-2 text-center">Precision</span>
+                <span className="text-3xl font-black text-slate-900">97.5%</span>
+              </div>
             </div>
           </div>
         </section>
+
+        <style>{`
+          @keyframes popIn3D {
+            0% { opacity: 0; transform: translateY(60px) scale(0.9) rotateX(-40deg); }
+            70% { opacity: 1; transform: translateY(-5px) scale(1.02) rotateX(10deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
+          }
+          .perspective-1000 { perspective: 1000px; }
+        `}</style>
 
         {/* 5. Collapsible <details> History Accordion with Interactive Patient Switcher */}
         <details
