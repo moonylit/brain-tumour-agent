@@ -8,7 +8,7 @@ import {
 } from "@/lib/api";
 
 import PredictionCard from "./PredictionCard";
-import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
+import { Sparkles, AlertTriangle, X } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -216,65 +216,84 @@ export default function UploadCard({
         {/* Left Column (Upload Card) */}
         <div className="bg-white p-8 md:p-12 rounded-[2rem] border border-slate-200 shadow-sm flex flex-col h-full">
           <div>
-            <div className="flex items-center justify-between gap-3 mb-2">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4 flex items-center gap-3">
-                <Upload className="h-8 w-8 text-blue-600" />
-                <span>Upload MRI Scan</span>
-              </h2>
-              <div className="mx-auto inline-flex items-center gap-3 px-5 py-2.5 bg-blue-50/50 rounded-full shadow-sm border border-blue-200 mb-8 hover:bg-blue-100/50 hover:border-blue-300 transition-all cursor-default whitespace-nowrap">
-                <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-                </div>
-                <span className="text-sm font-bold text-slate-500 tracking-wider uppercase">Track 01</span>
-                <span className="text-slate-300 font-light text-lg">/</span>
-                <span className="text-sm font-black text-blue-600 tracking-widest uppercase">
-                  SerpApi Decision Agent
-                </span>
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3">
+                <svg className="w-8 h-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Upload MRI Scan</h2>
+              </div>
+              
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-50/50 rounded-full border border-blue-200">
+                <svg className="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                <span className="text-[10px] font-bold text-slate-500 tracking-wider uppercase">Track 01</span>
+                <span className="text-slate-300 font-light">/</span>
+                <span className="text-[10px] font-black text-blue-600 tracking-widest uppercase">SerpApi Decision Agent</span>
               </div>
             </div>
-            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
-              Select a brain MRI image (JPG or PNG, max 10MB) for tumour classification, Grad-CAM explainability localization, and autonomous SerpApi clinical literature and regional hospital discovery.
+            
+            <p className="text-slate-600 font-medium text-[15px] leading-relaxed mb-8 max-w-3xl">
+              Upload a patient's axial brain MRI (T1, T2, or FLAIR in JPG/PNG, up to 10MB) for neural tumor classification, AI Grad-CAM localization, and automated referral routing.
             </p>
 
-            {/* Massive Upload Dropzone */}
+            {/* Upgraded Drag-and-Drop Area */}
             <div 
               onDragOver={(e) => handleDragOver(e, setIsDraggingMain)}
               onDragLeave={(e) => handleDragLeave(e, setIsDraggingMain)}
               onDrop={(e) => handleDrop(e, 'main-mri-upload', setIsDraggingMain)}
-              className={`w-full min-h-[300px] flex flex-col items-center justify-center border-2 border-dashed rounded-3xl transition-all p-10 ${
-                isDraggingMain ? 'border-blue-600 bg-blue-100 shadow-inner' : 'border-blue-300 bg-blue-50/40 hover:border-blue-500 hover:bg-blue-50'
+              className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center py-12 px-6 group cursor-pointer shadow-sm ${
+                isDraggingMain
+                  ? 'border-blue-600 bg-blue-100 shadow-inner'
+                  : 'border-indigo-300 bg-gradient-to-b from-blue-50/50 to-indigo-50/30 hover:bg-blue-50 hover:border-blue-400'
               }`}
             >
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25">
-                <Upload className="h-7 w-7 text-white" />
+              {/* Custom Icon Stack */}
+              <div className="relative mb-6 pointer-events-none">
+                {/* Outer glowing ring */}
+                <div className="absolute inset-0 bg-blue-400 blur-xl opacity-20 rounded-full group-hover:opacity-40 transition-opacity"></div>
+
+                {/* Main MRI Icon Container */}
+                <div className="relative w-[72px] h-[72px] bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl border-4 border-white shadow-md flex items-center justify-center overflow-hidden">
+                  {/* Subtle grid lines */}
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+                  {/* Brain outline SVG */}
+                  <svg className="w-10 h-10 text-blue-300 relative z-10 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                  </svg>
+                </div>
+
+                {/* Overlapping Action Badge */}
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full border-2 border-white flex items-center justify-center shadow-sm z-20 group-hover:bg-blue-700 group-hover:scale-110 transition-transform">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                </div>
               </div>
 
-              <label htmlFor="main-mri-upload" className="cursor-pointer">
-                <p className="text-xl font-bold text-slate-800 mb-2 text-center">
-                  Browse neuroimaging file or select from local directory
-                </p>
-              </label>
+              {/* Text & Button */}
+              <h3 className="text-xl font-bold text-slate-900 mb-1 text-center pointer-events-none">Drag and drop neuroimaging files here</h3>
+              <p className="text-slate-500 font-medium mb-6 text-center pointer-events-none">or browse your local directory</p>
 
-              <button
+              <button 
                 type="button"
                 onClick={() => (document.getElementById("main-mri-upload") || document.getElementById("mri-upload-input"))?.click()}
-                className="mt-6 px-10 py-4 bg-blue-600 text-white text-base font-bold uppercase tracking-wider rounded-xl hover:bg-blue-700 shadow-md transition-all active:scale-95 cursor-pointer"
+                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold uppercase tracking-wider rounded-lg shadow-lg shadow-blue-600/30 transition-all active:scale-95 z-10 pointer-events-auto cursor-pointer"
               >
                 Choose File
               </button>
 
-              <input
-                type="file"
-                id="main-mri-upload"
-                accept="image/jpeg,image/png"
-                onChange={handleImageChange}
-                className="hidden"
-              />
+              <div className="mt-6 text-[11px] font-mono font-medium text-slate-400 tracking-wider pointer-events-none">
+                Supported formats: JPEG, PNG • Max size: 10 MB
+              </div>
 
-              <p className="mt-4 text-xs font-mono font-medium text-slate-500">
-                Supported formats: JPG, PNG • Max size: 10 MB
-              </p>
+              {/* Hidden File Input ensures functionality isn't broken */}
+              <input 
+                type="file" 
+                id="main-mri-upload"
+                accept="image/jpeg,image/png,.jpg,.jpeg,.png"
+                onChange={handleImageChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-0" 
+              />
             </div>
           </div>
 

@@ -26,10 +26,10 @@ describe("UploadCard Component", () => {
 
     expect(screen.getByText("Upload MRI Scan")).toBeInTheDocument();
     expect(
-      screen.getByText(/Select a brain MRI image \(JPG or PNG, max 10MB\)/i),
+      screen.getByText(/Upload a patient's axial brain MRI/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Supported formats: JPG, PNG • Max size: 10 MB/i),
+      screen.getByText(/Supported formats: JPEG, PNG • Max size: 10 MB/i),
     ).toBeInTheDocument();
   });
 
@@ -194,7 +194,7 @@ describe("UploadCard Component", () => {
 
   it("handles native drag-and-drop events and hover state correctly", async () => {
     render(<UploadCard />);
-    const dropzone = screen.getByText(/Browse neuroimaging file or select from local directory/i).closest("div");
+    const dropzone = screen.getByText(/Drag and drop neuroimaging files here/i).closest("div");
     expect(dropzone).toBeInTheDocument();
 
     // Drag over activates hover styling
@@ -204,8 +204,8 @@ describe("UploadCard Component", () => {
 
     // Drag leave reverts hover styling
     fireEvent.dragLeave(dropzone!);
-    expect(dropzone?.className).toContain("border-blue-300");
-    expect(dropzone?.className).toContain("bg-blue-50/40");
+    expect(dropzone?.className).toContain("border-indigo-300");
+    expect(dropzone?.className).toContain("from-blue-50/50");
 
     // Drop file sets input files and triggers preview
     const validFile = new File(["dropped-scan"], "dropped_mri.jpg", {
