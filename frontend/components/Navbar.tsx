@@ -47,11 +47,31 @@ export default function Navbar() {
       </div>
 
       {/* Center Column */}
-      <nav className="hidden md:flex items-center gap-8 bg-slate-50 px-6 py-2 rounded-full border border-slate-200">
-        <a href="#upload" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Upload</a>
-        <a href="#statistics" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Statistics</a>
-        <a href="#history" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">History</a>
-        <a href="#features" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Features</a>
+      <nav className="hidden md:flex items-center gap-2 bg-white px-2 py-2 rounded-full border-2 border-slate-200 shadow-sm">
+        <a 
+          href="#upload" 
+          className="px-6 py-3 text-base font-black text-slate-700 uppercase tracking-wide rounded-full hover:bg-blue-600 hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
+        >
+          Upload
+        </a>
+        <a 
+          href="#statistics" 
+          className="px-6 py-3 text-base font-black text-slate-700 uppercase tracking-wide rounded-full hover:bg-blue-600 hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
+        >
+          Statistics
+        </a>
+        <a 
+          href="#history" 
+          className="px-6 py-3 text-base font-black text-slate-700 uppercase tracking-wide rounded-full hover:bg-blue-600 hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
+        >
+          History
+        </a>
+        <a 
+          href="#features" 
+          className="px-6 py-3 text-base font-black text-slate-700 uppercase tracking-wide rounded-full hover:bg-blue-600 hover:text-white hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
+        >
+          Features
+        </a>
       </nav>
 
 
