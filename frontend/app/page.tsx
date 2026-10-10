@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import UploadCard from "@/components/UploadCard";
 import HistoryCard from "@/components/HistoryCard";
+import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
@@ -29,11 +30,15 @@ export default function Home() {
         >
           <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-lg font-bold text-slate-800 hover:text-blue-600 transition-colors">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">📊</span> View Patient EHR &amp; Prediction History
+              <span className="text-2xl">📊</span> View Patient EHR &amp; Prediction History{" "}
+              <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded ml-2">
+                Demo Data
+              </span>
             </div>
             <span className="transition group-open:rotate-180">▼</span>
           </summary>
-          <div className="p-6 border-t border-slate-200">
+          <div className="p-6 border-t border-slate-200 space-y-8">
+            <PatientTrajectoryCard activePatient="Eleanor Vance" />
             <HistoryCard />
           </div>
         </details>
@@ -113,9 +118,11 @@ export default function Home() {
         </section>
       </div>
 
-      {/* 7. Footer */}
-      <footer className="w-full py-8 text-center text-slate-500 text-sm mt-12 border-t border-slate-200">
-        Built for Autonomous Clinical Triage
+      {/* 7. Global Disclaimer Footer */}
+      <footer className="w-full py-8 bg-slate-900 mt-20 flex flex-col items-center justify-center px-6 text-center">
+        <p className="text-slate-400 text-sm max-w-4xl leading-relaxed">
+          <strong>⚠️ Disclaimer:</strong> NeuroAgent is an experimental AI decision-support system. Always consult a qualified healthcare provider for medical advice, diagnosis, or treatment.
+        </p>
       </footer>
     </main>
   );

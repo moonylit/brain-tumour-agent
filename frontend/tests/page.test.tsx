@@ -76,7 +76,7 @@ describe("Page Integration (app/page.tsx)", () => {
 
     // 6. Footer
     expect(
-      screen.getByText("Built for Autonomous Clinical Triage"),
+      screen.getByText(/NeuroAgent is an experimental AI decision-support system/i),
     ).toBeInTheDocument();
   });
 });

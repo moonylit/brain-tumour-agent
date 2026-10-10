@@ -172,15 +172,8 @@ export default function PatientTrajectoryCard({
   } = patientData;
 
   return (
-    <details className="group w-full max-w-7xl mx-auto mb-16 bg-white/60 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-sm transition-all duration-300">
-      <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-xl font-bold text-slate-800 hover:text-blue-600">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">📁</span> Patient EHR History: {activePatient} (Longitudinal Tracking)
-        </div>
-        <span className="transition group-open:rotate-180">▼</span>
-      </summary>
-      <div className="p-6 border-t border-slate-200">
-        {/* Card Header */}
+    <div className="w-full">
+      {/* Card Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
@@ -329,7 +322,7 @@ export default function PatientTrajectoryCard({
         <div className="bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col gap-4">
           <div>
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Diagnostic Summary
+              Clinical Trajectory
             </span>
             <h4 className="text-lg font-bold text-slate-900 mt-0.5">{diagnosis}</h4>
             <p className="text-xs font-medium text-slate-600">{stage}</p>
@@ -359,10 +352,6 @@ export default function PatientTrajectoryCard({
 
           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-600 space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-slate-500">Historical Rate:</span>
-              <span className="font-bold text-rose-600">+{growthRatePct}%</span>
-            </div>
-            <div className="flex items-center justify-between">
               <span className="text-slate-500">Baseline Scan:</span>
               <span className="font-bold text-slate-700">{baselineArea.toLocaleString()} px²</span>
             </div>
@@ -381,6 +370,5 @@ export default function PatientTrajectoryCard({
         </div>
       </div>
     </div>
-  </details>
-);
+  );
 }
