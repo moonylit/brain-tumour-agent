@@ -18,13 +18,72 @@ interface UploadCardProps {
   region?: string;
   onRegionChange?: (region: string) => void;
   onPrediction?: (result: PredictionResponse) => void;
+  isDraggingMain?: boolean;
+  setIsDraggingMain?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDragOver?: (
+    e: React.DragEvent,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
+  handleDragLeave?: (
+    e: React.DragEvent,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
+  handleDrop?: (
+    e: React.DragEvent,
+    inputId: string,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
 }
 
 export default function UploadCard({
   region: propRegion,
   onRegionChange,
   onPrediction,
+  isDraggingMain: propIsDraggingMain,
+  setIsDraggingMain: propSetIsDraggingMain,
+  handleDragOver: propHandleDragOver,
+  handleDragLeave: propHandleDragLeave,
+  handleDrop: propHandleDrop,
 }: UploadCardProps = {}) {
+  const [localIsDraggingMain, setLocalIsDraggingMain] = useState(false);
+  const isDraggingMain = propIsDraggingMain !== undefined ? propIsDraggingMain : localIsDraggingMain;
+  const setIsDraggingMain = propSetIsDraggingMain || setLocalIsDraggingMain;
+
+  const defaultHandleDragOver = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  };
+
+  const defaultHandleDragLeave = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  };
+
+  const defaultHandleDrop = (e: React.DragEvent, inputId: string, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const fileInput = document.getElementById(inputId) as HTMLInputElement;
+      if (fileInput) {
+        // Create a new DataTransfer object to assign the dropped file to the hidden input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(e.dataTransfer.files[0]);
+        fileInput.files = dataTransfer.files;
+        
+        // Dispatch a change event so the existing onChange handlers pick it up
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  };
+
+  const handleDragOver = propHandleDragOver || defaultHandleDragOver;
+  const handleDragLeave = propHandleDragLeave || defaultHandleDragLeave;
+  const handleDrop = propHandleDrop || defaultHandleDrop;
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [localRegion, setLocalRegion] = useState("Jaipur");
   const region = propRegion !== undefined ? propRegion : localRegion;
@@ -61,26 +120,6 @@ export default function UploadCard({
     setErrorMessage(null);
     const file = event.target.files?.[0];
 
-    if (!file) return;
-
-    const validationError = validateFile(file);
-    if (validationError) {
-      setErrorMessage(validationError);
-      setSelectedImage(null);
-      setPreview(null);
-      return;
-    }
-
-    setSelectedImage(file);
-    setPreview(URL.createObjectURL(file));
-    setResult(null);
-    setErrorMessage(null);
-  }
-
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    setErrorMessage(null);
-    const file = event.dataTransfer.files?.[0];
     if (!file) return;
 
     const validationError = validateFile(file);
@@ -158,16 +197,19 @@ export default function UploadCard({
             </p>
 
             {/* Massive Upload Dropzone */}
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-              className="w-full min-h-[300px] flex flex-col items-center justify-center bg-blue-50/40 border-2 border-dashed border-blue-300 rounded-3xl hover:border-blue-500 hover:bg-blue-50 transition-all p-10 text-center"
+            <div 
+              onDragOver={(e) => handleDragOver(e, setIsDraggingMain)}
+              onDragLeave={(e) => handleDragLeave(e, setIsDraggingMain)}
+              onDrop={(e) => handleDrop(e, 'main-mri-upload', setIsDraggingMain)}
+              className={`w-full min-h-[300px] flex flex-col items-center justify-center border-2 border-dashed rounded-3xl transition-all p-10 ${
+                isDraggingMain ? 'border-blue-600 bg-blue-100 shadow-inner' : 'border-blue-300 bg-blue-50/40 hover:border-blue-500 hover:bg-blue-50'
+              }`}
             >
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-blue-200 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25">
                 <Upload className="h-7 w-7 text-white" />
               </div>
 
-              <label htmlFor="mri-upload-input" className="cursor-pointer">
+              <label htmlFor="main-mri-upload" className="cursor-pointer">
                 <p className="text-xl font-bold text-slate-800 mb-2 text-center">
                   Browse neuroimaging file or select from local directory
                 </p>
@@ -175,7 +217,7 @@ export default function UploadCard({
 
               <button
                 type="button"
-                onClick={() => document.getElementById("mri-upload-input")?.click()}
+                onClick={() => (document.getElementById("main-mri-upload") || document.getElementById("mri-upload-input"))?.click()}
                 className="mt-6 px-10 py-4 bg-blue-600 text-white text-base font-bold uppercase tracking-wider rounded-xl hover:bg-blue-700 shadow-md transition-all active:scale-95 cursor-pointer"
               >
                 Choose File
@@ -183,7 +225,7 @@ export default function UploadCard({
 
               <input
                 type="file"
-                id="mri-upload-input"
+                id="main-mri-upload"
                 accept="image/jpeg,image/png"
                 onChange={handleImageChange}
                 className="hidden"

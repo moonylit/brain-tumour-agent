@@ -15,6 +15,40 @@ export default function Home() {
   const [gradCamUrl, setGradCamUrl] = useState<string | null>(null);
   const [customScans, setCustomScans] = useState<any[]>([]);
 
+  const [isDraggingMain, setIsDraggingMain] = useState(false);
+  const [isDraggingEHR, setIsDraggingEHR] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent, inputId: string, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const fileInput = document.getElementById(inputId) as HTMLInputElement;
+      if (fileInput) {
+        // Create a new DataTransfer object to assign the dropped file to the hidden input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(e.dataTransfer.files[0]);
+        fileInput.files = dataTransfer.files;
+        
+        // Dispatch a change event so the existing onChange handlers pick it up
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  };
+
   useEffect(() => {
     const handleNewPrediction = (e: Event) => {
       const customEvent = e as CustomEvent<{ prediction?: string }>;
@@ -41,6 +75,11 @@ export default function Home() {
         <UploadCard
           region={region}
           onRegionChange={setRegion}
+          isDraggingMain={isDraggingMain}
+          setIsDraggingMain={setIsDraggingMain}
+          handleDragOver={handleDragOver}
+          handleDragLeave={handleDragLeave}
+          handleDrop={handleDrop}
           onPrediction={(res) => {
             setPredictionResult(res.prediction);
             const heatmap = res.heatmap_filename ? getHeatmapUrl(res.heatmap_filename) : null;
@@ -131,6 +170,11 @@ export default function Home() {
               customScans={customScans}
               setCustomScans={setCustomScans}
               onSelectPatient={setActiveDemoPatient}
+              isDraggingEHR={isDraggingEHR}
+              setIsDraggingEHR={setIsDraggingEHR}
+              handleDragOver={handleDragOver}
+              handleDragLeave={handleDragLeave}
+              handleDrop={handleDrop}
             />
             <HistoryCard />
           </div>

@@ -154,6 +154,21 @@ interface PatientTrajectoryCardProps {
   customScans?: CustomScanPoint[];
   setCustomScans?: React.Dispatch<React.SetStateAction<CustomScanPoint[]>>;
   onSelectPatient?: (patient: string) => void;
+  isDraggingEHR?: boolean;
+  setIsDraggingEHR?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDragOver?: (
+    e: React.DragEvent,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
+  handleDragLeave?: (
+    e: React.DragEvent,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
+  handleDrop?: (
+    e: React.DragEvent,
+    inputId: string,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
 }
 
 export default function PatientTrajectoryCard({
@@ -164,7 +179,51 @@ export default function PatientTrajectoryCard({
   customScans: propCustomScans,
   setCustomScans: propSetCustomScans,
   onSelectPatient,
+  isDraggingEHR: propIsDraggingEHR,
+  setIsDraggingEHR: propSetIsDraggingEHR,
+  handleDragOver: propHandleDragOver,
+  handleDragLeave: propHandleDragLeave,
+  handleDrop: propHandleDrop,
 }: PatientTrajectoryCardProps) {
+  const [localIsDraggingEHR, setLocalIsDraggingEHR] = useState(false);
+  const isDraggingEHR = propIsDraggingEHR !== undefined ? propIsDraggingEHR : localIsDraggingEHR;
+  const setIsDraggingEHR = propSetIsDraggingEHR || setLocalIsDraggingEHR;
+
+  const defaultHandleDragOver = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  };
+
+  const defaultHandleDragLeave = (e: React.DragEvent, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  };
+
+  const defaultHandleDrop = (e: React.DragEvent, inputId: string, setDragging: React.Dispatch<React.SetStateAction<boolean>>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const fileInput = document.getElementById(inputId) as HTMLInputElement;
+      if (fileInput) {
+        // Create a new DataTransfer object to assign the dropped file to the hidden input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(e.dataTransfer.files[0]);
+        fileInput.files = dataTransfer.files;
+        
+        // Dispatch a change event so the existing onChange handlers pick it up
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  };
+
+  const handleDragOver = propHandleDragOver || defaultHandleDragOver;
+  const handleDragLeave = propHandleDragLeave || defaultHandleDragLeave;
+  const handleDrop = propHandleDrop || defaultHandleDrop;
+
   const [mounted, setMounted] = useState(false);
   const [customPatientName, setCustomPatientName] = useState("");
   const [internalCustomScans, setInternalCustomScans] = useState<CustomScanPoint[]>([]);
@@ -260,7 +319,15 @@ export default function PatientTrajectoryCard({
       </div>
 
       {activeDemoPatient === "Custom" && customScans.length === 0 ? (
-        <div className="w-full h-64 flex flex-col items-center justify-center bg-blue-50/50 border-2 border-dashed border-blue-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
+        <div 
+          onDragOver={(e) => handleDragOver(e, setIsDraggingEHR)}
+          onDragLeave={(e) => handleDragLeave(e, setIsDraggingEHR)}
+          onDrop={(e) => handleDrop(e, 'historical-mri-upload', setIsDraggingEHR)}
+          className={`w-full h-64 flex flex-col items-center justify-center border-2 border-dashed rounded-xl transition-all cursor-pointer ${
+            isDraggingEHR ? 'border-blue-600 bg-blue-100 shadow-inner scale-[0.98]' : 'border-blue-300 bg-blue-50/50 hover:border-blue-500 hover:bg-blue-50'
+          }`}
+          onClick={() => document.getElementById('historical-mri-upload')?.click()}
+        >
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shadow-sm mb-3">
             <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -301,7 +368,10 @@ export default function PatientTrajectoryCard({
           />
           <button 
             type="button"
-            onClick={() => document.getElementById('historical-mri-upload')?.click()}
+            onClick={(e) => {
+              e.stopPropagation();
+              document.getElementById('historical-mri-upload')?.click();
+            }}
             className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm transition-all"
           >
             Select MRI File

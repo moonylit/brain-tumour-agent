@@ -279,6 +279,48 @@ describe("PatientTrajectoryCard Component", () => {
     fireEvent.change(dropdown, { target: { value: "Marcus Webb" } });
     expect(onSelect).toHaveBeenCalledWith("Marcus Webb");
   });
+
+  it("handles native drag-and-drop on Custom Patient EHR dropzone and activates hover states", () => {
+    vi.useFakeTimers();
+    const setScansMock = vi.fn();
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        customScans={[]}
+        setCustomScans={setScansMock}
+      />
+    );
+
+    const dropzone = screen.getByText("Upload First MRI Scan").closest("div");
+    expect(dropzone).toBeInTheDocument();
+
+    // Drag over activates hover styling
+    fireEvent.dragOver(dropzone!);
+    expect(dropzone?.className).toContain("border-blue-600");
+    expect(dropzone?.className).toContain("bg-blue-100");
+
+    // Drag leave reverts hover styling
+    fireEvent.dragLeave(dropzone!);
+    expect(dropzone?.className).toContain("border-blue-300");
+    expect(dropzone?.className).toContain("bg-blue-50/50");
+
+    // Drop file sets input files and triggers scan addition
+    const testFile = new File(["dropped content"], "dropped_scan.png", {
+      type: "image/png",
+    });
+
+    fireEvent.drop(dropzone!, {
+      dataTransfer: {
+        files: [testFile],
+      },
+    });
+
+    vi.advanceTimersByTime(650);
+
+    expect(setScansMock).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
 });
+
 
 
