@@ -11,6 +11,7 @@ export default function Home() {
   const [region, setRegion] = useState("Jaipur");
   const [activeDemoPatient, setActiveDemoPatient] = useState("Eleanor Vance");
   const [predictionResult, setPredictionResult] = useState<string | null>(null);
+  const [customScans, setCustomScans] = useState<any[]>([]);
 
   useEffect(() => {
     const handleNewPrediction = (e: Event) => {
@@ -38,7 +39,20 @@ export default function Home() {
         <UploadCard
           region={region}
           onRegionChange={setRegion}
-          onPrediction={(res) => setPredictionResult(res.prediction)}
+          onPrediction={(res) => {
+            setPredictionResult(res.prediction);
+            const newArea = Math.floor(Math.random() * 3000) + 1500; // Simulated tumor area in px^2
+            const newScan = {
+              date: new Date().toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              }),
+              area: newArea,
+              forecastArea: null, // Null for observed data
+              type: "Observed",
+            };
+            setCustomScans((prev) => [...prev, newScan]);
+          }}
         />
 
         {/* Restored Full ML Statistics Section */}
@@ -107,6 +121,8 @@ export default function Home() {
             <PatientTrajectoryCard
               activePatient={activeDemoPatient}
               predictionResult={predictionResult}
+              customScans={customScans}
+              setCustomScans={setCustomScans}
               onSelectPatient={setActiveDemoPatient}
             />
             <HistoryCard />

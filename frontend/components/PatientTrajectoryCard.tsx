@@ -137,10 +137,19 @@ export function getDynamicTrajectoryData(patientName: string) {
   };
 }
 
+export interface CustomScanPoint {
+  date: string;
+  area: number | null;
+  forecastArea: number | null;
+  type: string;
+}
+
 interface PatientTrajectoryCardProps {
   activePatient?: string;
   activeDemoPatient?: string;
   predictionResult?: string | null;
+  customScans?: CustomScanPoint[];
+  setCustomScans?: React.Dispatch<React.SetStateAction<CustomScanPoint[]>>;
   onSelectPatient?: (patient: string) => void;
 }
 
@@ -148,10 +157,20 @@ export default function PatientTrajectoryCard({
   activePatient,
   activeDemoPatient: activeDemoPatientProp,
   predictionResult,
+  customScans: propCustomScans,
+  setCustomScans: propSetCustomScans,
   onSelectPatient,
 }: PatientTrajectoryCardProps) {
   const [mounted, setMounted] = useState(false);
   const [customPatientName, setCustomPatientName] = useState("");
+  const [internalCustomScans, setInternalCustomScans] = useState<CustomScanPoint[]>([]);
+
+  const customScans =
+    propCustomScans !== undefined ? propCustomScans : internalCustomScans;
+  const setCustomScans =
+    propSetCustomScans !== undefined
+      ? propSetCustomScans
+      : setInternalCustomScans;
 
   useEffect(() => {
     setMounted(true);
@@ -236,20 +255,124 @@ export default function PatientTrajectoryCard({
         )}
       </div>
 
-      {activeDemoPatient === "Custom" ? (
+      {activeDemoPatient === "Custom" && customScans.length === 0 ? (
         <div className="w-full h-64 flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-3">
-            <span className="text-xl text-blue-600">⬆️</span>
-          </div>
-          <p className="text-slate-700 font-bold mb-1 text-lg">Upload First MRI Scan</p>
-          <p className="text-slate-400 text-sm font-medium mb-6">Initialize trajectory for new patient</p>
-
-          <button 
-            onClick={() => (document.getElementById('mri-upload-input') || document.getElementById('mri-file-input'))?.click()} 
-            className="px-8 py-3 bg-blue-600 text-white text-sm font-bold uppercase tracking-wider rounded-full hover:bg-blue-700 shadow-md transition-all active:scale-95"
+          <p className="text-slate-700 font-bold mb-1 text-lg">Upload Baseline MRI Scan</p>
+          <button
+            onClick={() => (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
+            className="mt-4 px-8 py-3 bg-blue-600 text-white text-sm font-bold uppercase rounded-full hover:bg-blue-700 shadow-md transition-all"
           >
             Select MRI File
           </button>
+        </div>
+      ) : activeDemoPatient === "Custom" && customScans.length > 0 ? (
+        <div className="w-full">
+          <div className="h-72 w-full bg-white p-4 border border-slate-200 rounded-xl">
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={customScans}
+                  margin={{ top: 12, right: 24, left: 0, bottom: 8 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    stroke="#64748b"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={{ stroke: "#cbd5e1" }}
+                  />
+                  <YAxis
+                    stroke="#64748b"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={{ stroke: "#cbd5e1" }}
+                    tickFormatter={(v) => `${Number(v).toLocaleString()} px`}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur-md text-xs">
+                            <p className="font-bold text-slate-800 mb-1">{label}</p>
+                            {payload.map((entry, index) => (
+                              entry.value !== null && (
+                                <p
+                                  key={index}
+                                  className="font-semibold flex items-center justify-between gap-4"
+                                  style={{ color: entry.color }}
+                                >
+                                  <span>{entry.name}:</span>
+                                  <span>{Number(entry.value).toLocaleString()} px²</span>
+                                </p>
+                              )
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="bottom"
+                    height={36}
+                    formatter={(value) => (
+                      <span className="text-xs font-semibold text-slate-700">{value}</span>
+                    )}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="area"
+                    name="Observed Area (px)"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    dot={{ r: 5, fill: "#2563eb", strokeWidth: 2, stroke: "#ffffff" }}
+                    activeDot={{ r: 7 }}
+                    connectNulls={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="forecastArea"
+                    name="AI Forecast (px)"
+                    stroke="#9333ea"
+                    strokeWidth={3}
+                    strokeDasharray="5 5"
+                    dot={{ r: 5, fill: "#9333ea", strokeWidth: 2, stroke: "#ffffff" }}
+                    activeDot={{ r: 7 }}
+                    connectNulls={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-slate-50/50 rounded-xl animate-pulse text-slate-400 font-medium text-xs">
+                Rendering Longitudinal Chart...
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 flex-wrap gap-4">
+            <button
+              onClick={() => (document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
+              className="px-6 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm font-bold rounded-lg hover:bg-blue-50 transition-all"
+            >
+              + Add Follow-up Scan
+            </button>
+
+            <button
+              onClick={() => {
+                const lastScan = customScans[customScans.length - 1];
+                const baseArea = lastScan?.area ?? lastScan?.forecastArea ?? 2000;
+                const predictedGrowth = Math.floor(baseArea * (Math.random() * 0.4 + 1.1)); // Simulates 10-50% growth
+                setCustomScans((prev: any[]) => [
+                  ...prev,
+                  { date: "Forecast (+3M)", area: null, forecastArea: predictedGrowth, type: "AI Forecast" }
+                ]);
+              }}
+              className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold tracking-wider rounded-lg shadow-md transition-all flex items-center gap-2"
+            >
+              <span>🔮</span> Predict Future Trajectory
+            </button>
+          </div>
         </div>
       ) : (
       /* Main 2-Column EHR Trajectory Grid */

@@ -59,8 +59,8 @@ describe("PatientTrajectoryCard Component", () => {
     expect(trajectoryData[4].predicted).toBe(21000);
   });
 
-  it("renders custom text input and interactive upload dropzone when activePatient is Custom without prediction", () => {
-    render(<PatientTrajectoryCard activePatient="Custom" />);
+  it("renders custom text input and interactive upload dropzone when activePatient is Custom without scans", () => {
+    render(<PatientTrajectoryCard activePatient="Custom" customScans={[]} />);
 
     // Custom patient input
     const input = screen.getByPlaceholderText("Enter New Patient Name...");
@@ -75,10 +75,7 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.queryByText("New Record Active")).not.toBeInTheDocument();
 
     // Dropzone content
-    expect(screen.getByText("Upload First MRI Scan")).toBeInTheDocument();
-    expect(
-      screen.getByText("Initialize trajectory for new patient")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Upload Baseline MRI Scan")).toBeInTheDocument();
     const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
     expect(uploadBtn).toBeInTheDocument();
   });
@@ -103,13 +100,42 @@ describe("PatientTrajectoryCard Component", () => {
     const clickSpy = vi.spyOn(hiddenInput, "click");
     document.body.appendChild(hiddenInput);
 
-    render(<PatientTrajectoryCard activePatient="Custom" />);
+    render(<PatientTrajectoryCard activePatient="Custom" customScans={[]} />);
     const uploadBtn = screen.getByRole("button", { name: /Select MRI File/i });
     fireEvent.click(uploadBtn);
 
     expect(clickSpy).toHaveBeenCalled();
     document.body.removeChild(hiddenInput);
   });
+
+  it("renders dynamic Recharts graph, follow-up button, and triggers future forecast prediction for Custom patient with scans", () => {
+    const mockScans = [
+      { date: "Oct 10", area: 2400, forecastArea: null, type: "Observed" },
+    ];
+    const setScansMock = vi.fn();
+
+    render(
+      <PatientTrajectoryCard
+        activePatient="Custom"
+        customScans={mockScans}
+        setCustomScans={setScansMock}
+      />
+    );
+
+    // Recharts container buttons
+    expect(
+      screen.getByRole("button", { name: /\+ Add Follow-up Scan/i })
+    ).toBeInTheDocument();
+    const forecastBtn = screen.getByRole("button", {
+      name: /Predict Future Trajectory/i,
+    });
+    expect(forecastBtn).toBeInTheDocument();
+
+    // Click forecast button to trigger AI trajectory
+    fireEvent.click(forecastBtn);
+    expect(setScansMock).toHaveBeenCalled();
+  });
+
 
 
   it("renders Historical Scans Log gallery with scans and follow-up button for demo patients", () => {
