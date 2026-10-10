@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Brain Tumour AI — Deep Learning Diagnostic System",
+  title: "CerebrAI | Clinical MRI Segmentation",
   description:
     "Clinical-grade MRI brain tumour classification and explainable AI diagnostic system powered by ResNet50 and Grad-CAM.",
 };

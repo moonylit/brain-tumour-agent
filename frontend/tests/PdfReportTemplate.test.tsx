@@ -16,10 +16,10 @@ describe("PdfReportTemplate Component", () => {
     region: "Jaipur",
   };
 
-  it("renders the co-branded BrAIny x SerpApi header block", () => {
+  it("renders the co-branded CerebrAI x SerpApi header block", () => {
     render(<PdfReportTemplate {...defaultProps} />);
 
-    expect(screen.getByRole("heading", { level: 1, name: /BrAIny/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /CerebrAI/i })).toBeInTheDocument();
     expect(screen.getByText("SerpApi")).toBeInTheDocument();
     expect(screen.getByText("✕")).toBeInTheDocument();
   });

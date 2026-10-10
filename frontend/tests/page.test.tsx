@@ -46,8 +46,8 @@ describe("Page Integration (app/page.tsx)", () => {
   it("renders all top-level landing page sections in the standardized order without crashing", async () => {
     render(<Home />);
 
-    // 1. Header (SerpApi / Nav / BrainTumourAI)
-    expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
+    // 1. Header (SerpApi / Nav / CerebrAI)
+    expect(screen.getByText("CerebrAI")).toBeInTheDocument();
     expect(screen.getByText("SerpApi")).toBeInTheDocument();
     expect(screen.getByText("API Online")).toBeInTheDocument();
 

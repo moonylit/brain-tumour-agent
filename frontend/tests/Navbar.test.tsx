@@ -25,7 +25,7 @@ describe("Navbar Component", () => {
 
     expect(screen.getByText(/Powered By/i)).toBeInTheDocument();
     expect(screen.getByText("SerpApi")).toBeInTheDocument();
-    expect(screen.getByText("BrainTumourAI")).toBeInTheDocument();
+    expect(screen.getByText("CerebrAI")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Upload" })).toHaveAttribute(
       "href",
       "#upload",

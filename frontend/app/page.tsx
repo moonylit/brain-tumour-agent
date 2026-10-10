@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
-      {/* 1. Header (SerpApi / Nav / BrainTumourAI) */}
+      {/* 1. Header (SerpApi / Nav / CerebrAI) */}
       <Navbar />
 
       <div className="flex-1 flex flex-col gap-16 pb-16">

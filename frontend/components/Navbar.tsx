@@ -40,9 +40,24 @@ export default function Navbar() {
   return (
     <header className="flex justify-between items-center w-full px-8 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
       {/* Left Column */}
-      <div className="flex items-center gap-4">
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-          BrainTumourAI
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+          <svg
+            className="h-5 w-5 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-4 4 4 4 0 0 0 2 3.46A4 4 0 0 0 7 18a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4 4 4 0 0 0 1-3.54A4 4 0 0 0 20 11a4 4 0 0 0-4-4V6a4 4 0 0 0-4-4z" />
+            <path d="M12 2v20" />
+          </svg>
+        </div>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+          CerebrAI
         </h1>
       </div>
 
