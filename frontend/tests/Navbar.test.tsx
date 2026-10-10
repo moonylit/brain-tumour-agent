@@ -34,7 +34,16 @@ describe("Navbar Component", () => {
       "href",
       "#statistics",
     );
+    expect(screen.getByRole("link", { name: "History" })).toHaveAttribute(
+      "href",
+      "#history",
+    );
+    expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
+      "href",
+      "#features",
+    );
   });
+
 
   it("displays 'API Online' status pill when backend health check succeeds", async () => {
     (api.checkBackendHealth as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(

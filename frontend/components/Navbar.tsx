@@ -48,19 +48,12 @@ export default function Navbar() {
 
       {/* Center Column */}
       <nav className="hidden md:flex items-center gap-8 bg-slate-50 px-6 py-2 rounded-full border border-slate-200">
-        <a
-          href="#upload"
-          className="text-sm font-bold text-slate-600 hover:text-blue-600"
-        >
-          Upload
-        </a>
-        <a
-          href="#statistics"
-          className="text-sm font-bold text-slate-600 hover:text-blue-600"
-        >
-          Statistics
-        </a>
+        <a href="#upload" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Upload</a>
+        <a href="#statistics" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Statistics</a>
+        <a href="#history" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">History</a>
+        <a href="#features" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Features</a>
       </nav>
+
 
       {/* Right Column */}
       <div className="flex items-center gap-3">
