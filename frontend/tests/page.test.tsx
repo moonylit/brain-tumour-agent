@@ -72,11 +72,11 @@ describe("Page Integration (app/page.tsx)", () => {
       screen.getByText(/View Patient EHR & Prediction History/i),
     ).toBeInTheDocument();
 
-    // 5. System Architecture Pipeline
-    expect(screen.getByText("System Architecture & Pipeline")).toBeInTheDocument();
-    expect(screen.getByText("ResNet-50 Deep Learning Model")).toBeInTheDocument();
-    expect(screen.getByText("Gradient-Weighted Activation Maps")).toBeInTheDocument();
-    expect(screen.getByText("Geospatial Decision Agent")).toBeInTheDocument();
+    // 5. Diagnostic Data Pipeline
+    expect(screen.getByText("Diagnostic Data Pipeline")).toBeInTheDocument();
+    expect(screen.getByText("Primary Vision Engine")).toBeInTheDocument();
+    expect(screen.getByText("Spatial Heatmap Localization")).toBeInTheDocument();
+    expect(screen.getByText("Automated Referral Routing")).toBeInTheDocument();
 
     // 6. Footer
     expect(

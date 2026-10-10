@@ -191,83 +191,93 @@ export default function Home() {
         </details>
 
         {/* 6. Vertical System Architecture Pipeline / Features */}
+        {/* 6. Vertical System Architecture Pipeline / Features */}
         <section id="features" className="w-full">
           <span id="pipeline" className="sr-only">Pipeline</span>
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-4 text-center">
-            System Architecture &amp; Pipeline
-          </h2>
-          <p className="text-lg text-slate-600 text-center max-w-2xl mx-auto mb-12">
-            A transparent breakdown of the data flow and machine learning models powering the NeuroAgent engine.
-          </p>
-
-          <div className="relative flex flex-col gap-8 max-w-4xl mx-auto px-4">
-            <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-emerald-200"></div>
-
-            {/* Step 1: Classification Engine */}
-            <div className="relative z-10 bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-start md:items-center gap-8">
-              <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h3 className="text-xl font-bold text-slate-800">
-                    ResNet-50 Deep Learning Model
-                  </h3>
-                  <span className="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold tracking-wide">
-                    FastAPI + Keras
-                  </span>
-                </div>
-                <p className="text-slate-600 leading-relaxed mt-2">
-                  The core vision engine is a ResNet-50 v2 convolutional neural network. It processes the MRI through an OpenCV contour-based skull-stripping pipeline, delivering 98.09% validation accuracy across multiple merged datasets.
-                </p>
-              </div>
+          <div className="w-full max-w-5xl mx-auto py-12">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+                Diagnostic Data Pipeline
+              </h2>
+              <p className="text-lg text-slate-500 font-medium max-w-2xl mx-auto">
+                A transparent, three-stage computational workflow from raw MRI ingestion to actionable clinical routing.
+              </p>
             </div>
 
-            {/* Step 2: Explainability */}
-            <div className="relative z-10 bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-start md:items-center gap-8">
-              <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center shadow-lg shadow-purple-500/30">
-                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h3 className="text-xl font-bold text-slate-800">
-                    Gradient-Weighted Activation Maps
-                  </h3>
-                  <span className="px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-bold tracking-wide">
-                    Grad-CAM
-                  </span>
+            <div className="relative space-y-8 before:absolute before:inset-0 before:ml-8 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-1 before:bg-gradient-to-b before:from-blue-500 before:via-purple-500 before:to-emerald-500 before:opacity-30">
+              
+              {/* Stage 1: ResNet-50 */}
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full border-4 border-white bg-blue-600 text-white shadow-xl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform group-hover:scale-110">
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                 </div>
-                <p className="text-slate-600 leading-relaxed mt-2">
-                  To prevent the &quot;black box&quot; problem, the system extracts feature maps from the final convolutional layer. It calculates the gradients for the predicted class to highlight the exact anatomical pixels driving the tumor classification.
-                </p>
+                <div className="w-[calc(100%-5rem)] md:w-[calc(50%-3rem)] p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-blue-700 bg-blue-100 rounded-md">Stage 01</span>
+                    <span className="px-2.5 py-1 text-[10px] font-mono font-bold text-slate-500 bg-slate-100 rounded-md">FastAPI + Keras</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Primary Vision Engine</h3>
+                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                    Raw MRI scans undergo OpenCV contour-based skull-stripping before processing through a fine-tuned ResNet-50 v2 convolutional network.
+                  </p>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    <span className="text-xs font-bold text-slate-700">Validation Accuracy: <span className="text-blue-600 font-black">98.09%</span></span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Step 3: Autonomous Routing */}
-            <div className="relative z-10 bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-start md:items-center gap-8">
-              <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h3 className="text-xl font-bold text-slate-800">
-                    Geospatial Decision Agent
-                  </h3>
-                  <span className="px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold tracking-wide">
-                    SerpApi + Google Maps
-                  </span>
+              {/* Stage 2: Grad-CAM */}
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full border-4 border-white bg-purple-600 text-white shadow-xl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform group-hover:scale-110">
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                 </div>
-                <p className="text-slate-600 leading-relaxed mt-2">
-                  Once a high-confidence mass is detected, the dashboard triggers SerpApi web search agents to autonomously scrape regional medical data, mapping the fastest route to the nearest tertiary neurotrauma center.
-                </p>
+                <div className="w-[calc(100%-5rem)] md:w-[calc(50%-3rem)] p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-purple-700 bg-purple-100 rounded-md">Stage 02</span>
+                    <span className="px-2.5 py-1 text-[10px] font-mono font-bold text-slate-500 bg-slate-100 rounded-md">Explainable AI (XAI)</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Spatial Heatmap Localization</h3>
+                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                    Eliminating the &quot;black box&quot; by extracting feature maps from the final convolutional layer. Gradients are calculated to highlight the exact anatomical pathology.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                     <div className="px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 text-center">
+                       <span className="block text-[10px] font-bold text-slate-400 uppercase">Input</span>
+                       <span className="block text-xs font-bold text-slate-700">Convolutional Weights</span>
+                     </div>
+                     <div className="px-3 py-2 bg-purple-50 rounded-lg border border-purple-100 text-center">
+                       <span className="block text-[10px] font-bold text-purple-400 uppercase">Output</span>
+                       <span className="block text-xs font-bold text-purple-700">Grad-CAM Overlay</span>
+                     </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Stage 3: SerpApi */}
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full border-4 border-white bg-emerald-500 text-white shadow-xl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform group-hover:scale-110">
+                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <div className="w-[calc(100%-5rem)] md:w-[calc(50%-3rem)] p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-emerald-300 transition-all">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-emerald-700 bg-emerald-100 rounded-md">Stage 03</span>
+                    <span className="px-2.5 py-1 text-[10px] font-mono font-bold text-slate-500 bg-slate-100 rounded-md">SerpApi + Geospatial</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Automated Referral Routing</h3>
+                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                    Upon high-confidence mass detection, SerpApi agents dynamically scrape regional facility data to route the patient to the nearest specialized neurotrauma center.
+                  </p>
+                  <div className="flex items-center gap-3">
+                     <div className="flex -space-x-2">
+                        <div className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[8px] font-bold">H</div>
+                        <div className="w-6 h-6 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-[8px] font-bold">H</div>
+                     </div>
+                     <span className="text-xs font-bold text-emerald-600">Dynamic Facility Fetching</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
