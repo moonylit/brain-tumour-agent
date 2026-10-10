@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import html
 import hashlib
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -184,8 +184,9 @@ def generate_diagnostic_dossier(
     # -------------------------------------------------------------
     # Metadata Initialization
     # -------------------------------------------------------------
-    now_utc = datetime.now(timezone.utc)
-    date_str = now_utc.strftime("%d %b %Y, %I:%M %p UTC")
+    ist_tz = timezone(timedelta(hours=5, minutes=30))
+    now_ist = datetime.now(ist_tz)
+    date_str = f"{now_ist.strftime('%d %b %Y, %I:%M %p')} IST"
     
     target_region = (
         region
@@ -196,7 +197,7 @@ def generate_diagnostic_dossier(
 
     uid = (
         accession_id
-        or f"ACC-{now_utc.strftime('%Y%m%d')}-{hashlib.md5(filename.encode()).hexdigest()[:6].upper()}"
+        or f"ACC-{now_ist.strftime('%Y%m%d')}-{hashlib.md5(filename.encode()).hexdigest()[:6].upper()}"
     )
 
     doc_id = f"DOS-{hashlib.md5(f'{uid}-{date_str}'.encode()).hexdigest()[:8].upper()}"
@@ -215,8 +216,8 @@ def generate_diagnostic_dossier(
     # 1. FORMAL HEADER
     # -------------------------------------------------------------
     header_left = [
-        Paragraph("<b>NEURO-ONCOLOGY CLINICAL DECISION DOSSIER</b>", title_style),
-        Paragraph("Advanced AI Perception &amp; SerpApi Dynamic Geo-Agent Telemetry", subtitle_style),
+        Paragraph("<b>Br<font color='#2563EB'>AI</font>ny</b> <font color='#CBD5E1'>&#10005;</font> <b><font color='#1A1A2E'>SerpApi</font></b>", title_style),
+        Paragraph("Autonomous Medical Decision Support &amp; Clinical Triage Engine", subtitle_style),
         Paragraph("Department of Neuro-Radiology &bull; Precision Oncology Referral Protocol", dept_style),
     ]
 
@@ -401,17 +402,23 @@ def generate_diagnostic_dossier(
             Paragraph(interp, body_style),
         ])
 
+    prob_table_style = [
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F8FAFC")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#F1F5F9")),
+        ("TOPPADDING", (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+    ]
+    for r_idx, (cls_k, _) in enumerate(class_display_map.items(), start=1):
+        if cls_k == prediction.lower().replace("_", "").replace(" ", ""):
+            prob_table_style.append(("BACKGROUND", (0, r_idx), (-1, r_idx), colors.HexColor("#EFF6FF")))
+            prob_table_style.append(("LINEBELOW", (0, r_idx), (-1, r_idx), 0.5, colors.HexColor("#DBEAFE")))
+
     prob_table = Table(prob_rows, colWidths=[160, 90, 110, 180])
-    prob_table.setStyle(
-        TableStyle([
-            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F1F5F9")),
-            ("BOX", (0, 0), (-1, -1), 0.5, color_border),
-            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
-            ("TOPPADDING", (0, 0), (-1, -1), 3),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ])
-    )
+    prob_table.setStyle(TableStyle(prob_table_style))
     elements.append(prob_table)
 
     # -------------------------------------------------------------
@@ -421,7 +428,7 @@ def generate_diagnostic_dossier(
 
     p2_header = Table([
         [
-            Paragraph("<b>SERPAPI AUTONOMOUS CLINICAL AGENT INTELLIGENCE</b>", title_style),
+            Paragraph("<b>Br<font color='#2563EB'>AI</font>ny</b> <font color='#CBD5E1'>&#10005;</font> <b><font color='#1A1A2E'>SerpApi</font></b> &bull; Autonomous Clinical Intelligence", title_style),
             Paragraph(f"REGION: <b>{_safe(target_region.upper())}</b> | UID: <b>{uid}</b>", meta_val_style),
         ]
     ], colWidths=[340, 200])
