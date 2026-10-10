@@ -142,10 +142,12 @@ export function getDynamicTrajectoryData(patientName: string) {
 
 interface PatientTrajectoryCardProps {
   activePatient: string;
+  onSelectPatient?: (patient: string) => void;
 }
 
 export default function PatientTrajectoryCard({
   activePatient,
+  onSelectPatient,
 }: PatientTrajectoryCardProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -185,11 +187,22 @@ export default function PatientTrajectoryCard({
                 {mrn}
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3 flex-wrap">
               <Activity className="h-7 w-7 text-blue-600 shrink-0" />
               <span>
                 Patient Profile: {activePatient} — Longitudinal Tumor Trajectory
               </span>
+              {onSelectPatient && (
+                <select 
+                  value={activePatient} 
+                  onChange={(e) => onSelectPatient(e.target.value)}
+                  className="ml-4 text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
+                >
+                  <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
+                  <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
+                  <option value="Custom">Add New Patient (Live Upload)</option>
+                </select>
+              )}
             </h2>
           </div>
 
@@ -201,7 +214,14 @@ export default function PatientTrajectoryCard({
           </div>
         </div>
 
-      {/* Main 2-Column EHR Trajectory Grid */}
+      {activePatient === "Custom" ? (
+        <div className="w-full h-64 flex items-center justify-center bg-slate-50 border border-dashed border-slate-300 rounded-xl my-4">
+          <p className="text-slate-500 font-medium">
+            Upload historical MRI scans to generate longitudinal trajectory for new patient.
+          </p>
+        </div>
+      ) : (
+      /* Main 2-Column EHR Trajectory Grid */
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Left/Center (Col-Span-2): Recharts LineChart */}
         <div className="lg:col-span-2 bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
@@ -369,6 +389,7 @@ export default function PatientTrajectoryCard({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

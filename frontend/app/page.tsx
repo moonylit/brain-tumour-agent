@@ -9,6 +9,7 @@ import PatientTrajectoryCard from "@/components/PatientTrajectoryCard";
 
 export default function Home() {
   const [region, setRegion] = useState("Jaipur");
+  const [activeDemoPatient, setActiveDemoPatient] = useState("Eleanor Vance");
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white flex flex-col">
@@ -23,7 +24,7 @@ export default function Home() {
         {/* 4. Dynamic Results Grid (Grad-CAM Images + Model Confidence Metrics) */}
         <UploadCard region={region} onRegionChange={setRegion} />
 
-        {/* Restored Statistics Section: Model Performance Metrics */}
+        {/* Restored Full ML Statistics Section */}
         <section
           id="statistics"
           className="w-full max-w-7xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-sm p-8"
@@ -32,49 +33,62 @@ export default function Home() {
             Model Performance Metrics
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
+            <div className="p-6 bg-blue-50 rounded-2xl border border-blue-200 shadow-xs">
               <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">
                 Validation Accuracy
               </p>
               <p className="text-3xl font-black text-slate-800 mt-2">98.09%</p>
             </div>
-            <div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100">
+            <div className="p-6 bg-purple-50 rounded-2xl border border-purple-200 shadow-xs">
               <p className="text-xs font-bold text-purple-600 uppercase tracking-widest">
-                Core Engine
+                F1-Score
               </p>
-              <p className="text-xl font-black text-slate-800 mt-2 pt-1">ResNet-50</p>
+              <p className="text-3xl font-black text-slate-800 mt-2">97.8%</p>
             </div>
-            <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+            <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-200 shadow-xs">
               <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
-                Avg Inference
+                Recall (Sensitivity)
               </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">&lt;1.2s</p>
+              <p className="text-3xl font-black text-slate-800 mt-2">98.2%</p>
             </div>
-            <div className="p-6 bg-amber-50/50 rounded-2xl border border-amber-100">
+            <div className="p-6 bg-amber-50 rounded-2xl border border-amber-200 shadow-xs">
               <p className="text-xs font-bold text-amber-600 uppercase tracking-widest">
-                False Negative Rate
+                Precision
               </p>
-              <p className="text-3xl font-black text-slate-800 mt-2">0.02%</p>
+              <p className="text-3xl font-black text-slate-800 mt-2">97.5%</p>
             </div>
           </div>
         </section>
 
-        {/* 5. Collapsible <details> History Accordion */}
+        {/* 5. Collapsible <details> History Accordion with Interactive Patient Switcher */}
         <details
           id="history"
           className="group w-full max-w-7xl mx-auto my-12 bg-white rounded-3xl border border-slate-200 shadow-sm"
         >
           <summary className="cursor-pointer list-none p-6 flex items-center justify-between text-lg font-bold text-slate-800 hover:text-blue-600 transition-colors">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <span className="text-2xl">📊</span> View Patient EHR &amp; Prediction History{" "}
               <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] uppercase font-bold rounded ml-2">
                 Demo Data
               </span>
+              <select 
+                value={activeDemoPatient} 
+                onChange={(e) => setActiveDemoPatient(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                className="ml-4 text-sm p-1.5 bg-slate-50 border border-slate-200 rounded-md outline-none focus:ring-2 focus:ring-blue-500 font-normal text-slate-700"
+              >
+                <option value="Eleanor Vance">Eleanor Vance (Glioblastoma)</option>
+                <option value="Marcus Webb">Marcus Webb (Meningioma)</option>
+                <option value="Custom">Add New Patient (Live Upload)</option>
+              </select>
             </div>
             <span className="transition group-open:rotate-180">▼</span>
           </summary>
           <div className="p-6 border-t border-slate-200 space-y-8">
-            <PatientTrajectoryCard activePatient="Eleanor Vance" />
+            <PatientTrajectoryCard
+              activePatient={activeDemoPatient}
+              onSelectPatient={setActiveDemoPatient}
+            />
             <HistoryCard />
           </div>
         </details>

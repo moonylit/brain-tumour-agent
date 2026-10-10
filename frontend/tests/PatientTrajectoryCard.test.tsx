@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+
 import PatientTrajectoryCard, {
   getDynamicTrajectoryData,
 } from "../components/PatientTrajectoryCard";
@@ -59,4 +60,32 @@ describe("PatientTrajectoryCard Component", () => {
     expect(trajectoryData[4].area).toBeNull();
     expect(trajectoryData[4].predicted).toBe(21000);
   });
+
+  it("renders custom placeholder when activePatient is Custom", () => {
+    render(<PatientTrajectoryCard activePatient="Custom" />);
+
+    expect(
+      screen.getByText(
+        "Upload historical MRI scans to generate longitudinal trajectory for new patient."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("calls onSelectPatient callback when a different patient is chosen from dropdown", () => {
+    const onSelect = vi.fn();
+    render(
+      <PatientTrajectoryCard
+        activePatient="Eleanor Vance"
+        onSelectPatient={onSelect}
+      />
+    );
+
+    const dropdown = screen.getByRole("combobox");
+    expect(dropdown).toHaveValue("Eleanor Vance");
+
+    fireEvent.change(dropdown, { target: { value: "Marcus Webb" } });
+    expect(onSelect).toHaveBeenCalledWith("Marcus Webb");
+  });
 });
+
+
