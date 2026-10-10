@@ -272,5 +272,39 @@ describe("UploadCard Component", () => {
     });
     global.fetch = originalFetch;
   });
+
+  it("renders terminal loader with CerebrAI Core and progression text during analysis", async () => {
+    let resolvePredict: (val: api.PredictionResponse) => void = () => {};
+    const predictPromise = new Promise<api.PredictionResponse>((res) => {
+      resolvePredict = res;
+    });
+    (api.predictMRI as unknown as ReturnType<typeof vi.fn>).mockReturnValueOnce(predictPromise);
+
+    render(<UploadCard />);
+    const input = (document.getElementById("main-mri-upload") || document.getElementById("mri-upload-input") || document.getElementById("mri-file-input")) as HTMLInputElement;
+
+    const validFile = new File(["sample-scan"], "scan.png", { type: "image/png" });
+    fireEvent.change(input, { target: { files: [validFile] } });
+
+    const predictBtn = await screen.findByRole("button", { name: /Analyze MRI Scan/i });
+    fireEvent.click(predictBtn);
+
+    // Terminal header and initial loading text visible
+    expect(screen.getByText("CerebrAI Core")).toBeInTheDocument();
+    expect(screen.getByText(/> Initializing neural pipeline.../i)).toBeInTheDocument();
+
+    // Resolve the prediction
+    resolvePredict({
+      prediction: "glioma",
+      confidence: 0.98,
+      probabilities: { glioma: 0.98, meningioma: 0.01, pituitary: 0.005, notumor: 0.005 },
+      processing_time_ms: 85,
+      heatmap_filename: "hm.png",
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Prediction Result")).toBeInTheDocument();
+    });
+  });
 });
 

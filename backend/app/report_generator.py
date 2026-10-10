@@ -428,7 +428,7 @@ def generate_diagnostic_dossier(
 
     p2_header = Table([
         [
-            Paragraph("<b>Br<font color='#2563EB'>AI</font>ny</b> <font color='#CBD5E1'>&#10005;</font> <b><font color='#1A1A2E'>SerpApi</font></b> &bull; Autonomous Clinical Intelligence", title_style),
+            Paragraph("<b>Cerebr<font color='#2563EB'>AI</font></b> <font color='#CBD5E1'>&#10005;</font> <b><font color='#1A1A2E'>SerpApi</font></b> &bull; Autonomous Clinical Intelligence", title_style),
             Paragraph(f"REGION: <b>{_safe(target_region.upper())}</b> | UID: <b>{uid}</b>", meta_val_style),
         ]
     ], colWidths=[340, 200])

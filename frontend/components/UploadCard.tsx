@@ -93,7 +93,9 @@ export default function UploadCard({
   }
 
   const [preview, setPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const loading = isAnalyzing;
+  const [loadingText, setLoadingText] = useState("Initializing neural pipeline...");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -210,16 +212,33 @@ export default function UploadCard({
       return;
     }
 
+    const timers: NodeJS.Timeout[] = [];
+
     try {
-      setLoading(true);
+      setIsAnalyzing(true);
+      setLoadingText("Initializing neural pipeline...");
+
+      timers.push(setTimeout(() => setLoadingText("Applying OpenCV contour skull-stripping..."), 600));
+      timers.push(setTimeout(() => setLoadingText("Extracting spatial features via ResNet-50..."), 1400));
+      timers.push(setTimeout(() => setLoadingText("Computing Gradient-Weighted Activation Maps..."), 2200));
+      timers.push(setTimeout(() => setLoadingText("Synthesizing diagnostic triage report..."), 3000));
+
       setErrorMessage(null);
 
       // Send MRI for real model prediction & SerpApi agent research with dynamic region
       const targetRegion = region && region.trim() ? region.trim() : "Jaipur";
-      const predictionData =
+      const predictionPromise =
         targetRegion.toLowerCase() === "jaipur"
-          ? await predictMRI(selectedImage)
-          : await predictMRI(selectedImage, targetRegion);
+          ? predictMRI(selectedImage)
+          : predictMRI(selectedImage, targetRegion);
+
+      const isTest = typeof process !== "undefined" && process.env.NODE_ENV === "test";
+      const minDelay = isTest ? 0 : 3500;
+
+      const [predictionData] = await Promise.all([
+        predictionPromise,
+        new Promise((resolve) => setTimeout(resolve, minDelay)),
+      ]);
 
       setResult(predictionData);
       onPrediction?.(predictionData);
@@ -235,7 +254,8 @@ export default function UploadCard({
       console.error("Prediction failed:", error);
       setErrorMessage(formatApiError(error));
     } finally {
-      setLoading(false);
+      timers.forEach(clearTimeout);
+      setIsAnalyzing(false);
     }
   }
 
@@ -526,7 +546,37 @@ export default function UploadCard({
 
       {/* Prediction Results Display */}
       <div className="max-w-7xl mx-auto mt-10 px-4">
-        {result ? (
+        {isAnalyzing ? (
+          <div className="w-full max-w-2xl mx-auto mt-8 bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-slate-700 font-mono">
+            {/* Terminal Header */}
+            <div className="bg-slate-800 px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+              </div>
+              <span className="text-slate-400 text-xs font-bold tracking-widest uppercase ml-2">CerebrAI Core</span>
+            </div>
+
+            {/* Terminal Body */}
+            <div className="p-6 flex flex-col items-center justify-center min-h-[160px]">
+              {/* Animated Scanner Ring */}
+              <div className="relative w-12 h-12 mb-6">
+                <div className="absolute inset-0 border-4 border-blue-500/30 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+              </div>
+
+              {/* Rapidly Updating Text */}
+              <div className="text-emerald-400 text-sm md:text-base font-bold tracking-wide animate-pulse text-center">
+                &gt; {loadingText}
+                <span className="inline-block w-2 h-4 bg-emerald-400 ml-1 animate-[ping_1s_infinite]"></span>
+              </div>
+            </div>
+          </div>
+        ) : result ? (
           <PredictionCard
             prediction={result.prediction}
             confidence={result.confidence}

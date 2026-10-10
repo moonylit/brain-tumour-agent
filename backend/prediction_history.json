@@ -1539,5 +1539,217 @@
         },
         "accession_id": "ACC-20261010-22D3FB",
         "region": "Jaipur"
+    },
+    {
+        "timestamp": "2026-10-10T17:50:42.782465",
+        "filename": "Te-pi_6.jpg",
+        "prediction": "pituitary",
+        "confidence": 0.9999517202377319,
+        "processing_time_ms": 4010.92,
+        "heatmap_filename": "e46bef60a7aa4a2498a88173fc1aadd0.png",
+        "agent_research": {
+            "status": "escalation_recommended",
+            "tumor_class": "Pituitary",
+            "confidence": 1.0,
+            "patient_city": "Jaipur",
+            "region": "Jaipur",
+            "escalation_required": true,
+            "clinical_summary": "Presumptive Pituitary adenoma detected with 100.0% confidence. Endocrine and ophthalmological escalation indicated for the Jaipur patient. Prioritize baseline pituitary hormone profiling (PRL, IGF-1, ACTH, morning cortisol) and automated Humphrey visual field perimetry to rule out optic chiasm compromise.",
+            "articles": [
+                {
+                    "title": "Endocrine Society Clinical Practice Guideline: Management of Pituitary Adenomas",
+                    "snippet": "Recommends baseline anterior pituitary hormone assessment (PRL, IGF-1, ACTH, free T4), transsphenoidal endoscopic resection for macroadenomas compressing optic chiasm, and dopamine agonists for prolactinomas.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/30383183/",
+                    "source": "Journal of Clinical Endocrinology & Metabolism"
+                },
+                {
+                    "title": "Endoscopic Endonasal Transsphenoidal Surgery for Pituitary Macroadenomas: Visual & Endocrine Preservation",
+                    "snippet": "High-resolution endonasal endoscopy achieves visual field recovery in 88% of compressed chiasm presentations with minimal cerebrospinal fluid rhinorrhea risk.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/33827110/",
+                    "source": "World Neurosurgery"
+                },
+                {
+                    "title": "[Treatment of pituitary adenoma]",
+                    "snippet": "MICROADENOMA: Small (< 10 mm) prolactin-secreting adenomas should be treated surgically, generally by transsphenoidal adenomectomy, or medically ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/9893701/",
+                    "source": "National Institutes of Health (.gov)"
+                },
+                {
+                    "title": "Modern Management of Pituitary Adenomas",
+                    "snippet": "Endoscopic transsphenoidal resection is the preferred treatment option for most symptomatic or growing PA. Nowadays techniques like high definition ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/30043702/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Medical management of functioning pituitary adenoma",
+                    "snippet": "The treatment of functioning pituitary adenoma (FPA) must achieve endocrinological remission as well as tumor size reduction. The first-line treatment of ...",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/26236804/",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                },
+                {
+                    "title": "Growth hormone-producing pituitary gland adenoma",
+                    "snippet": "These guidelines are articles in PubMed that match specific search criteria developed by MedGen to capture the most relevant practice guidelines. This list ...",
+                    "url": "https://www.ncbi.nlm.nih.gov/medgen/82999",
+                    "source": "National Institutes of Health (NIH) | (.gov)"
+                }
+            ],
+            "facilities": [
+                {
+                    "name": "RHL Renova Cancer Centre | Cancer Hospital in Jaipur",
+                    "rating": 4.9,
+                    "address": "RHL Renova Cancer Centre, Hospital Rd, opp. Jaipuria Hospital, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 350 6177",
+                    "link": "http://www.renovahospitals.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre",
+                    "rating": 4.7,
+                    "address": "Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 84400 49999",
+                    "link": "http://www.bmchrc.org/"
+                },
+                {
+                    "name": "Dr. N.C Poonia - Neuro Care Hospital & Research Centre Pvt. Ltd. - Best Neurosurgeon in Jaipur, Rajasthan",
+                    "rating": 4.4,
+                    "address": "1/611, Sector 2, Sector-1, Vidyadhar Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302039, India",
+                    "phone": "+91 141 223 6712",
+                    "link": "http://www.neurocarehospital.com/"
+                },
+                {
+                    "name": "Priyush Neuro & Super Speciality Hospital",
+                    "rating": 4.5,
+                    "address": "2/154, B2 Bypass Rd, SFS Manasarovar, Hans Vihar, Mansarovar, Jaipur, Rajasthan 302020, India",
+                    "phone": "+91 86900 99711",
+                    "link": "https://priyushhospital.com/"
+                },
+                {
+                    "name": "Nivik Neuro Trauma & Multispeciality Hospital",
+                    "rating": 4.7,
+                    "address": "Uday Nagar B, PN. 9, opposite Pillar No.1, Manyawas, Mohru Nagar, Mansarovar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302020, India",
+                    "phone": "+91 96029 94307",
+                    "link": "https://www.nivikhospital.com/"
+                },
+                {
+                    "name": "Advanced Neurology & Super Specialty Hospital",
+                    "rating": 4.3,
+                    "address": "\u092c\u094d\u0930\u0947\u0928 \u091f\u0949\u0935\u0930, D-357, Gaurav Tower Marg, near Gaurav Tower, D-Block, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "Eternal Multispeciality Hospital",
+                    "rating": 4.7,
+                    "address": "3A, Jagatpura Rd, near Jawahar Circle, Chainpura, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 95491 58888",
+                    "link": "https://www.eternalhospital.com/"
+                },
+                {
+                    "name": "Bhagwan Mahaveer Cancer Hospital & Research Centre Blood Bank",
+                    "rating": 3.6,
+                    "address": "Bhagwan Mahavir Cancer Hospital & Research Centre, Jawahar Lal Nehru Marg, Bajaj Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 270 0107",
+                    "link": "http://www.bmchrc.org/"
+                },
+                {
+                    "name": "Amar Medical & Research Centre",
+                    "rating": 4.7,
+                    "address": "3, Kiran Path, Mansarovar Sector 3, Mansarovar, Jaipur, Rajasthan 302020, India",
+                    "phone": "+91 83370 00000",
+                    "link": "https://www.parkhospital.in/hospital/super-multispeciality-hospital-in-jaipur?utm_source=GMB-Organic&utm_medium=gmb&utm_campaign=jaipur-profile"
+                },
+                {
+                    "name": "Brain Tower",
+                    "rating": 4.3,
+                    "address": "D-357, Sector 10 Rd, D-Block, Sector 4, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 272 4258",
+                    "link": "https://www.thebraintower.com/"
+                },
+                {
+                    "name": "JNU Main Campus (University, Hospital & Medical College)",
+                    "rating": 3.3,
+                    "address": "Agra - Jaipur Rd, near New RTO Office, Jagatpura, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 141 311 9000",
+                    "link": null
+                },
+                {
+                    "name": "Dr. Abhishek Pareek ( Cancer Surgeon Jaipur )",
+                    "rating": 4.9,
+                    "address": "RHL RENOVA, CANCER CENTER, opp. RAJASTHAN JAIPURIA HOSPITAL, Kailash Puri Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 95608 66506",
+                    "link": "http://www.drabhishekpareek.in/"
+                },
+                {
+                    "name": "RHL - Rajasthan Hospital | \u0906\u0930 \u090f\u091a \u090f\u0932 - \u0930\u093e\u091c\u0938\u094d\u0925\u093e\u0928 \u0939\u0949\u0938\u094d\u092a\u093f\u091f\u0932",
+                    "rating": 4.5,
+                    "address": "Jawahar Lal Nehru Marg, opp. RAJASTHAN JAIPURIA HOSPITAL, Jai Jawan Colony, Milap Nagar, Jaipur, Rajasthan 302018, India",
+                    "phone": "+91 141 272 0020",
+                    "link": "http://www.rajasthanhospital.in/"
+                },
+                {
+                    "name": "Dr. Prithvi Giri",
+                    "rating": 4.9,
+                    "address": "ANUKAMPA APARTMENT, behind Shri Hospital, Model Town, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 98283 94603",
+                    "link": null
+                },
+                {
+                    "name": "Dr. Sunit Shah",
+                    "rating": 4.0,
+                    "address": "Near, Brain Tower, D-358, Malviya Nagar, Gaurav Tower Marg, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 98290 59370",
+                    "link": "http://www.thebraintower.com/"
+                },
+                {
+                    "name": "Jaipur Neurology Charitable Trust",
+                    "rating": 2.0,
+                    "address": "ANUKAMPA APARTMENT, A 101, Model Town, Malviya Nagar, Jaipur, Rajasthan 302017, India",
+                    "phone": "+91 95296 28607",
+                    "link": "https://jaipurneurologycharitabletrust.in/"
+                },
+                {
+                    "name": "Chirayu Hospital - Gynaecology Hospital | Best Multispeciality Hospital in Kalwar Road Jaipur",
+                    "rating": 4.3,
+                    "address": "EMERGENCY BLOCK, CHIRAYU HOSPITAL, Kalwar Rd, Hathoj, Jaipur, Rajasthan 302044, India",
+                    "phone": "+91 72300 25066",
+                    "link": "https://www.chirayuhospitaljaipur.com/"
+                },
+                {
+                    "name": "Babylon Hospital Private Limited",
+                    "rating": 4.7,
+                    "address": "311, Anand Puri, Bees Dukan, Adarsh Nagar, Jaipur, Jaipur Nagar Nigam Area, Rajasthan 302004, India",
+                    "phone": "+91 93525 83833",
+                    "link": "https://www.babylonhospital.com/"
+                },
+                {
+                    "name": "Bombay Hospital Jaipur",
+                    "rating": 4.3,
+                    "address": "Sitapura Industrial Area, Sitapura, Jaipur, Ramchandpura, Rajasthan 302022, India",
+                    "phone": null,
+                    "link": "http://www.bombayhospitalsjaipur.com/"
+                },
+                {
+                    "name": "Mahatma Gandhi University of Medical Sciences & Technology",
+                    "rating": 4.3,
+                    "address": "RIICO Institutional Area, Mahatma Gandhi Rd, Ricco Industrial Area, Sitapura, Jaipur, Rajasthan 302022, India",
+                    "phone": "+91 83069 98895",
+                    "link": "http://www.mgumst.org/"
+                }
+            ],
+            "queries_executed": [
+                "Pituitary adenoma standard of care guidelines PubMed",
+                "Pituitary adenoma novel therapeutics clinical trials",
+                "tertiary neuro-oncology center hospital near Jaipur"
+            ],
+            "source_mode": "live_serpapi",
+            "timestamp": "2026-10-10T12:20:26.416991+00:00"
+        },
+        "probabilities": {
+            "glioma": 2.8858289624622557e-07,
+            "meningioma": 4.772192914970219e-05,
+            "notumor": 2.9206594831521215e-07,
+            "pituitary": 0.9999517202377319
+        },
+        "accession_id": "ACC-20261010-B8B777",
+        "region": "Jaipur"
     }
 ]
