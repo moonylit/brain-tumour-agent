@@ -211,7 +211,7 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.getByText("Patient MRI Log")).toBeInTheDocument();
     expect(screen.getByText(/SCAN 01 • Oct 10/i)).toBeInTheDocument();
     expect(screen.getByText("Meningioma")).toBeInTheDocument();
-    const scanImg = screen.getByAltText("Scan 01");
+    const scanImg = screen.getByAltText("Uploaded MRI");
     expect(scanImg).toBeInTheDocument();
     expect(scanImg).toHaveAttribute("src", "blob:http://localhost/scan1.png");
 
@@ -258,7 +258,7 @@ describe("PatientTrajectoryCard Component", () => {
     expect(screen.getByText(/SCAN 03 • Aug 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/SCAN 04 • Oct 2026/i)).toBeInTheDocument();
     expect(screen.getAllByText("GLIOBLASTOMA")).toHaveLength(4);
-    expect(screen.getByAltText("Scan 1")).toBeInTheDocument();
+    expect(screen.getAllByAltText("Historical MRI")).toHaveLength(4);
     expect(
       screen.getByRole("button", { name: /\+ Attach Follow-up Scan/i })
     ).toBeInTheDocument();

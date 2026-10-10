@@ -143,6 +143,7 @@ export interface CustomScanPoint {
   forecastArea: number | null;
   type: string;
   imagePreview?: string;
+  url?: string;
   prediction?: string;
 }
 
@@ -444,6 +445,7 @@ export default function PatientTrajectoryCard({
                     forecastArea: null,
                     type: 'Observed',
                     imagePreview: heatMapImage, // Prioritize Grad-CAM
+                    url: heatMapImage,
                     prediction: scanPrediction
                   };
                   
@@ -488,6 +490,7 @@ export default function PatientTrajectoryCard({
                     forecastArea: null,
                     type: 'Observed',
                     imagePreview: heatMapImage, // Prioritize Grad-CAM
+                    url: heatMapImage,
                     prediction: scanPrediction
                   };
                   
@@ -584,33 +587,36 @@ export default function PatientTrajectoryCard({
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Patient MRI Log</h4>
               <div className="grid grid-cols-2 gap-3 overflow-y-auto mb-4 flex-grow">
                 {customScans.filter(scan => scan.type === 'Observed').map((scan, idx) => (
-                  <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-900 aspect-square flex items-center justify-center border border-slate-300 shadow-sm">
-
-                    {/* Actual MRI Image */}
-                    {scan.imagePreview && (
+                  <div key={idx} className="relative w-full h-48 rounded-xl overflow-hidden group shadow-md border border-slate-200 bg-slate-900">
+                    {/* Base MRI Image */}
+                    {(scan.url || scan.imagePreview) && (
                       <img 
-                        src={scan.imagePreview} 
-                        alt={`Scan 0${idx+1}`} 
-                        className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500 z-0 mix-blend-screen" 
+                        src={scan.url || scan.imagePreview} 
+                        alt="Uploaded MRI" 
+                        className="absolute inset-0 w-full h-full object-cover saturate-[1.2] contrast-[1.1] z-0" 
                       />
                     )}
-
-                    {/* Simulated Grad-CAM Heatmap Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-red-500/40 via-yellow-400/20 to-transparent z-0 pointer-events-none mix-blend-overlay" />
-
+                    
+                    {/* Simulated Grad-CAM Localization Glow */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_55%_45%,rgba(220,38,38,0.55)_0%,rgba(234,179,8,0.35)_25%,rgba(59,130,246,0.15)_55%,transparent_100%)] z-10 pointer-events-none mix-blend-color-dodge opacity-90" />
+                    
+                    {/* Segmentation Highlight Ring */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_55%_45%,transparent_15%,rgba(16,185,129,0.25)_30%,transparent_50%)] z-10 pointer-events-none mix-blend-screen opacity-75" />
+                    
+                    {/* Dark Gradient for Text Legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-20 pointer-events-none" />
+                    
                     {/* Prediction Badge Top Right */}
                     {scan.prediction && (
-                      <div className="absolute top-2 right-2 bg-blue-600/90 backdrop-blur text-white text-[9px] font-bold px-2 py-1 rounded shadow-sm z-10 uppercase tracking-wider">
+                      <div className="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-black px-2 py-1 rounded shadow-sm z-30 uppercase tracking-widest">
                         {scan.prediction}
                       </div>
                     )}
 
-                    {/* Date & Title Bottom Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-3 z-0 pointer-events-none">
-                      <span className="text-white text-[10px] font-black tracking-wider drop-shadow-md">
-                        SCAN 0{idx + 1} • {scan.date}
-                      </span>
-                    </div>
+                    {/* Date Label Bottom Left */}
+                    <span className="absolute bottom-2 left-3 text-white text-sm font-bold z-30">
+                      SCAN 0{idx + 1} • {scan.date}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -778,54 +784,26 @@ export default function PatientTrajectoryCard({
           <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Historical Scans Log</h4>
           <div className="grid grid-cols-2 gap-3 overflow-y-auto mb-4 flex-grow">
             {[
-              { 
-                date: 'Jan 2026', 
-                pred: activeDemoPatient === 'Eleanor Vance' ? 'GLIOBLASTOMA' : 'MENINGIOMA', 
-                // Actual T1/T2 axial MRI with highly localized colorful circular red/yellow Grad-CAM heatmap overlay in right hemisphere
-                img: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=300&q=80' 
-              },
-              { 
-                date: 'May 2026', 
-                pred: activeDemoPatient === 'Eleanor Vance' ? 'GLIOBLASTOMA' : 'MENINGIOMA', 
-                // Contrast-enhanced axial scan showing multi-planar localized glowing neural pathology
-                img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=300&q=80' 
-              },
-              { 
-                date: 'Aug 2026', 
-                pred: activeDemoPatient === 'Eleanor Vance' ? 'GLIOBLASTOMA' : 'MENINGIOMA', 
-                // Axial cross-section displaying highlighting spatial tumor localization and tracking
-                img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=300&q=80' 
-              },
-              { 
-                date: 'Oct 2026', 
-                pred: activeDemoPatient === 'Eleanor Vance' ? 'GLIOBLASTOMA' : 'MENINGIOMA', 
-                // Recent structural brain scan displaying neural segmentation patterns
-                img: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=300&q=80' 
-              }
+              { date: 'Jan 2026', img: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=300&q=80' },
+              { date: 'May 2026', img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=300&q=80' },
+              { date: 'Aug 2026', img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=300&q=80' },
+              { date: 'Oct 2026', img: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=300&q=80' }
             ].map((mock, idx) => (
-              <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-900 aspect-square flex items-center justify-center border border-slate-300 shadow-sm">
-                {/* Actual Grad-CAM Brain MRI Scan Asset */}
-                <img 
-                  src={mock.img} 
-                  alt={`Scan ${idx+1}`} 
-                  className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:scale-105 group-hover:opacity-100 transition-all duration-300 z-0 saturate-[1.8] contrast-[1.15] brightness-[0.85] mix-blend-lighten" 
-                />
+              <div key={idx} className="relative w-full h-48 rounded-xl overflow-hidden group shadow-md border border-slate-200">
+                <img src={mock.img} alt="Historical MRI" className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 z-0" />
 
-                {/* Simulated Grad-CAM Localization Glow (Thermal Multi-color: Violet/Red/Yellow hotspot focus) */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_45%,rgba(220,38,38,0.45)_0%,rgba(234,179,8,0.25)_30%,rgba(59,130,246,0.1)_60%,transparent_100%)] z-1 pointer-events-none mix-blend-color-dodge opacity-80" />
+                {/* Grad-CAM Overlays */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_50%,rgba(220,38,38,0.5)_0%,rgba(234,179,8,0.3)_30%,rgba(59,130,246,0.1)_60%,transparent_100%)] z-10 mix-blend-color-dodge opacity-85" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_50%,transparent_20%,rgba(16,185,129,0.2)_35%,transparent_50%)] z-10 mix-blend-screen opacity-70" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-20" />
 
-                {/* Highlight ring for segmentation edge detection */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_45%,transparent_20%,rgba(16,185,129,0.15)_35%,transparent_40%)] z-1 pointer-events-none mix-blend-screen opacity-60" />
-
-                {/* Specific Prediction Badge */}
-                <div className={`absolute top-2 right-2 ${mock.pred === 'GLIOBLASTOMA' ? 'bg-red-600/90' : 'bg-blue-600/90'} text-[9px] tracking-widest px-2 py-1 font-black text-white rounded shadow-md z-3 uppercase`}>
-                  {mock.pred}
-                </div>
-
-                {/* Dark Shadow Overlay ensuring typography is visible on high-contrast graphics */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent z-2 pointer-events-none flex flex-col justify-end p-3">
-                  <span className="text-white text-[10px] font-black tracking-wider drop-shadow-md">SCAN 0{idx + 1} • {mock.date}</span>
-                </div>
+                {/* Labels */}
+                <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded z-30 uppercase tracking-widest">
+                  {activeDemoPatient === 'Eleanor Vance' ? 'GLIOBLASTOMA' : 'MENINGIOMA'}
+                </span>
+                <span className="absolute bottom-2 left-3 text-white text-sm font-bold z-30">
+                  SCAN 0{idx + 1} • {mock.date}
+                </span>
               </div>
             ))}
           </div>
