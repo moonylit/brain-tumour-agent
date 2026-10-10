@@ -33,7 +33,15 @@ FRONTEND_URL = "http://localhost:3000"
 
 ALLOWED_IMAGE_TYPES = {
     "image/jpeg",
+    "image/jpg",
     "image/png",
+    "image/webp",
+    "image/bmp",
+    "image/tiff",
+    "image/gif",
+    "image/avif",
+    "image/x-icon",
+    "image/vnd.microsoft.icon",
 }
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB

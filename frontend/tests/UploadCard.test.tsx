@@ -29,7 +29,7 @@ describe("UploadCard Component", () => {
       screen.getByText(/Upload a patient's axial brain MRI/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Supported formats: JPEG, PNG • Max size: 10 MB/i),
+      screen.getByText(/Supported formats: JPEG, PNG.*Max size: 10 MB/i),
     ).toBeInTheDocument();
   });
 
@@ -305,6 +305,26 @@ describe("UploadCard Component", () => {
     await waitFor(() => {
       expect(screen.getByText("Prediction Result")).toBeInTheDocument();
     });
+  });
+
+  it("accepts and previews WebP format images via drag and drop", async () => {
+    render(<UploadCard />);
+    const dropzone = screen.getByText(/Drag and drop neuroimaging files here/i).closest("div");
+    expect(dropzone).toBeInTheDocument();
+
+    const webpFile = new File(["fake-webp-binary"], "patient_axial_scan.webp", {
+      type: "image/webp",
+    });
+
+    fireEvent.drop(dropzone!, {
+      dataTransfer: {
+        files: [webpFile],
+      },
+    });
+
+    expect(await screen.findByAltText("MRI Preview")).toBeInTheDocument();
+    expect(screen.getByText(/patient_axial_scan\.webp/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Unsupported image format/i)).not.toBeInTheDocument();
   });
 });
 

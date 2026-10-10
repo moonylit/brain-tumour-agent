@@ -2,6 +2,8 @@ import os
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
 import time
+import io
+from PIL import Image
 
 import numpy as np
 import tensorflow as tf
@@ -31,11 +33,15 @@ class Predictor:
         self,
         image_bytes,
     ):
-
-        image = tf.image.decode_image(
-            image_bytes,
-            channels=3,
-        )
+        try:
+            # Safely handle any image format including WebP, JPEG, PNG, BMP, TIFF, etc.
+            pil_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            image = np.array(pil_img)
+        except Exception:
+            image = tf.image.decode_image(
+                image_bytes,
+                channels=3,
+            )
 
         image = tf.image.resize(
             image,

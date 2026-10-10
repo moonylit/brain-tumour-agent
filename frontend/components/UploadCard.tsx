@@ -11,7 +11,19 @@ import PredictionCard from "./PredictionCard";
 import { Sparkles, AlertTriangle, X } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
-const ALLOWED_TYPES = ["image/jpeg", "image/png"];
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/gif",
+  "image/avif",
+  "image/x-icon",
+  "image/vnd.microsoft.icon",
+  "image/svg+xml",
+];
 
 interface UploadCardProps {
   region?: string;
@@ -174,8 +186,13 @@ export default function UploadCard({
     if (file.size > MAX_FILE_SIZE_BYTES) {
       return `File size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the maximum allowed limit of 10 MB.`;
     }
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return `Unsupported image format (${file.type || "unknown"}). Only JPG and PNG MRI scans are supported.`;
+    const isImage =
+      (file.type && file.type.startsWith("image/")) ||
+      ALLOWED_TYPES.includes(file.type) ||
+      /\.(jpe?g|png|webp|avif|bmp|tiff?|gif|ico|svg)$/i.test(file.name);
+
+    if (!isImage) {
+      return `Unsupported image format (${file.type || "unknown"}). Only image files (WebP, JPG, PNG, etc.) are supported.`;
     }
     return null;
   }
@@ -282,7 +299,7 @@ export default function UploadCard({
             </div>
             
             <p className="text-slate-600 font-medium text-[15px] leading-relaxed mb-8 max-w-3xl">
-              Upload a patient's axial brain MRI (T1, T2, or FLAIR in JPG/PNG, up to 10MB) for neural tumor classification, AI Grad-CAM localization, and automated referral routing.
+              Upload a patient's axial brain MRI (T1, T2, or FLAIR in WebP, JPG, PNG or any image format, up to 10MB) for neural tumor classification, AI Grad-CAM localization, and automated referral routing.
             </p>
 
             {/* Upgraded Drag-and-Drop Area */}
@@ -332,14 +349,14 @@ export default function UploadCard({
               </button>
 
               <div className="mt-6 text-[11px] font-mono font-medium text-slate-400 tracking-wider pointer-events-none">
-                Supported formats: JPEG, PNG • Max size: 10 MB
+                Supported formats: JPEG, PNG, WebP &amp; All Images • Max size: 10 MB
               </div>
 
               {/* Hidden File Input ensures functionality isn't broken */}
               <input 
                 type="file" 
                 id="main-mri-upload"
-                accept="image/jpeg,image/png,.jpg,.jpeg,.png"
+                accept="image/*,.jpg,.jpeg,.png,.webp,.avif,.bmp,.tiff,.gif"
                 onChange={handleImageChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-0" 
               />

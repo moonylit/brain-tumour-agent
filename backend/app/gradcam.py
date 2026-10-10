@@ -2,6 +2,8 @@ import os
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
 import uuid
+import io
+from PIL import Image
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -19,11 +21,15 @@ class GradCAM:
         self,
         image_bytes,
     ):
-
-        image = tf.image.decode_image(
-            image_bytes,
-            channels=3,
-        )
+        try:
+            # Safely decode any image format (WebP, PNG, JPG, BMP, TIFF, etc.)
+            pil_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            image = np.array(pil_img)
+        except Exception:
+            image = tf.image.decode_image(
+                image_bytes,
+                channels=3,
+            )
 
         image = tf.image.resize(
             image,
@@ -143,11 +149,15 @@ class GradCAM:
         heatmap,
         image_bytes,
     ):
-
-        original = tf.image.decode_image(
-            image_bytes,
-            channels=3,
-        ).numpy()
+        try:
+            # Safely decode any image format (WebP, PNG, JPG, BMP, TIFF, etc.)
+            pil_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            original = np.array(pil_img)
+        except Exception:
+            original = tf.image.decode_image(
+                image_bytes,
+                channels=3,
+            ).numpy()
 
         original = cv2.resize(
             original,

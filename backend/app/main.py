@@ -204,7 +204,15 @@ async def predict(
         target_region,
     )
 
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
+    is_image = (
+        (file.content_type and file.content_type.startswith("image/"))
+        or file.content_type in ALLOWED_IMAGE_TYPES
+        or (file.filename and file.filename.lower().endswith(
+            (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".tif", ".gif", ".avif", ".svg")
+        ))
+    )
+
+    if not is_image:
 
         logger.warning(
             "Unsupported file type received: %s",
@@ -215,11 +223,8 @@ async def predict(
             status_code=400,
             detail={
                 "error": "unsupported_file_type",
-                "message": "Only JPG and PNG MRI images are supported.",
-                "supported_formats": [
-                    "image/jpeg",
-                    "image/png",
-                ],
+                "message": "Only image files (JPG, PNG, WebP, etc.) are supported.",
+                "supported_formats": sorted(list(ALLOWED_IMAGE_TYPES)),
             },
         )
 
