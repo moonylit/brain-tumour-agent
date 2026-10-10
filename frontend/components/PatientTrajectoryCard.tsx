@@ -258,7 +258,9 @@ export default function PatientTrajectoryCard({
       {activeDemoPatient === "Custom" && customScans.length === 0 ? (
         <div className="w-full h-64 flex flex-col items-center justify-center bg-blue-50/50 border-2 border-dashed border-blue-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center shadow-sm mb-3">
-            <span className="text-lg text-blue-600">⬆️</span>
+            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
           </div>
           <p className="text-slate-800 font-bold mb-1 text-lg">Upload First MRI Scan</p>
           <p className="text-slate-500 text-sm mb-4">Initialize trajectory for new patient</p>
@@ -294,133 +296,163 @@ export default function PatientTrajectoryCard({
         </div>
       ) : activeDemoPatient === "Custom" && customScans.length > 0 ? (
         <div className="w-full">
-          <div className="h-72 w-full bg-white p-4 border border-slate-200 rounded-xl">
-            {mounted ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={customScans}
-                  margin={{ top: 12, right: 24, left: 0, bottom: 8 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    stroke="#64748b"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={{ stroke: "#cbd5e1" }}
-                  />
-                  <YAxis
-                    stroke="#64748b"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={{ stroke: "#cbd5e1" }}
-                    tickFormatter={(v) => `${Number(v).toLocaleString()} px`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur-md text-xs">
-                            <p className="font-bold text-slate-800 mb-1">{label}</p>
-                            {payload.map((entry, index) => (
-                              entry.value !== null && (
-                                <p
-                                  key={index}
-                                  className="font-semibold flex items-center justify-between gap-4"
-                                  style={{ color: entry.color }}
-                                >
-                                  <span>{entry.name}:</span>
-                                  <span>{Number(entry.value).toLocaleString()} px²</span>
-                                </p>
-                              )
-                            ))}
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="bottom"
-                    height={36}
-                    formatter={(value) => (
-                      <span className="text-xs font-semibold text-slate-700">{value}</span>
-                    )}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="area"
-                    name="Observed Area (px)"
-                    stroke="#2563eb"
-                    strokeWidth={3}
-                    dot={{ r: 5, fill: "#2563eb", strokeWidth: 2, stroke: "#ffffff" }}
-                    activeDot={{ r: 7 }}
-                    connectNulls={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="forecastArea"
-                    name="AI Forecast (px)"
-                    stroke="#9333ea"
-                    strokeWidth={3}
-                    strokeDasharray="5 5"
-                    dot={{ r: 5, fill: "#9333ea", strokeWidth: 2, stroke: "#ffffff" }}
-                    activeDot={{ r: 7 }}
-                    connectNulls={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full w-full flex items-center justify-center bg-slate-50/50 rounded-xl animate-pulse text-slate-400 font-medium text-xs">
-                Rendering Longitudinal Chart...
+          <input 
+            type="file" 
+            id="historical-mri-upload" 
+            accept="image/*" 
+            className="hidden" 
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                // Simulate instant scan processing for trajectory
+                setTimeout(() => {
+                  const newArea = Math.floor(Math.random() * 3000) + 1500;
+                  const newScan = {
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    area: newArea,
+                    forecastArea: null,
+                    type: 'Observed'
+                  };
+                  setCustomScans(prev => [...prev, newScan]);
+                }, 600);
+              }
+            }}
+          />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 bg-white p-4 border border-slate-200 rounded-xl h-80">
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={customScans}
+                    margin={{ top: 12, right: 24, left: 0, bottom: 8 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                    <XAxis
+                      dataKey="date"
+                      stroke="#64748b"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={{ stroke: "#cbd5e1" }}
+                    />
+                    <YAxis
+                      stroke="#64748b"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={{ stroke: "#cbd5e1" }}
+                      tickFormatter={(v) => `${Number(v).toLocaleString()} px`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="rounded-xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur-md text-xs">
+                              <p className="font-bold text-slate-800 mb-1">{label}</p>
+                              {payload.map((entry, index) => (
+                                entry.value !== null && (
+                                  <p
+                                    key={index}
+                                    className="font-semibold flex items-center justify-between gap-4"
+                                    style={{ color: entry.color }}
+                                  >
+                                    <span>{entry.name}:</span>
+                                    <span>{Number(entry.value).toLocaleString()} px²</span>
+                                  </p>
+                                )
+                              ))}
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      formatter={(value) => (
+                        <span className="text-xs font-semibold text-slate-700">{value}</span>
+                      )}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="area"
+                      name="Observed Area (px)"
+                      stroke="#2563eb"
+                      strokeWidth={3}
+                      dot={{ r: 5, fill: "#2563eb", strokeWidth: 2, stroke: "#ffffff" }}
+                      activeDot={{ r: 7 }}
+                      connectNulls={false}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="forecastArea"
+                      name="AI Forecast (px)"
+                      stroke="#9333ea"
+                      strokeWidth={3}
+                      strokeDasharray="5 5"
+                      dot={{ r: 5, fill: "#9333ea", strokeWidth: 2, stroke: "#ffffff" }}
+                      activeDot={{ r: 7 }}
+                      connectNulls={true}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center bg-slate-50/50 rounded-xl animate-pulse text-slate-400 font-medium text-xs">
+                  Rendering Longitudinal Chart...
+                </div>
+              )}
+            </div>
+
+            <div className="lg:col-span-1 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner h-full flex flex-col">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Patient MRI Log</h4>
+              <div className="grid grid-cols-2 gap-3 overflow-y-auto mb-4 flex-grow">
+                {customScans.filter(scan => scan.type === 'Observed').map((scan, idx) => (
+                  <div key={idx} className="relative group overflow-hidden rounded-xl bg-slate-800 aspect-square flex items-center justify-center border border-slate-300">
+                    <span className="text-slate-400 text-xs font-bold">SCAN 0{idx + 1}</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
+                      <span className="text-white text-[10px] font-black tracking-wider">{scan.date}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
 
-          <div className="mt-6 flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 flex-wrap gap-4">
-            <input 
-              type="file" 
-              id="historical-mri-upload" 
-              accept="image/*" 
-              className="hidden" 
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  // Simulate instant scan processing for trajectory
-                  setTimeout(() => {
-                    const newArea = Math.floor(Math.random() * 3000) + 1500;
-                    const newScan = {
-                      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                      area: newArea,
-                      forecastArea: null,
-                      type: 'Observed'
-                    };
-                    setCustomScans(prev => [...prev, newScan]);
-                  }, 600);
-                }
-              }}
-            />
-            <button
-              onClick={() => (document.getElementById("historical-mri-upload") || document.getElementById("mri-upload-input") || document.getElementById("mri-file-input"))?.click()}
-              className="px-6 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm font-bold rounded-lg hover:bg-blue-50 transition-all"
-            >
-              + Add Follow-up Scan
-            </button>
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2 mt-auto">
+                <button 
+                  type="button"
+                  onClick={() => document.getElementById('historical-mri-upload')?.click()} 
+                  className="w-full py-2.5 bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-blue-50 transition-colors shadow-sm"
+                >
+                  + Add Follow-up Scan
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (customScans.length === 0) return;
+                    const lastIndex = customScans.length - 1;
+                    const lastScan = customScans[lastIndex];
 
-            <button
-              onClick={() => {
-                const lastScan = customScans[customScans.length - 1];
-                const baseArea = lastScan?.area ?? lastScan?.forecastArea ?? 2000;
-                const predictedGrowth = Math.floor(baseArea * (Math.random() * 0.4 + 1.1)); // Simulates 10-50% growth
-                setCustomScans((prev: any[]) => [
-                  ...prev,
-                  { date: "Forecast (+3M)", area: null, forecastArea: predictedGrowth, type: "AI Forecast" }
-                ]);
-              }}
-              className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold tracking-wider rounded-lg shadow-md transition-all flex items-center gap-2"
-            >
-              <span>🔮</span> Predict Future Trajectory
-            </button>
+                    // Create a copy of the array and anchor the forecast line to the last observed point
+                    const updatedScans = [...customScans];
+                    const baseArea = lastScan.area ?? lastScan.forecastArea ?? 2000;
+                    updatedScans[lastIndex] = { ...lastScan, forecastArea: baseArea };
+
+                    // Calculate prediction and add the new future point
+                    const predictedGrowth = Math.floor(baseArea * (Math.random() * 0.4 + 1.1));
+                    updatedScans.push({ 
+                      date: 'Forecast (+3M)', 
+                      area: null, 
+                      forecastArea: predictedGrowth, 
+                      type: 'AI Forecast' 
+                    });
+
+                    setCustomScans(updatedScans);
+                  }} 
+                  className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md transition-all"
+                >
+                  Predict Trajectory
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       ) : (

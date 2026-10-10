@@ -149,7 +149,7 @@ describe("PatientTrajectoryCard Component", () => {
     vi.useRealTimers();
   });
 
-  it("renders dynamic Recharts graph, follow-up button, and triggers future forecast prediction for Custom patient with scans", () => {
+  it("renders dynamic Recharts graph, Patient MRI Log gallery, follow-up button, and triggers stitched trajectory prediction for Custom patient with scans", () => {
     const mockScans = [
       { date: "Oct 10", area: 2400, forecastArea: null, type: "Observed" },
     ];
@@ -162,6 +162,11 @@ describe("PatientTrajectoryCard Component", () => {
         setCustomScans={setScansMock}
       />
     );
+
+    // Custom Patient MRI Log gallery
+    expect(screen.getByText("Patient MRI Log")).toBeInTheDocument();
+    expect(screen.getByText("SCAN 01")).toBeInTheDocument();
+    expect(screen.getByText("Oct 10")).toBeInTheDocument();
 
     // Recharts container buttons
     const followUpBtn = screen.getByRole("button", {
@@ -178,13 +183,23 @@ describe("PatientTrajectoryCard Component", () => {
     expect(clickSpy).toHaveBeenCalled();
 
     const forecastBtn = screen.getByRole("button", {
-      name: /Predict Future Trajectory/i,
+      name: /Predict Trajectory/i,
     });
     expect(forecastBtn).toBeInTheDocument();
 
-    // Click forecast button to trigger AI trajectory
+    // Click forecast button to trigger stitched AI trajectory
     fireEvent.click(forecastBtn);
-    expect(setScansMock).toHaveBeenCalled();
+    expect(setScansMock).toHaveBeenCalledTimes(1);
+
+    const updatedScans = setScansMock.mock.calls[0][0];
+    expect(updatedScans).toHaveLength(2);
+    // Anchored / stitched to last observed point
+    expect(updatedScans[0].forecastArea).toBe(2400);
+    // Future forecast point
+    expect(updatedScans[1].date).toBe("Forecast (+3M)");
+    expect(updatedScans[1].area).toBeNull();
+    expect(updatedScans[1].type).toBe("AI Forecast");
+    expect(updatedScans[1].forecastArea).toBeGreaterThanOrEqual(2400);
   });
 
 
