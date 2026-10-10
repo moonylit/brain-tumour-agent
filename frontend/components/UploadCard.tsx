@@ -8,7 +8,6 @@ import {
 } from "@/lib/api";
 
 import PredictionCard from "./PredictionCard";
-import RegionSelector from "./RegionSelector";
 import { Upload, Sparkles, AlertTriangle, X } from "lucide-react";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
@@ -327,27 +326,75 @@ export default function UploadCard({
                 Geographic Referral Routing
               </h2>
             </div>
-            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-8">
+            <p className="text-base md:text-lg text-slate-600 leading-relaxed">
               Target metropolitan region for autonomous hospital geolocation and tertiary surgical center referral routing:
             </p>
-
-            <RegionSelector
-              value={region}
-              onChange={handleRegionChange}
-              disabled={loading}
-            />
           </div>
 
-          {/* Live Interactive Map with Nearby Hospitals */}
-          <div className="w-full h-72 md:h-96 mt-8 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative">
-            <iframe
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              src="https://maps.google.com/maps?q=neurology+and+cancer+hospitals+near+Jaipur&t=&z=11&ie=UTF8&iwloc=&output=embed"
-            ></iframe>
+          {/* Emergency Triage Routing List */}
+          <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6">
+            <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Nearest Specialized Centers</h3>
+              </div>
+              <span className="text-xs font-semibold text-slate-500">Routing from: Dahmi Kalan, Jaipur</span>
+            </div>
+
+            <div className="divide-y divide-slate-100">
+              
+              {/* Hospital 1 */}
+              <div className="p-6 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-lg font-bold text-slate-900">Nivik Neuro Trauma & Multispeciality Hospital</h4>
+                  <p className="text-sm text-slate-500 mt-1">Mansarovar, Jaipur • Neurology Specialization</p>
+                  <div className="flex items-center gap-4 mt-3">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      ~35 mins
+                    </span>
+                    <span className="text-xs font-bold text-slate-500">18.6 km</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <a href="tel:+919602994307" className="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200" title="Call Hospital">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                  </a>
+                  <a href="https://maps.google.com/?cid=5166471560753553435" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-lg hover:bg-slate-800 transition-colors shadow-md">
+                    <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    Navigate
+                  </a>
+                </div>
+              </div>
+
+              {/* Hospital 2 */}
+              <div className="p-6 hover:bg-slate-50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-lg font-bold text-slate-900">HCG Cancer Hospital</h4>
+                  <p className="text-sm text-slate-500 mt-1">Mansarovar, Jaipur • Oncology Center</p>
+                  <div className="flex items-center gap-4 mt-3">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      ~42 mins
+                    </span>
+                    <span className="text-xs font-bold text-slate-500">20.8 km</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <a href="tel:+918042930898" className="p-2.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                  </a>
+                  <a href="https://maps.google.com/?cid=17234322953667946797" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-lg hover:bg-slate-800 transition-colors shadow-md">
+                    <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    Navigate
+                  </a>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
